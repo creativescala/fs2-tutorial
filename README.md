@@ -13,6 +13,10 @@ This is the rough plan for contents:
     - contents are (potentially) arranged in time not space
     - separation between description and action (as in `IO`) so need to "`compile`" the `Stream`
   - Basic examples: map, filter, etc.
+  - Calculating averages
+    - Naive approach
+    - Incremental approach (e.g. https://math.stackexchange.com/questions/106700/incremental-averaging)
+    - EWMA
 - Effects in FS2
 - Fan-in and fan-out
   - Pull based model
@@ -22,5 +26,6 @@ This is the rough plan for contents:
   - Streaming average
   - Reservoir sampling
   - Hyperloglog
+  - Sliding and tumbling windows
 
 [fs2]: https://fs2.io/
