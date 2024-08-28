@@ -42,7 +42,7 @@
             <h1 id="stream-as-a-list" class="title">Stream as a List</h1>
             <p><code>Stream</code> is the main type in FS2. We&#39;re going to develop several mental models to understand how <code>Stream</code> works. We&#39;ll start with a really simple model: <code>Stream</code> is just a fancy <code>List</code>.</p>
             
-            <h2 id="constructing-stream" class="section">Constructing Stream</h2>
+            <h2 id="working-with-stream" class="section">Working With Stream</h2>
             <p>We can construct a <code>Stream</code> just like we&#39;d construct a <code>List</code>.</p>
             <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
 
@@ -50,9 +50,16 @@
 </span><span class="comment">// s: Stream[[x &gt;: Nothing &lt;: Any] =&gt; Pure[x], Int] = Stream(..)</span></code></pre>
             <p>As you can see from what is printed, it is indeed a fancy <code>List</code>.
             We have some odd type parameter, and it&#39;s so fancy that it doesn&#39;t print its value.</p>
-            <p>We can see it does contain the value we expect by converting it to a <code>List</code>.</p>
+            <p>We can see it does contain the values we expect by converting it to a <code>List</code>.</p>
             <pre><code class="nohighlight"><span class="identifier">s</span><span>.</span><span class="identifier">toList</span><span>
 </span><span class="comment">// res0: List[Int] = List(1, 2, 3, 4, 5)</span></code></pre>
+            <p>We can do the majority of the things we&#39;d do with a <code>List</code> with <code>Stream</code>.
+            Here&#39;s another example.</p>
+            <pre><code class="nohighlight"><span class="identifier">s</span><span>.</span><span class="identifier">map</span><span>(</span><span class="identifier">x</span><span> =&gt; </span><span class="identifier">x</span><span> + </span><span class="number-literal">1</span><span>).</span><span class="identifier">toList</span><span>
+</span><span class="comment">// res1: List[Int] = List(2, 3, 4, 5, 6)</span></code></pre>
+            <p>You don&#39;t need me to reiterate the <code>List</code> API here, as I&#39;m sure you&#39;re familiar with it.
+            Complete the challenge in code/src/main/scala/introduction/01-list.scala.
+            <strong>Insert exercise here</strong></p>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="index.html">←FS2 Tutorial</a> 
             </div>
