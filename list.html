@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="Laika 1.0.0" />
-    <title>FS2 Tutorial</title>
+    <title>Stream as a List</title>
     
     
     <meta name="description" content="docs" />
@@ -26,29 +26,30 @@
       <details>
         <summary>FS2 Tutorial</summary>
         <ul class="nav-list">
-          <li class="level1 nav-leaf"><a href="list.html">Stream as a List</a></li>
+          <li class="level1 active nav-leaf"><a href="#">Stream as a List</a></li>
         </ul>
       </details>
     </nav>
     <nav id="sidebar">
         <ul class="nav-list">
-          <li class="level1 active nav-leaf"><a href="#">FS2 Tutorial</a></li>
-          <li class="level1 nav-leaf"><a href="list.html">Stream as a List</a></li>
+          <li class="level1 nav-leaf"><a href="index.html">FS2 Tutorial</a></li>
+          <li class="level1 active nav-leaf"><a href="#">Stream as a List</a></li>
         </ul>
     </nav>
 
     <div id="content">
         <main class="content">
-            <h1 id="fs2-tutorial" class="title">FS2 Tutorial</h1>
+            <h1 id="stream-as-a-list" class="title">Stream as a List</h1>
+            <p><code>Stream</code> is the main type in FS2. We&#39;re going to develop several mental models to understand how <code>Stream</code> works. We&#39;ll start with a really simple model: <code>Stream</code> is just a fancy <code>List</code>.</p>
             
-            <h2 id="what" class="section">What</h2>
-            <p>This is a self-guided tutorial to <a href="https://fs2.io/">FS2</a>, using streaming data analytics for the majority of examples.
-            It&#39;s a combination of text and coding exercises.</p>
-            
-            <h2 id="how" class="section">How</h2>
-            <p>You should clone <a href="https://github.com/creativescala/fs2-tutorial">this repository</a> to your computer. In code/src/main/scala/ there are various code challenges you will work with. The text will tell you when to tackle each challenge.</p>
+            <h2 id="constructing-stream" class="section">Constructing Stream</h2>
+            <p>We can construct a <code>Stream</code> just like we&#39;d construct a <code>List</code>.</p>
+            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
+
+</span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>, </span><span class="number-literal">5</span><span>)
+</span><span class="comment">// res0: Stream[[x &gt;: Nothing &lt;: Any] =&gt; Pure[x], Int] = Stream(..)</span></code></pre>
             <div class="flex flex-row justify-between">
-                 <a class="pageNavigation" href="list.html">Stream as a List→</a>
+                <a class="pageNavigation" href="index.html">←FS2 Tutorial</a> 
             </div>
         </main>
         <footer>Creative Scala is copyright Noel Welsh</footer>
