@@ -46,8 +46,13 @@
             <p>We can construct a <code>Stream</code> just like we&#39;d construct a <code>List</code>.</p>
             <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
 
-</span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>, </span><span class="number-literal">5</span><span>)
-</span><span class="comment">// res0: Stream[[x &gt;: Nothing &lt;: Any] =&gt; Pure[x], Int] = Stream(..)</span></code></pre>
+</span><span class="keyword">val</span><span> </span><span class="identifier">s</span><span> = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>, </span><span class="number-literal">5</span><span>)
+</span><span class="comment">// s: Stream[[x &gt;: Nothing &lt;: Any] =&gt; Pure[x], Int] = Stream(..)</span></code></pre>
+            <p>As you can see from what is printed, it is indeed a fancy <code>List</code>.
+            We have some odd type parameter, and it&#39;s so fancy that it doesn&#39;t print its value.</p>
+            <p>We can tell it is like a <code>List</code> by converting it to one.</p>
+            <pre><code class="nohighlight"><span class="identifier">s</span><span>.</span><span class="identifier">toList</span><span>
+</span><span class="comment">// res0: List[Int] = List(1, 2, 3, 4, 5)</span></code></pre>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="index.html">←FS2 Tutorial</a> 
             </div>
