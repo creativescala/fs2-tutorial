@@ -50,7 +50,7 @@
 </span><span class="comment">// s: Stream[[x &gt;: Nothing &lt;: Any] =&gt; Pure[x], Int] = Stream(..)</span></code></pre>
             <p>As you can see from what is printed, it is indeed a fancy <code>List</code>.
             We have some odd type parameter, and it&#39;s so fancy that it doesn&#39;t print its value.</p>
-            <p>We can tell it is like a <code>List</code> by converting it to one.</p>
+            <p>We can see it does contain the value we expect by converting it to a <code>List</code>.</p>
             <pre><code class="nohighlight"><span class="identifier">s</span><span>.</span><span class="identifier">toList</span><span>
 </span><span class="comment">// res0: List[Int] = List(1, 2, 3, 4, 5)</span></code></pre>
             <div class="flex flex-row justify-between">
