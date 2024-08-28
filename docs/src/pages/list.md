@@ -16,7 +16,7 @@ val s = Stream(1, 2, 3, 4, 5)
 As you can see from what is printed, it is indeed a fancy `List`.
 We have some odd type parameter, and it's so fancy that it doesn't print its value.
 
-We can tell it is like a `List` by converting it to one.
+We can see it does contain the value we expect by converting it to a `List`.
 
 ```scala mdoc
 s.toList
