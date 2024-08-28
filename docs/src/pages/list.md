@@ -10,5 +10,14 @@ We can construct a `Stream` just like we'd construct a `List`.
 ```scala mdoc
 import fs2.*
 
-Stream(1, 2, 3, 4, 5)
+val s = Stream(1, 2, 3, 4, 5)
+```
+
+As you can see from what is printed, it is indeed a fancy `List`.
+We have some odd type parameter, and it's so fancy that it doesn't print its value.
+
+We can tell it is like a `List` by converting it to one.
+
+```scala mdoc
+s.toList
 ```
