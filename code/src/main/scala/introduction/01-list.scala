@@ -25,4 +25,19 @@ object StreamAsList {
   def list[A](values: List[A]): Stream[Pure, A] = ???
 
   // Transformation. We focus on transforming existing Streams
+
+  // This method returns a stream where every element in `stream` is incremented
+  // by `value`.
+  def add(stream: Stream[Pure, Int], value: Int): Stream[Pure, Int] = ???
+
+  // This methods return a stream that only contains the values of the input
+  // stream that match the predicate.
+  def only[A](
+      stream: Stream[Pure, A],
+      predicate: A => Boolean
+  ): Stream[Pure, A] = ???
+
+  // This method should sum all the values in the given `stream` and return a
+  // Stream containing just a single value, the total.
+  def sum(stream: Stream[Pure, Int]): Stream[Pure, Int] = ???
 }

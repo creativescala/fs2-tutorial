@@ -30,6 +30,47 @@ s.map(x => x + 1).toList
 ```
 
 You don't need me to reiterate the `List` API here, as I'm sure you're familiar with it.
-There are a few differences between `List` and `Stream`, in addition to the many similarities.
-We'll explore these in the code challenge in `code/src/main/scala/introduction/01-list.scala`.
-**Insert exercise here**
+It's time for you to write some code. 
+Go and do the code exercise in `code/src/main/scala/introduction/01-list.scala`.
+
+
+## Streaming Algorithms: Kahan Summation
+
+We haven't yet seen what differentiates a `Stream` from a `List`, but we've seen enough to look at our first streaming algorithm.
+This algorithm, known as Kahan summation, performs the apparently simple job of summing numbers.
+
+Floating point numbers are kinda goofy. One issue is that they have finite precision. This can lead to surprising results from simple arithmetic. Let's see an example with `Float`, instead of `Double`, as it's easier to see the problem with lower precision numbers.
+
+Here's one billion written as a `Float`. (Did you know you can use the `_` separator in Scala to write numbers? I didn't until recently. The `f` suffix makes the literal a `Float` instead of `Double`.)
+
+```scala mdoc
+val billion = 1_000_000_000.0f
+```
+
+Let's add 40,000 to it.
+
+```scala mdoc
+billion + 40_000f
+```
+
+Easy enough. Let's do the same in a roundabout way.
+
+```scala mdoc
+(billion :: List.fill(100_000)(4.0f)).foldLeft(0.0f)(_ + _)
+```
+
+Hmmm. We are out by 40,000. This occurs because a `Float` can only store between 6 and 9 decimal digits of precision. As a result, one billion (represented as a `Float`) plus one rounds to one billion.
+
+```scala mdoc
+1_000_000_000f + 1f
+```
+
+There are three possible solutions: 
+
+1. we can use a higher precision numeric type, but that takes more memory, may require more CPU cycles, and still may not solve the problem;
+2. we can cry, because life is unfair, but this doesn't solve the problem;
+3. we can use a clever algorithm like [Kahan summation][kahan]. This does solve the problem.
+
+For this exercise we'll choose option 3.
+
+[kahan]: https://en.wikipedia.org/wiki/Kahan_summation_algorithm
