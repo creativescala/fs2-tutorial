@@ -58,9 +58,32 @@
             <pre><code class="nohighlight"><span class="identifier">s</span><span>.</span><span class="identifier">map</span><span>(</span><span class="identifier">x</span><span> =&gt; </span><span class="identifier">x</span><span> + </span><span class="number-literal">1</span><span>).</span><span class="identifier">toList</span><span>
 </span><span class="comment">// res1: List[Int] = List(2, 3, 4, 5, 6)</span></code></pre>
             <p>You don&#39;t need me to reiterate the <code>List</code> API here, as I&#39;m sure you&#39;re familiar with it.
-            There are a few differences between <code>List</code> and <code>Stream</code>, in addition to the many similarities.
-            We&#39;ll explore these in the code challenge in <code>code/src/main/scala/introduction/01-list.scala</code>.
-            <strong>Insert exercise here</strong></p>
+            It&#39;s time for you to write some code. 
+            Go and do the code exercise in <code>code/src/main/scala/introduction/01-list.scala</code>.</p>
+            
+            <h2 id="streaming-algorithms-kahan-summation" class="section">Streaming Algorithms: Kahan Summation</h2>
+            <p>We haven&#39;t yet seen what differentiates a <code>Stream</code> from a <code>List</code>, but we&#39;ve seen enough to look at our first streaming algorithm.
+            This algorithm, known as Kahan summation, performs the apparently simple job of summing numbers.</p>
+            <p>Floating point numbers are kinda goofy. One issue is that they have finite precision. This can lead to surprising results from simple arithmetic. Let&#39;s see an example with <code>Float</code>, instead of <code>Double</code>, as it&#39;s easier to see the problem with lower precision numbers.</p>
+            <p>Here&#39;s one billion written as a <code>Float</code>. (Did you know you can use the <code>_</code> separator in Scala to write numbers? I didn&#39;t until recently. The <code>f</code> suffix makes the literal a <code>Float</code> instead of <code>Double</code>.)</p>
+            <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">billion</span><span> = </span><span class="number-literal">1_000_000_000.0f</span><span>
+</span><span class="comment">// billion: Float = 1.0E9F</span></code></pre>
+            <p>Let&#39;s add 40,000 to it.</p>
+            <pre><code class="nohighlight"><span class="identifier">billion</span><span> + </span><span class="number-literal">40_000f</span><span>
+</span><span class="comment">// res2: Float = 1.00004E9F</span></code></pre>
+            <p>Easy enough. Let&#39;s do the same in a roundabout way.</p>
+            <pre><code class="nohighlight"><span>(</span><span class="identifier">billion</span><span> :: </span><span class="type-name">List</span><span>.</span><span class="identifier">fill</span><span>(</span><span class="number-literal">100_000</span><span>)(</span><span class="number-literal">4.0f</span><span>)).</span><span class="identifier">foldLeft</span><span>(</span><span class="number-literal">0.0f</span><span>)(</span><span class="identifier">_</span><span> + </span><span class="identifier">_</span><span>)
+</span><span class="comment">// res3: Float = 1.0E9F</span></code></pre>
+            <p>Hmmm. We are out by 40,000. This occurs because a <code>Float</code> can only store between 6 and 9 decimal digits of precision. As a result, one billion (represented as a <code>Float</code>) plus one rounds to one billion.</p>
+            <pre><code class="nohighlight"><span class="number-literal">1_000_000_000f</span><span> + </span><span class="number-literal">1f</span><span>
+</span><span class="comment">// res4: Float = 1.0E9F</span></code></pre>
+            <p>There are three possible solutions: </p>
+            <ol class="arabic">
+              <li>we can use a higher precision numeric type, but that takes more memory, may require more CPU cycles, and still may not solve the problem;</li>
+              <li>we can cry, because life is unfair, but this doesn&#39;t solve the problem;</li>
+              <li>we can use a clever algorithm like <a href="https://en.wikipedia.org/wiki/Kahan_summation_algorithm">Kahan summation</a>. This does solve the problem.</li>
+            </ol>
+            <p>For this exercise we&#39;ll choose option 3.</p>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="index.html">←FS2 Tutorial</a> 
             </div>
