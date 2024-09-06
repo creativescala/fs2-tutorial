@@ -79,11 +79,12 @@
 </span><span class="comment">// res4: Float = 1.0E9F</span></code></pre>
             <p>There are three possible solutions: </p>
             <ol class="arabic">
-              <li>we can use a higher precision numeric type, but that takes more memory, may require more CPU cycles, and still may not solve the problem;</li>
-              <li>we can cry, because life is unfair, but this doesn&#39;t solve the problem;</li>
-              <li>we can use a clever algorithm like <a href="https://en.wikipedia.org/wiki/Kahan_summation_algorithm">Kahan summation</a>. This does solve the problem.</li>
+              <li>we can use a higher precision numeric type;</li>
+              <li>we can cry, because life is unfair;</li>
+              <li>we can use a clever algorithm like <a href="https://en.wikipedia.org/wiki/Kahan_summation_algorithm">Kahan summation</a>. </li>
             </ol>
             <p>For this exercise we&#39;ll choose option 3.</p>
+            <p>The <a href="https://en.wikipedia.org/wiki/Kahan_summation_algorithm">Wikipedia explanation</a> is clear enough that I&#39;m not going to repeat a description here. Implement Kahan summation in <code>code/src/main/scala/introduction/02-kahan.scala</code>.</p>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="index.html">←FS2 Tutorial</a> 
             </div>
