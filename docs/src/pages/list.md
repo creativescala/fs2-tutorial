@@ -30,5 +30,6 @@ s.map(x => x + 1).toList
 ```
 
 You don't need me to reiterate the `List` API here, as I'm sure you're familiar with it.
-Complete the challenge in code/src/main/scala/introduction/01-list.scala.
+There are a few differences between `List` and `Stream`, in addition to the many similarities.
+We'll explore these in the code challenge in `code/src/main/scala/introduction/01-list.scala`.
 **Insert exercise here**
