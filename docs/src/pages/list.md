@@ -56,7 +56,7 @@ billion + 40_000f
 Easy enough. Let's do the same in a roundabout way.
 
 ```scala mdoc
-(billion :: List.fill(100_000)(4.0f)).foldLeft(0.0f)(_ + _)
+(billion :: List.fill(10_000)(4.0f)).foldLeft(0.0f)(_ + _)
 ```
 
 Hmmm. We are out by 40,000. This occurs because a `Float` can only store between 6 and 9 decimal digits of precision. As a result, one billion (represented as a `Float`) plus one rounds to one billion.
