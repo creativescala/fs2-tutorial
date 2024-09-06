@@ -67,10 +67,12 @@ Hmmm. We are out by 40,000. This occurs because a `Float` can only store between
 
 There are three possible solutions: 
 
-1. we can use a higher precision numeric type, but that takes more memory, may require more CPU cycles, and still may not solve the problem;
-2. we can cry, because life is unfair, but this doesn't solve the problem;
-3. we can use a clever algorithm like [Kahan summation][kahan]. This does solve the problem.
+1. we can use a higher precision numeric type;
+2. we can cry, because life is unfair;
+3. we can use a clever algorithm like [Kahan summation][kahan]. 
 
 For this exercise we'll choose option 3.
+
+The [Wikipedia explanation][kahan] is clear enough that I'm not going to repeat a description here. Implement Kahan summation in `code/src/main/scala/introduction/02-kahan.scala`.
 
 [kahan]: https://en.wikipedia.org/wiki/Kahan_summation_algorithm
