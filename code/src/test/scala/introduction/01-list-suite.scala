@@ -29,7 +29,7 @@ class StreamAsListSuite extends FunSuite {
 
   test("only") {
     assertEquals(StreamAsList.only(Stream(1, 2, 3, 4, 5, 6, 7, 8, 9), _ % 2 == 0).toList, List(2, 4, 6, 8))
-    assertEquals(StreamAsList.only(Stream(1, 2, 3, 4, 5, 6, 7, 8, 9), _ < 5 == 0).toList, List(1, 2, 3, 4))
+    assertEquals(StreamAsList.only(Stream(1, 2, 3, 4, 5, 6, 7, 8, 9), _ < 5).toList, List(1, 2, 3, 4))
   }
 
   test("sum") {
