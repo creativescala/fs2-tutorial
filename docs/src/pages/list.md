@@ -55,7 +55,8 @@ object StreamAsList {
 
   // This method accepts a list of values and returns the Stream that produces
   // exactly those values in the order given.
-  def list[A](values: List[A]): Stream[Pure, A] = Stream.emits(values)
+  def list[A](values: List[A]): Stream[Pure, A] = 
+    Stream.emits(values)
 
   // Transformation. We focus on transforming existing Streams
 
@@ -121,5 +122,9 @@ There are three possible solutions:
 For this exercise we'll choose option 3.
 
 The [Wikipedia explanation][kahan] is clear enough that I'm not going to repeat a description here. Implement Kahan summation in `code/src/main/scala/introduction/02-kahan.scala`.
+
+@:solution
+
+@:@
 
 [kahan]: https://en.wikipedia.org/wiki/Kahan_summation_algorithm
