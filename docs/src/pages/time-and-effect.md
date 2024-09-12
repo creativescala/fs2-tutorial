@@ -42,12 +42,17 @@ which is a `Stream` of effects of type `F` that produce values of type `A`.
 
 In our previous examples we have converted `Stream` into `List`. This only works because our `Streams` are `Pure`. If they have some other effect type the method is not callable.
 
-```scala mdoc:fail
+```scala
 import fs2.*
 import cats.effect.*
 
 val effect: Stream[IO, Int] = Stream(1, 2, 3)
 effect.toList
+// -- [E008] Not Found Error: -----------------------------------------------------
+// 1 |effect.toList
+//   |^^^^^^^^^^^^^
+//   |value toList is not a member of fs2.Stream[cats.effect.IO, Int], but could be made available as an extension method.
+//.  |
 ```
 
 To run an effectful `Stream` we must first convert it into some runnable effect type, and when we do so we must specify what we want to do with all the values in the `Stream`. Here's what is possibly the simplest example.

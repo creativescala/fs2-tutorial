@@ -105,7 +105,6 @@ lazy val docs =
       tlSite := Def
         .sequential(
           (examples.js / Compile / fastLinkJS),
-          // (Compile / run).toTask(""),
           mdoc.toTask(""),
           laikaSite
         )
