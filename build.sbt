@@ -31,7 +31,7 @@ ThisBuild / developers := List(
 )
 
 // true by default, set to false to publish to s01.oss.sonatype.org
-ThisBuild / tlSonatypeUseLegacyHost := true
+ ThisBuild / sonatypeCredentialHost := xerial.sbt.Sonatype.sonatypeLegacy
 
 ThisBuild / crossScalaVersions := List(scala3)
 ThisBuild / scalaVersion := scala3
