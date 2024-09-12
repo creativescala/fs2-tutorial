@@ -124,7 +124,38 @@ For this exercise we'll choose option 3.
 The [Wikipedia explanation][kahan] is clear enough that I'm not going to repeat a description here. Implement Kahan summation in `code/src/main/scala/introduction/02-kahan.scala`.
 
 @:solution
+There are two parts to this. The first, harder, part is to implement Kahan summation itself. The second part is to remove the state that Kahan summation needs from the output of the `Stream`. Here's how I did it.
 
+```scala mdoc:silent
+object Kahan {
+  final case class KahanSum(total: Float, carry: Float) {
+    def +(input: Float): KahanSum = {
+      val y = input - carry
+      val nextTotal = total + y
+      val nextCarry = (nextTotal - total) - y
+
+      KahanSum(nextTotal, nextCarry)
+    }
+  }
+  object KahamSum {
+    val empty = KahanSum(0.0f, 0.0f)
+  }
+
+  // Perform Kahan summation, returning a Stream with a single element that is
+  // the total
+  def sum(stream: Stream[Pure, Float]): Stream[Pure, Float] =
+    stream.fold(KahanSum.empty)((accum, elt) => accum + elt).map(_.total)
+
+  // Perform Kahan summation, returning a Stream where each element is the sum
+  // of elements in the input up to that point.
+  //
+  // This is often more useful in a streaming application because the input may
+  // never end, or we may want the most up-to-date result at any given point in
+  // time.
+  def cumulativeSum(stream: Stream[Pure, Float]): Stream[Pure, Float] =
+    stream.scan(KahanSum.empty)((accum, elt) => accum + elt).map(_.total).tail
+}
+```
 @:@
 
 [kahan]: https://en.wikipedia.org/wiki/Kahan_summation_algorithm
