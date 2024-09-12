@@ -80,7 +80,7 @@ What do you think will happen when you run `effect` above? Make sure you come up
 @:solution
 The result is a great big nothing burger.
 
-```scala mdoc
+```scala mdoc:compile-only
 effect.compile.drain.unsafeRunSync()
 ```
 
