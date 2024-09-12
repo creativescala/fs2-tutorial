@@ -33,6 +33,53 @@ You don't need me to reiterate the `List` API here, as I'm sure you're familiar 
 It's time for you to write some code. 
 Go and do the code exercise in `code/src/main/scala/introduction/01-list.scala`.
 
+@:solution
+Here's one way you could solve the problem. For several of the questions you could use different methods to achieve the same effect.
+
+```scala mdoc:silent
+object StreamAsList {
+  // Construction. We focus on creating Streams
+
+  // The empty stream produces no values
+  val empty: Stream[Pure, Int] = 
+    Stream.empty
+
+  // This Stream should produce 1, 2, and 3, in that order
+  val naturals: Stream[Pure, Int] = 
+    Stream(1, 2, 3)
+
+  // This method accepts a single value and returns the Stream that produces
+  // that single value
+  def one[A](value: A): Stream[Pure, A] = 
+    Stream.emit(value)
+
+  // This method accepts a list of values and returns the Stream that produces
+  // exactly those values in the order given.
+  def list[A](values: List[A]): Stream[Pure, A] = Stream.emits(values)
+
+  // Transformation. We focus on transforming existing Streams
+
+  // This method returns a stream where every element in `stream` is incremented
+  // by `value`.
+  def add(stream: Stream[Pure, Int], value: Int): Stream[Pure, Int] =
+    stream.map(x => x + value)
+
+  // This methods return a stream that only contains the values of the input
+  // stream that match the predicate.
+  def only[A](
+      stream: Stream[Pure, A],
+      predicate: A => Boolean
+  ): Stream[Pure, A] = 
+    stream.filter(predicate)
+
+  // This method should sum all the values in the given `stream` and return a
+  // Stream containing just a single value, the total.
+  def sum(stream: Stream[Pure, Int]): Stream[Pure, Int] =
+    stream.fold(0)((accum, elt) => accum + elt)
+}
+```
+@:@
+
 
 ## Streaming Algorithms: Kahan Summation
 
