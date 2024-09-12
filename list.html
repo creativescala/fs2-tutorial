@@ -135,6 +135,35 @@
             <p>The <a href="https://en.wikipedia.org/wiki/Kahan_summation_algorithm">Wikipedia explanation</a> is clear enough that I&#39;m not going to repeat a description here. Implement Kahan summation in <code>code/src/main/scala/introduction/02-kahan.scala</code>.</p>
             <div class="solution">
               <div class="solution-body">
+                <p>There are two parts to this. The first, harder, part is to implement Kahan summation itself. The second part is to remove the state that Kahan summation needs from the output of the <code>Stream</code>. Here&#39;s how I did it.</p>
+                <pre><code class="nohighlight"><span class="keyword">object</span><span> </span><span class="type-name">Kahan</span><span> {
+  </span><span class="keyword">final</span><span> </span><span class="keyword">case</span><span> </span><span class="keyword">class</span><span> </span><span class="type-name">KahanSum</span><span>(</span><span class="identifier">total</span><span>: </span><span class="type-name">Float</span><span>, </span><span class="identifier">carry</span><span>: </span><span class="type-name">Float</span><span>) {
+    </span><span class="keyword">def</span><span> +(</span><span class="identifier">input</span><span>: </span><span class="type-name">Float</span><span>): </span><span class="type-name">KahanSum</span><span> = {
+      </span><span class="keyword">val</span><span> </span><span class="identifier">y</span><span> = </span><span class="identifier">input</span><span> - </span><span class="identifier">carry</span><span>
+      </span><span class="keyword">val</span><span> </span><span class="identifier">nextTotal</span><span> = </span><span class="identifier">total</span><span> + </span><span class="identifier">y</span><span>
+      </span><span class="keyword">val</span><span> </span><span class="identifier">nextCarry</span><span> = (</span><span class="identifier">nextTotal</span><span> - </span><span class="identifier">total</span><span>) - </span><span class="identifier">y</span><span>
+
+      </span><span class="type-name">KahanSum</span><span>(</span><span class="identifier">nextTotal</span><span>, </span><span class="identifier">nextCarry</span><span>)
+    }
+  }
+  </span><span class="keyword">object</span><span> </span><span class="type-name">KahanSum</span><span> {
+    </span><span class="keyword">val</span><span> </span><span class="identifier">empty</span><span> = </span><span class="type-name">KahanSum</span><span>(</span><span class="number-literal">0.0f</span><span>, </span><span class="number-literal">0.0f</span><span>)
+  }
+
+  </span><span class="comment">// Perform Kahan summation, returning a Stream with a single element that is
+</span><span>  </span><span class="comment">// the total
+</span><span>  </span><span class="keyword">def</span><span> </span><span class="declaration-name">sum</span><span>(</span><span class="identifier">stream</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Float</span><span>]): </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Float</span><span>] =
+    </span><span class="identifier">stream</span><span>.</span><span class="identifier">fold</span><span>(</span><span class="type-name">KahanSum</span><span>.</span><span class="identifier">empty</span><span>)((</span><span class="identifier">accum</span><span>, </span><span class="identifier">elt</span><span>) =&gt; </span><span class="identifier">accum</span><span> + </span><span class="identifier">elt</span><span>).</span><span class="identifier">map</span><span>(</span><span class="identifier">_</span><span>.</span><span class="identifier">total</span><span>)
+
+  </span><span class="comment">// Perform Kahan summation, returning a Stream where each element is the sum
+</span><span>  </span><span class="comment">// of elements in the input up to that point.
+</span><span>  </span><span class="comment">//
+</span><span>  </span><span class="comment">// This is often more useful in a streaming application because the input may
+</span><span>  </span><span class="comment">// never end, or we may want the most up-to-date result at any given point in
+</span><span>  </span><span class="comment">// time.
+</span><span>  </span><span class="keyword">def</span><span> </span><span class="declaration-name">cumulativeSum</span><span>(</span><span class="identifier">stream</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Float</span><span>]): </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Float</span><span>] =
+    </span><span class="identifier">stream</span><span>.</span><span class="identifier">scan</span><span>(</span><span class="type-name">KahanSum</span><span>.</span><span class="identifier">empty</span><span>)((</span><span class="identifier">accum</span><span>, </span><span class="identifier">elt</span><span>) =&gt; </span><span class="identifier">accum</span><span> + </span><span class="identifier">elt</span><span>).</span><span class="identifier">map</span><span>(</span><span class="identifier">_</span><span>.</span><span class="identifier">total</span><span>).</span><span class="identifier">tail</span><span>
+}</span></code></pre>
               </div>
             </div>
             <div class="flex flex-row justify-between">
