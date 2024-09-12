@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Laika 1.0.0" />
+    <title>Streams as Effects over Time</title>
+    
+    
+    <meta name="description" content="docs" />
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600"
+        rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Pro:400" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/creative-scala.css" />
+    <script src="js/toc.js"></script><script src="js/solution.js"></script><script src="main.js"></script>
+    <script> /* for avoiding page load transitions */</script>
+</head>
+
+<body>
+    <nav id="topbar">
+      <details>
+        <summary>FS2 Tutorial</summary>
+        <ul class="nav-list">
+          <li class="level1 nav-leaf"><a href="list.html">Stream as a List</a></li>
+          <li class="level1 active nav-leaf"><a href="#">Streams as Effects over Time</a></li>
+        </ul>
+      </details>
+    </nav>
+    <nav id="sidebar">
+        <ul class="nav-list">
+          <li class="level1 nav-leaf"><a href="index.html">FS2 Tutorial</a></li>
+          <li class="level1 nav-leaf"><a href="list.html">Stream as a List</a></li>
+          <li class="level1 active nav-leaf"><a href="#">Streams as Effects over Time</a></li>
+        </ul>
+    </nav>
+
+    <div id="content">
+        <main class="content">
+            <h1 id="streams-as-effects-over-time" class="title">Streams as Effects over Time</h1>
+            <p>In the <a href="list.html">previous section</a> we approached <code>Stream</code> as a fancy <code>List</code>. 
+            In this section we&#39;ll develop a much more useful model for understanding <code>Stream</code>: as effects over time.
+            Let&#39;s look at this in two parts, considering first values over time and then effects.</p>
+            
+            <h2 id="values-in-time-and-space" class="section">Values in Time and Space</h2>
+            <p>We can think of a <code>List</code> as values arranged in <em>space</em>; in particular in the computer&#39;s memory.
+            Each value inside a <code>List</code> lives somewhere in the computer&#39;s memory, and they are there for all time. (Ok, they are not actually there forever but from the point the <code>List</code> is created until it is garbage collected. However we cannot attempt to observe a <code>List</code> before or after it is created ---Scala is <em>memory safe</em>---so from the point of view of our program the values are always there whenever we go looking for them.)</p>
+            <p>A <code>Stream</code>, however, can represent values arranged in <em>time</em>. At any point in time a <code>Stream</code> may produce additional values. This can model, for example, data arriving from the network or disk, or user input. The corollary of data arranged over time is that at some point in time there may be no data. This could be because no data has yet arrived, or because we&#39;ve processed all the data that has arrived and we&#39;re waiting for more (which may or may not arrive).</p>
+            
+            <h2 id="effects" class="section">Effects</h2>
+            <p>A <code>Stream</code> can also represent <em>effects</em> that occur to produce the values that make up the <code>Stream</code>. Disk, network, and user input all are effects, and <code>Stream</code> allows us to model them as such.</p>
+            <p>An important implication of this is that there is a <em>separation between description and action</em>. A <code>Stream</code> is a description of some effects that will produce values over time. Only when we put those effects into action do we actually produce the values. </p>
+            <p>If you&#39;ve worked through the <a href="https://creativescala.org/cats-effect-tutorial">Cats Effect tutorial</a>, or are otherwise familiar with effects, this part should be familiar.</p>
+            <p>Now we understand this we can better understand the type signature of <code>Stream</code>. So far we&#39;ve seen types like</p>
+            <pre><code class="nohighlight"><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Float</span><span>]</span></code></pre>
+            <p>This tells us that the <code>Stream</code> has no effects (this is what <code>Pure</code> means) and produces values of type <code>Float</code>.</p>
+            <p>More generally, the type is</p>
+            <pre><code class="nohighlight"><span class="type-name">Stream</span><span>[</span><span class="type-name">F</span><span>, </span><span class="type-name">A</span><span>]</span></code></pre>
+            <p>which is a <code>Stream</code> of effects of type <code>F</code> that produce values of type <code>A</code>.</p>
+            
+            <h2 id="running-streams" class="section">Running Streams</h2>
+            <p>In our previous examples we have converted <code>Stream</code> into <code>List</code>. This only works because our <code>Streams</code> are <code>Pure</code>. If they have some other effect type the method is not callable.</p>
+            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
+</span><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.*
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">effect</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">Int</span><span>] = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>)
+</span><span class="identifier">effect</span><span>.</span><span class="identifier">toList</span><span>
+</span><span class="comment">// -- [E008] Not Found Error: -----------------------------------------------------
+// 1 |effect.toList
+//   |^^^^^^^^^^^^^
+//   |value toList is not a member of fs2.Stream[cats.effect.IO, Int], but could be made available as an extension method.
+//.  |</span></code></pre>
+            <p>To run an effectful <code>Stream</code> we must first convert it into some runnable effect type, and when we do so we must specify what we want to do with all the values in the <code>Stream</code>. Here&#39;s what is possibly the simplest example.</p>
+            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="identifier">unsafe</span><span>.</span><span class="identifier">implicits</span><span>.</span><span class="identifier">global</span><span>
+
+</span><span class="identifier">effect</span><span>.</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span></code></pre>
+            <p>Let&#39;s walk through this.</p>
+            <ol class="arabic">
+              <li>
+                <p>Calling <code>compile</code> says we want to convert this <code>Stream</code> into an effect, specifically the <code>F</code> type in the <code>Stream</code>. In this case that is <code>IO</code>.</p>
+              </li>
+              <li>
+                <p>Calling <code>compile</code> returns an object with methods that specify how to handle any values the <code>Stream</code> produces. We&#39;ve called <code>drain</code>, which means &quot;keep running the <code>Stream</code> until it has no more values, but throw away the values it produces&quot;. Calling <code>drain</code> indicates we&#39;re running the <code>Stream</code> purely for it&#39;s effects, which is a common occurrence when a <code>Stream&#39;s</code> job is to read values from somewhere (an effect) and then write them somewhere else (also an effect).</p>
+              </li>
+              <li>
+                <p>Our result is an <code>IO</code>, which is a value we can run by calling, for example, <code>unsafeRunSync.</code></p>
+              </li>
+            </ol>
+            <div class="exercise">
+              
+              <h4 id="exercise-guess-the-effect">Exercise: Guess the Effect</h4>
+              <p>What do you think will happen when you run <code>effect</code> above? Make sure you come up with a guess before running the code to see what actually happens.</p>
+            </div>
+            <div class="solution">
+              <div class="solution-body">
+                <p>The result is a great big nothing burger.</p>
+                <pre><code class="nohighlight"><span class="identifier">effect</span><span>.</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
+                <p>This is because the underlying <code>Stream</code> doesn&#39;t have any effects that actually produce any output. It&#39;s actually a pure <code>Stream</code>, but we&#39;re allowed to pretend that such a <code>Stream</code> has effects of any other type.</p>
+              </div>
+            </div>
+            
+            <h2 id="effects-in-streams" class="section">Effects in Streams</h2>
+            <p>We&#39;ve seen how to run <code>Streams</code>, but how do we actually put effects into a <code>Stream</code>?</p>
+            <div class="exercise">
+              
+              <h4 id="exercise-run-the-effects">Exercise: Run the Effects</h4>
+              <p>Look through the <code>Stream</code> API and find the methods that:</p>
+              <ol class="arabic">
+                <li>allow us to construct a <code>Stream</code> that runs an effect to produce a value; and</li>
+                <li>allow us to effectfully transform a value.</li>
+              </ol>
+              <p>Give an example of each.</p>
+            </div>
+            <div class="solution">
+              <div class="solution-body">
+                <p>The methods are:</p>
+                <ol class="arabic">
+                  <li><code>Stream.eval</code> to create a <code>Stream</code> that runs an effect to produce a value; and</li>
+                  <li><code>evalMap</code> to effectfully transform a value.</li>
+                </ol>
+                <p>You may have found other methods, particularly for the second part.</p>
+                <p>Here&#39;s an example using the former:</p>
+                <pre><code class="nohighlight"><span class="type-name">Stream</span><span>.</span><span class="identifier">eval</span><span>(</span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">&quot;Hello streams!&quot;</span><span>)).</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()
+</span><span class="comment">// Hello streams!</span></code></pre>
+                <p>And an example of the latter:</p>
+                <pre><code class="nohighlight"><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>).</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="identifier">a</span><span>).</span><span class="identifier">as</span><span>(</span><span class="identifier">a</span><span>)).</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()
+</span><span class="comment">// 1
+// 2
+// 3</span></code></pre>
+              </div>
+            </div>
+            <div class="flex flex-row justify-between">
+                <a class="pageNavigation" href="list.html">←Stream as a List</a> 
+            </div>
+        </main>
+        <footer>Creative Scala is copyright Noel Welsh</footer>
+    </div>
+
+    </div>
+</body>
+
+</html>
