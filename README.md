@@ -3,6 +3,8 @@
 This is a self-guided tutorial to [FS2][fs2], using streaming data analytics for the majority of examples.
 It's a combination of text and coding exercises.
 
+[Go to the tutorial](https://creativescala.org/fs2-tutorial)
+
 
 ## Plan
 
