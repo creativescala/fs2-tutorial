@@ -118,7 +118,7 @@ Stream.eval(IO.println("Hello streams!")).compile.drain.unsafeRunSync()
 
 And an example of the latter:
 
-```scala mdoc:compile-ony
+```scala mdoc:compile-only
 Stream(1, 2, 3).evalMap(a => IO.println(a).as(a)).compile.drain.unsafeRunSync()
 // 1
 // 2
