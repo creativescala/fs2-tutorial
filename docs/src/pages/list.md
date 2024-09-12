@@ -137,7 +137,7 @@ object Kahan {
       KahanSum(nextTotal, nextCarry)
     }
   }
-  object KahamSum {
+  object KahanSum {
     val empty = KahanSum(0.0f, 0.0f)
   }
 
