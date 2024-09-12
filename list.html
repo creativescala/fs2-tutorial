@@ -62,6 +62,51 @@
             <p>You don&#39;t need me to reiterate the <code>List</code> API here, as I&#39;m sure you&#39;re familiar with it.
             It&#39;s time for you to write some code. 
             Go and do the code exercise in <code>code/src/main/scala/introduction/01-list.scala</code>.</p>
+            <div class="solution">
+              <div class="solution-body">
+                <p>Here&#39;s one way you could solve the problem. For several of the questions you could use different methods to achieve the same effect.</p>
+                <pre><code class="nohighlight"><span class="keyword">object</span><span> </span><span class="type-name">StreamAsList</span><span> {
+  </span><span class="comment">// Construction. We focus on creating Streams
+</span><span>
+  </span><span class="comment">// The empty stream produces no values
+</span><span>  </span><span class="keyword">val</span><span> </span><span class="identifier">empty</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Int</span><span>] = 
+    </span><span class="type-name">Stream</span><span>.</span><span class="identifier">empty</span><span>
+
+  </span><span class="comment">// This Stream should produce 1, 2, and 3, in that order
+</span><span>  </span><span class="keyword">val</span><span> </span><span class="identifier">naturals</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Int</span><span>] = 
+    </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>)
+
+  </span><span class="comment">// This method accepts a single value and returns the Stream that produces
+</span><span>  </span><span class="comment">// that single value
+</span><span>  </span><span class="keyword">def</span><span> </span><span class="declaration-name">one</span><span>[</span><span class="type-name">A</span><span>](</span><span class="identifier">value</span><span>: </span><span class="type-name">A</span><span>): </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">A</span><span>] = 
+    </span><span class="type-name">Stream</span><span>.</span><span class="identifier">emit</span><span>(</span><span class="identifier">value</span><span>)
+
+  </span><span class="comment">// This method accepts a list of values and returns the Stream that produces
+</span><span>  </span><span class="comment">// exactly those values in the order given.
+</span><span>  </span><span class="keyword">def</span><span> </span><span class="declaration-name">list</span><span>[</span><span class="type-name">A</span><span>](</span><span class="identifier">values</span><span>: </span><span class="type-name">List</span><span>[</span><span class="type-name">A</span><span>]): </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">A</span><span>] = </span><span class="type-name">Stream</span><span>.</span><span class="identifier">emits</span><span>(</span><span class="identifier">values</span><span>)
+
+  </span><span class="comment">// Transformation. We focus on transforming existing Streams
+</span><span>
+  </span><span class="comment">// This method returns a stream where every element in `stream` is incremented
+</span><span>  </span><span class="comment">// by `value`.
+</span><span>  </span><span class="keyword">def</span><span> </span><span class="declaration-name">add</span><span>(</span><span class="identifier">stream</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Int</span><span>], </span><span class="identifier">value</span><span>: </span><span class="type-name">Int</span><span>): </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Int</span><span>] =
+    </span><span class="identifier">stream</span><span>.</span><span class="identifier">map</span><span>(</span><span class="identifier">x</span><span> =&gt; </span><span class="identifier">x</span><span> + </span><span class="identifier">value</span><span>)
+
+  </span><span class="comment">// This methods return a stream that only contains the values of the input
+</span><span>  </span><span class="comment">// stream that match the predicate.
+</span><span>  </span><span class="keyword">def</span><span> </span><span class="declaration-name">only</span><span>[</span><span class="type-name">A</span><span>](
+      </span><span class="identifier">stream</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">A</span><span>],
+      </span><span class="identifier">predicate</span><span>: </span><span class="type-name">A</span><span> =&gt; </span><span class="type-name">Boolean</span><span>
+  ): </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">A</span><span>] = 
+    </span><span class="identifier">stream</span><span>.</span><span class="identifier">filter</span><span>(</span><span class="identifier">predicate</span><span>)
+
+  </span><span class="comment">// This method should sum all the values in the given `stream` and return a
+</span><span>  </span><span class="comment">// Stream containing just a single value, the total.
+</span><span>  </span><span class="keyword">def</span><span> </span><span class="declaration-name">sum</span><span>(</span><span class="identifier">stream</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Int</span><span>]): </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">Int</span><span>] =
+    </span><span class="identifier">stream</span><span>.</span><span class="identifier">fold</span><span>(</span><span class="number-literal">0</span><span>)((</span><span class="identifier">accum</span><span>, </span><span class="identifier">elt</span><span>) =&gt; </span><span class="identifier">accum</span><span> + </span><span class="identifier">elt</span><span>)
+}</span></code></pre>
+              </div>
+            </div>
             
             <h2 id="streaming-algorithms-kahan-summation" class="section">Streaming Algorithms: Kahan Summation</h2>
             <p>We haven&#39;t yet seen what differentiates a <code>Stream</code> from a <code>List</code>, but we&#39;ve seen enough to look at our first streaming algorithm.
