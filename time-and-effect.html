@@ -72,7 +72,8 @@
 </span><span class="comment">// -- [E008] Not Found Error: -----------------------------------------------------
 // 1 |effect.toList
 //   |^^^^^^^^^^^^^
-//   |value toList is not a member of fs2.Stream[cats.effect.IO, Int], but could be made available as an extension method.
+//   |value toList is not a member of fs2.Stream[cats.effect.IO, Int], 
+//.  |but could be made available as an extension method.
 //.  |</span></code></pre>
             <p>To run an effectful <code>Stream</code> we must first convert it into some runnable effect type, and when we do so we must specify what we want to do with all the values in the <code>Stream</code>. Here&#39;s what is possibly the simplest example.</p>
             <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="identifier">unsafe</span><span>.</span><span class="identifier">implicits</span><span>.</span><span class="identifier">global</span><span>
