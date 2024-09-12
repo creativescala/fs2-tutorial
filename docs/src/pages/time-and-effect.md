@@ -51,7 +51,8 @@ effect.toList
 // -- [E008] Not Found Error: -----------------------------------------------------
 // 1 |effect.toList
 //   |^^^^^^^^^^^^^
-//   |value toList is not a member of fs2.Stream[cats.effect.IO, Int], but could be made available as an extension method.
+//   |value toList is not a member of fs2.Stream[cats.effect.IO, Int], 
+//.  |but could be made available as an extension method.
 //.  |
 ```
 
