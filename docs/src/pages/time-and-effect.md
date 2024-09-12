@@ -58,7 +58,7 @@ import cats.effect.*
 
 val effect: Stream[IO, Int] = Stream(1, 2, 3)
 ```
-```scala mdoc
+```scala
 import cats.effect.unsafe.implicits.global
 
 effect.compile.drain
@@ -66,7 +66,7 @@ effect.compile.drain
 
 Let's walk through this.
 
-1. Calling `comiple` says we want to convert this `Stream` into an effect, specifically the `F` type in the `Stream`. In this case that is `IO`.
+1. Calling `compile` says we want to convert this `Stream` into an effect, specifically the `F` type in the `Stream`. In this case that is `IO`.
 
 2. Calling `compile` returns an object with methods that specify how to handle any values the `Stream` produces. We've called `drain`, which means "keep running the `Stream` until it has no more values, but throw away the values it produces". Calling `drain` indicates we're running the `Stream` purely for it's effects, which is a common occurrence when a `Stream's` job is to read values from somewhere (an effect) and then write them somewhere else (also an effect).
 
@@ -80,7 +80,7 @@ What do you think will happen when you run `effect` above? Make sure you come up
 @:solution
 The result is a great big nothing burger.
 
-```scala mdoc:compile-only
+```scala
 effect.compile.drain.unsafeRunSync()
 ```
 
@@ -111,14 +111,14 @@ You may have found other methods, particularly for the second part.
 
 Here's an example using the former:
 
-```scala mdoc:compile-only
+```scala
 Stream.eval(IO.println("Hello streams!")).compile.drain.unsafeRunSync()
 // Hello streams!
 ```
 
 And an example of the latter:
 
-```scala mdoc:compile-only
+```scala
 Stream(1, 2, 3).evalMap(a => IO.println(a).as(a)).compile.drain.unsafeRunSync()
 // 1
 // 2
