@@ -83,7 +83,8 @@
 
   </span><span class="comment">// This method accepts a list of values and returns the Stream that produces
 </span><span>  </span><span class="comment">// exactly those values in the order given.
-</span><span>  </span><span class="keyword">def</span><span> </span><span class="declaration-name">list</span><span>[</span><span class="type-name">A</span><span>](</span><span class="identifier">values</span><span>: </span><span class="type-name">List</span><span>[</span><span class="type-name">A</span><span>]): </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">A</span><span>] = </span><span class="type-name">Stream</span><span>.</span><span class="identifier">emits</span><span>(</span><span class="identifier">values</span><span>)
+</span><span>  </span><span class="keyword">def</span><span> </span><span class="declaration-name">list</span><span>[</span><span class="type-name">A</span><span>](</span><span class="identifier">values</span><span>: </span><span class="type-name">List</span><span>[</span><span class="type-name">A</span><span>]): </span><span class="type-name">Stream</span><span>[</span><span class="type-name">Pure</span><span>, </span><span class="type-name">A</span><span>] = 
+    </span><span class="type-name">Stream</span><span>.</span><span class="identifier">emits</span><span>(</span><span class="identifier">values</span><span>)
 
   </span><span class="comment">// Transformation. We focus on transforming existing Streams
 </span><span>
@@ -132,6 +133,10 @@
             </ol>
             <p>For this exercise we&#39;ll choose option 3.</p>
             <p>The <a href="https://en.wikipedia.org/wiki/Kahan_summation_algorithm">Wikipedia explanation</a> is clear enough that I&#39;m not going to repeat a description here. Implement Kahan summation in <code>code/src/main/scala/introduction/02-kahan.scala</code>.</p>
+            <div class="solution">
+              <div class="solution-body">
+              </div>
+            </div>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="index.html">←FS2 Tutorial</a> <a class="pageNavigation" href="time-and-effect.html">Streams as Effects over Time→</a>
             </div>
