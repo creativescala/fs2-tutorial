@@ -11,10 +11,10 @@ object StreamAsList {
   // Construction. We focus on creating Streams
 
   // The empty stream produces no values
-  val empty: Stream[Pure, Int] = ???
+  val empty: Stream[Pure, Int] = Stream(0)
 
   // This Stream should produce 1, 2, and 3, in that order
-  val naturals: Stream[Pure, Int] = ???
+  val naturals: Stream[Pure, Int] = Stream(0)
 
   // This method accepts a single value and returns the Stream that produces
   // that single value
