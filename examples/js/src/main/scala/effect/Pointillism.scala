@@ -49,7 +49,7 @@ object Pointillism {
         val clicks = canvas.mouseClick
 
         clicks
-          .fold(List.empty[Point])((pts, pt) => pt :: pts)
+          .scan(List.empty[Point])((pts, pt) => pt :: pts)
           .map(pts => curve(pts))
           .evalMap(picture => canvas.render(picture))
           .compile
