@@ -4286,7 +4286,7 @@ $c_Leffect_Pointillism$.prototype.draw__T__V = (function(id) {
   $n($as_Lcats_effect_IO($n(new $c_Ldoodle_syntax_AbstractRendererSyntax$RendererFrameOps(this$1, frame).canvas__Ldoodle_effect_Renderer__Lcats_effect_kernel_Resource($m_Ldoodle_svg_package$().Ldoodle_svg_package$__f_svgRenderer)).use__F1__Lcats_effect_kernel_MonadCancel__O(new $c_sjsr_AnonFunction1(((canvas) => {
     var canvas$1 = $as_Ldoodle_svg_effect_Canvas(canvas);
     var clicks = $n(canvas$1).Ldoodle_svg_effect_Canvas__f_mouseClick;
-    var this$7 = $n($n($n($n(clicks).fold__O__F2__Lfs2_Stream($m_sci_Nil$(), new $c_sjsr_AnonFunction2(((pts, pt) => {
+    var this$7 = $n($n($n($n(clicks).scan__O__F2__Lfs2_Stream($m_sci_Nil$(), new $c_sjsr_AnonFunction2(((pts, pt) => {
       var pts$1 = $as_sci_List(pts);
       var pt$1 = $as_Ldoodle_core_Point(pt);
       var this$4 = $n(pts$1);
@@ -4479,6 +4479,45 @@ function $m_Lfs2_Pull$StreamPullOps$() {
   }
   return $n_Lfs2_Pull$StreamPullOps$;
 }
+function $p_Lfs2_Stream__scan___O__F2__Lfs2_Pull($thiz, z, f) {
+  var ev$202 = ($m_Lfs2_Stream$(), new $c_Lfs2_Stream$ToPull($thiz)).Lfs2_Stream$ToPull__f_self;
+  var this$6 = $n($m_Lfs2_Stream$ToPull$().uncons$extension__Lfs2_Stream__Lfs2_Pull(ev$202));
+  var f$1 = new $c_sjsr_AnonFunction1(((x$1) => {
+    var x$1$1 = $as_s_Option(x$1);
+    var x = $m_s_None$();
+    if ((x === x$1$1)) {
+      return $m_Lfs2_Pull$().Lfs2_Pull$__f_done;
+    }
+    if ((x$1$1 instanceof $c_s_Some)) {
+      var x336 = $as_T2($n($as_s_Some(x$1$1)).s_Some__f_value);
+      if ((x336 !== null)) {
+        var hd = $as_Lfs2_Chunk($n(x336)._1__O());
+        var tl = $as_Lfs2_Stream($n(x336)._2__O());
+        matchResult85: {
+          var \u03b417$___1;
+          var \u03b417$___2;
+          var this$3 = $n(hd);
+          var x331 = this$3.scanLeft___O__Z__F2__T2(z, false, f);
+          if ((x331 !== null)) {
+            var out = $as_Lfs2_Chunk($n(x331)._1__O());
+            var carry = $n(x331)._2__O();
+            var \u03b417$___1 = out;
+            var \u03b417$___2 = carry;
+            break matchResult85;
+          }
+          throw new $c_s_MatchError(x331);
+        }
+        var out$2 = $as_Lfs2_Chunk(\u03b417$___1);
+        var carry$2 = \u03b417$___2;
+        var this$5 = $n($m_Lfs2_Pull$().output__Lfs2_Chunk__Lfs2_Pull(out$2));
+        var post = new $c_sjsr_AnonFunction0((() => $p_Lfs2_Stream__scan___O__F2__Lfs2_Pull($n(tl), carry$2, f)));
+        return new $c_Lfs2_Pull$$anon$2(post, this$5);
+      }
+    }
+    throw new $c_s_MatchError(x$1$1);
+  }));
+  return new $c_Lfs2_Pull$$anon$1(f$1, this$6);
+}
 function $ps_Lfs2_Stream__evalOut$1__F1__O__Lfs2_Pull(f$9, o) {
   $m_Lfs2_Pull$();
   var fr = $n(f$9).apply__O__O(o);
@@ -4518,14 +4557,6 @@ $c_Lfs2_Stream.prototype.flatMap__F1__s_util_NotGiven__Lfs2_Stream = (function(f
   var self$1 = $m_Lfs2_Pull$StreamPullOps$().flatMapOutput$extension__Lfs2_Pull__F1__Lfs2_Pull(self, new $c_sjsr_AnonFunction1(((o) => $n($as_Lfs2_Stream($n(f).apply__O__O(o))).Lfs2_Stream__f_underlying)));
   return new $c_Lfs2_Stream(self$1);
 });
-$c_Lfs2_Stream.prototype.fold__O__F2__Lfs2_Stream = (function(z, f) {
-  $m_Lfs2_Pull$();
-  var ev$96 = ($m_Lfs2_Stream$(), new $c_Lfs2_Stream$ToPull(this)).Lfs2_Stream$ToPull__f_self;
-  var this$3 = $n($m_Lfs2_Stream$ToPull$().fold$extension__Lfs2_Stream__O__F2__Lfs2_Pull(ev$96, z, f));
-  var f$1 = new $c_sjsr_AnonFunction1(((o) => $m_Lfs2_Pull$().output1__O__Lfs2_Pull(o)));
-  var self = new $c_Lfs2_Pull$$anon$1(f$1, this$3);
-  return $m_Lfs2_Pull$StreamPullOps$().stream$extension__Lfs2_Pull__Lfs2_Stream(self);
-});
 $c_Lfs2_Stream.prototype.map__F1__Lfs2_Stream = (function(f) {
   $m_Lfs2_Pull$();
   var self = $m_Lfs2_Pull$().mapOutput__Lfs2_Stream__F1__Lfs2_Pull(this, f);
@@ -4533,6 +4564,13 @@ $c_Lfs2_Stream.prototype.map__F1__Lfs2_Stream = (function(f) {
 });
 $c_Lfs2_Stream.prototype.repeat__Lfs2_Stream = (function() {
   return this.$plus$plus__F0__Lfs2_Stream(new $c_sjsr_AnonFunction0((() => this.repeat__Lfs2_Stream())));
+});
+$c_Lfs2_Stream.prototype.scan__O__F2__Lfs2_Stream = (function(z, f) {
+  $m_Lfs2_Pull$();
+  var this$2 = $n($m_Lfs2_Pull$().output1__O__Lfs2_Pull(z));
+  var post = new $c_sjsr_AnonFunction0((() => $p_Lfs2_Stream__scan___O__F2__Lfs2_Pull(this, z, f)));
+  var self = new $c_Lfs2_Pull$$anon$2(post, this$2);
+  return $m_Lfs2_Pull$StreamPullOps$().stream$extension__Lfs2_Pull__Lfs2_Stream(self);
 });
 $c_Lfs2_Stream.prototype.toString__T = (function() {
   return "Stream(..)";
@@ -4665,28 +4703,6 @@ $c_Lfs2_Stream$ToPull$.prototype.uncons$extension__Lfs2_Stream__Lfs2_Pull = (fun
       return new $c_s_Some($x_1);
     }
   })));
-});
-$c_Lfs2_Stream$ToPull$.prototype.fold$extension__Lfs2_Stream__O__F2__Lfs2_Pull = (function(this$, z, f) {
-  var this$6 = $n(this.uncons$extension__Lfs2_Stream__Lfs2_Pull(this$));
-  var f$1 = new $c_sjsr_AnonFunction1(((x$1) => {
-    var x$1$1 = $as_s_Option(x$1);
-    var x = $m_s_None$();
-    if ((x === x$1$1)) {
-      $m_Lfs2_Pull$();
-      return new $c_Lfs2_Pull$Succeeded(z);
-    }
-    if ((x$1$1 instanceof $c_s_Some)) {
-      var x698 = $as_T2($n($as_s_Some(x$1$1)).s_Some__f_value);
-      if ((x698 !== null)) {
-        var hd = $as_Lfs2_Chunk($n(x698)._1__O());
-        var tl = $as_Lfs2_Stream($n(x698)._2__O());
-        var acc = $n(hd).foldLeft__O__F2__O(z, f);
-        return this.fold$extension__Lfs2_Stream__O__F2__Lfs2_Pull(($m_Lfs2_Stream$(), new $c_Lfs2_Stream$ToPull(tl)).Lfs2_Stream$ToPull__f_self, acc, f);
-      }
-    }
-    throw new $c_s_MatchError(x$1$1);
-  }));
-  return new $c_Lfs2_Pull$$anon$1(f$1, this$6);
 });
 var $d_Lfs2_Stream$ToPull$ = new $TypeData().initClass($c_Lfs2_Stream$ToPull$, "fs2.Stream$ToPull$", ({
   Lfs2_Stream$ToPull$: 1
@@ -35073,15 +35089,6 @@ $c_Lfs2_Chunk.prototype.constructor = $c_Lfs2_Chunk;
 function $h_Lfs2_Chunk() {
 }
 $h_Lfs2_Chunk.prototype = $c_Lfs2_Chunk.prototype;
-$c_Lfs2_Chunk.prototype.foldLeft__O__F2__O = (function(init, f) {
-  var res = new $c_sr_ObjectRef(init);
-  this.foreach__F1__V(new $c_sjsr_AnonFunction1(((o) => {
-    var ev$13 = $n(f).apply__O__O__O(res.sr_ObjectRef__f_elem, o);
-    res.sr_ObjectRef__f_elem = ev$13;
-    ev$13 = null;
-  })));
-  return res.sr_ObjectRef__f_elem;
-});
 $c_Lfs2_Chunk.prototype.foreach__F1__V = (function(f) {
   var i = 0;
   while ((i < this.size__I())) {
@@ -35120,6 +35127,37 @@ $c_Lfs2_Chunk.prototype.map__F1__Lfs2_Chunk = (function(f) {
   } else {
     return new $c_Lfs2_Chunk$ArraySlice(arr, 0, length, evidence$1);
   }
+});
+$c_Lfs2_Chunk.prototype.scanLeft___O__Z__F2__T2 = (function(z, emitZero, f) {
+  var dimensions = new $ac_I(new Int32Array([(emitZero ? ((1 + this.size__I()) | 0) : this.size__I())]));
+  var arr = $asArrayOf_O($m_jl_reflect_Array$().newInstance__jl_Class__AI__O($d_O.getClassOf(), dimensions), 1);
+  var acc = new $c_sr_ObjectRef(z);
+  if (emitZero) {
+    $n(arr).set(0, acc.sr_ObjectRef__f_elem);
+  }
+  var elem = (emitZero ? 1 : 0);
+  var i = new $c_sr_IntRef(elem);
+  this.foreach__F1__V(new $c_sjsr_AnonFunction1(((o) => {
+    var ev$15 = $n(f).apply__O__O__O(acc.sr_ObjectRef__f_elem, o);
+    acc.sr_ObjectRef__f_elem = ev$15;
+    ev$15 = null;
+    $n(arr).set(i.sr_IntRef__f_elem, acc.sr_ObjectRef__f_elem);
+    var ev$16 = ((1 + i.sr_IntRef__f_elem) | 0);
+    i.sr_IntRef__f_elem = ev$16;
+  })));
+  var this$4 = $m_Lfs2_Chunk$();
+  var evidence$1 = $m_s_reflect_ManifestFactory$AnyManifest$();
+  var length = $n(arr).u.length;
+  if ((length === 0)) {
+    var self = this$4.Lfs2_Chunk$__f_empty_;
+  } else if ((length === 1)) {
+    var o$1 = $n(arr).get(0);
+    var self = new $c_Lfs2_Chunk$Singleton(o$1);
+  } else {
+    var self = new $c_Lfs2_Chunk$ArraySlice(arr, 0, length, evidence$1);
+  }
+  var y = acc.sr_ObjectRef__f_elem;
+  return new $c_T2(self, y);
 });
 $c_Lfs2_Chunk.prototype.hashCode__I = (function() {
   var this$1 = $m_s_util_hashing_MurmurHash3$();
