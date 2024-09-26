@@ -62,7 +62,7 @@ lazy val css = taskKey[Unit]("Build the CSS")
 
 val commonSettings = Seq(
   libraryDependencies ++= Seq(
-    "org.creativescala" %%% "doodle" % "0.24.0",
+    "org.creativescala" %%% "doodle" % "0.26.0",
     "co.fs2" %%% "fs2-core" % "3.11.0",
     "org.scalameta" %% "munit" % "1.0.2" % Test
   ),

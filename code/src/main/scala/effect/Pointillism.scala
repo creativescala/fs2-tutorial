@@ -17,10 +17,12 @@
 package effect
 
 import cats.effect.*
+import cats.syntax.all.*
 import doodle.core.*
 import doodle.java2d.*
 import doodle.java2d.effect.Frame
 import doodle.syntax.all.*
+import scala.util.Random
 
 object Pointillism extends IOApp {
   def run(args: List[String]): IO[ExitCode] = {
@@ -29,13 +31,19 @@ object Pointillism extends IOApp {
         .withSize(600, 600)
         .withBackground(Color.midnightBlue)
 
-    def curve(points: Seq[Point]): Picture[Unit] = {
-      OpenPath
-        .interpolatingSpline(points)
-        .path
-        .strokeWidth(7.0)
-        .strokeColor(Color.hotpink)
-    }
+    val randomSize: IO[Double] =
+      IO(Random.nextInt(7)).map(_ + 5).map(_.toDouble)
+
+    val randomAlpha: IO[Normalized] =
+      IO(Random.nextDouble() * 0.5 + 0.5).map(_.normalized)
+
+    val randomColor: IO[Color] =
+      randomAlpha.map(alpha => Color.hotpink.alpha(alpha))
+
+    def point(location: Point): IO[Picture[Unit]] =
+      (randomSize, randomColor).mapN{ (size, color) =>
+        Picture.circle(size).fillColor(color).noStroke.at(location)
+      }
 
     frame
       .canvas()
@@ -43,8 +51,8 @@ object Pointillism extends IOApp {
         val clicks = canvas.mouseClick
 
         clicks
-          .scan(List.empty[Point])((pts, pt) => pt :: pts)
-          .map(pts => curve(pts))
+          .evalMap(pt => point(pt))
+          .scan(Picture.empty)((pts, pt) => pt.on(pts))
           .evalMap(picture => canvas.render(picture))
           .compile
           .drain
