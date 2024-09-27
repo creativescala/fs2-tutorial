@@ -18,6 +18,7 @@ package effect
 
 import cats.effect.*
 import cats.effect.unsafe.implicits.global
+import cats.syntax.all.*
 import doodle.core.*
 import doodle.svg.*
 import doodle.svg.effect.Frame
@@ -25,6 +26,7 @@ import doodle.syntax.all.*
 
 import scala.scalajs.js.annotation.JSExport
 import scala.scalajs.js.annotation.JSExportTopLevel
+import scala.util.Random
 
 @JSExportTopLevel("EffectPointillism")
 object Pointillism {
@@ -45,7 +47,7 @@ object Pointillism {
       randomAlpha.map(alpha => Color.hotpink.alpha(alpha))
 
     def point(location: Point): IO[Picture[Unit]] =
-      (randomSize, randomColor).mapN{ (size, color) =>
+      (randomSize, randomColor).mapN { (size, color) =>
         Picture.circle(size).fillColor(color).noStroke.at(location)
       }
 
@@ -60,7 +62,7 @@ object Pointillism {
           .evalMap(picture => canvas.render(picture))
           .compile
           .drain
-          .as(ExitCode.Success)
       }
+      .unsafeRunAsync(_ => ())
   }
 }

@@ -22,6 +22,7 @@ import doodle.core.*
 import doodle.java2d.*
 import doodle.java2d.effect.Frame
 import doodle.syntax.all.*
+
 import scala.util.Random
 
 object Pointillism extends IOApp {
@@ -41,7 +42,7 @@ object Pointillism extends IOApp {
       randomAlpha.map(alpha => Color.hotpink.alpha(alpha))
 
     def point(location: Point): IO[Picture[Unit]] =
-      (randomSize, randomColor).mapN{ (size, color) =>
+      (randomSize, randomColor).mapN { (size, color) =>
         Picture.circle(size).fillColor(color).noStroke.at(location)
       }
 
