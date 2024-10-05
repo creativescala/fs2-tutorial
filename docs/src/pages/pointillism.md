@@ -1,7 +1,7 @@
 # Pointillism
 
 This exercise asks you to work with effects and streams in a more involved way.
-There is a demonstration below. Click on the blue box to see how it works.
+There is a demonstration below. Click in the blue box to see how it works.
 
 @:doodle("canvas", "EffectPointillism.draw")
 
