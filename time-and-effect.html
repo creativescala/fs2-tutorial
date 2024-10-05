@@ -55,24 +55,25 @@
             Each value inside a <code>List</code> lives somewhere in the computer&#39;s memory, and they are there for all time. (Ok, they are not actually there forever but from the point the <code>List</code> is created until it is garbage collected. However we cannot attempt to observe a <code>List</code> before or after it is created ---Scala is <em>memory safe</em>---so from the point of view of our program the values are always there whenever we go looking for them.)</p>
             <p>A <code>Stream</code>, however, can represent values arranged in <em>time</em>. At any point in time a <code>Stream</code> may produce additional values. This can model, for example, data arriving from the network or disk, or user input. The corollary of data arranged over time is that at some point in time there may be no data. This could be because no data has yet arrived, or because we&#39;ve processed all the data that has arrived and we&#39;re waiting for more (which may or may not arrive).</p>
             <p>See the <a href="https://zainab-ali.github.io/aquascape/reference/time.html">Aquascape section for time</a> for a detailed description of available methods that deal with time.</p>
-            <p>@callout(info)</p>
-            
-            <h4 id="type-inference-and-temporal-instances" class="section">Type Inference and Temporal Instances</h4>
-            <p>The methods that manipulate time have an <code>implicit</code> parameter / <code>using</code> clause that looks for an instance of a type class <code>Temporal</code>. This will often fail to find an instance if you call these methods on a <code>Pure</code> <code>Stream</code>. When this happens you see an error message like</p>
-            <pre><code>No given instance of type cats.effect.kernel.Temporal[[x] =&gt;&gt; fs2.Pure[x]] was found for a context parameter of method metered in class Stream.
+            <div class="callout info">
+              
+              <h4 id="type-inference-and-temporal-instances">Type Inference and Temporal Instances</h4>
+              <p>The methods that manipulate time have an <code>implicit</code> parameter / <code>using</code> clause that looks for an instance of a type class <code>Temporal</code>. This will often fail to find an instance if you call these methods on a <code>Pure</code> <code>Stream</code>. When this happens you see an error message like</p>
+              <pre><code>No given instance of type cats.effect.kernel.Temporal[[x] =&gt;&gt; fs2.Pure[x]] 
+was found for a context parameter of method metered in class Stream.
 ... lots more stuff here ...</code></pre>
-            <p>The solution is to simply specify the type parameter to give type inference the help it needs. That is, instead of writing, say,</p>
-            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
+              <p>The solution is to simply specify the type parameter to give type inference the help it needs. That is, instead of writing, say,</p>
+              <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
 </span><span class="keyword">import</span><span> </span><span class="identifier">scala</span><span>.</span><span class="identifier">concurrent</span><span>.</span><span class="identifier">duration</span><span>.*
 
 </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>).</span><span class="identifier">metered</span><span>(</span><span class="number-literal">1</span><span>.</span><span class="identifier">second</span><span>)</span></code></pre>
-            <p>you should write</p>
-            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
+              <p>you should write</p>
+              <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
 </span><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.*
 </span><span class="keyword">import</span><span> </span><span class="identifier">scala</span><span>.</span><span class="identifier">concurrent</span><span>.</span><span class="identifier">duration</span><span>.*
 
 </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>).</span><span class="identifier">metered</span><span>[</span><span class="type-name">IO</span><span>](</span><span class="number-literal">1</span><span>.</span><span class="identifier">second</span><span>)</span></code></pre>
-            <p>@:@</p>
+            </div>
             
             <h2 id="effects" class="section">Effects</h2>
             <p>A <code>Stream</code> can also represent <em>effects</em> that occur to produce the values that make up the <code>Stream</code>. Disk, network, and user input all are effects, and <code>Stream</code> allows us to model them as such.</p>
