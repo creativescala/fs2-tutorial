@@ -69,7 +69,9 @@ val commonSettings = Seq(
   Compile / run / fork := true
 )
 
-lazy val root = tlCrossRootProject.aggregate(code, docs, examples)
+lazy val root = tlCrossRootProject
+  .aggregate(code, docs, examples)
+  .configureJVM(s => s.settings(commonSettings))
 
 lazy val code = project
   .in(file("code"))

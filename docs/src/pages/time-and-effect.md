@@ -31,9 +31,6 @@ was found for a context parameter of method metered in class Stream.
 The solution is to simply specify the type parameter to give type inference the help it needs. That is, instead of writing, say,
 
 ```scala
-import fs2.*
-import scala.concurrent.duration.*
-
 Stream(1, 2, 3).metered(1.second)
 ```
 
@@ -78,9 +75,6 @@ which is a `Stream` of effects of type `F` that produce values of type `A`.
 In our previous examples we have converted `Stream` into `List`. This only works because our `Streams` are `Pure`. If they have some other effect type the method is not callable.
 
 ```scala
-import fs2.*
-import cats.effect.*
-
 val effect: Stream[IO, Int] = Stream(1, 2, 3)
 effect.toList
 // -- [E008] Not Found Error: -----------------------------------------------------
@@ -94,9 +88,6 @@ effect.toList
 To run an effectful `Stream` we must first convert it into some runnable effect type, and when we do so we must specify what we want to do with all the values in the `Stream`. Here's what is possibly the simplest example.
 
 ```scala mdoc:invisible
-import fs2.*
-import cats.effect.*
-
 val effect: Stream[IO, Int] = Stream(1, 2, 3)
 ```
 ```scala
@@ -178,8 +169,6 @@ In the solution below I use `metered` to emit a value every second. Of the avail
 I used `evalMap` to add the effect of printing the values so that I can see they are indeed emitted over time.
 
 ```scala mdoc:silent
-import scala.concurrent.duration.*
-
 Stream(1, 2, 3).metered[IO](1.second).evalMap(IO.println)
 ```
 @:@

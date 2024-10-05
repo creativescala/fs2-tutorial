@@ -22,6 +22,7 @@ import doodle.core.*
 import doodle.java2d.*
 import doodle.java2d.effect.Frame
 import doodle.syntax.all.*
+import fs2.*
 
 import scala.util.Random
 
@@ -42,22 +43,18 @@ object Pointillism extends IOApp {
       randomAlpha.map(alpha => Color.hotpink.alpha(alpha))
 
     def point(location: Point): IO[Picture[Unit]] =
-      (randomSize, randomColor).mapN { (size, color) =>
-        Picture.circle(size).fillColor(color).noStroke.at(location)
-      }
+      // You might want to use randomSize, randomAlpha, and randomColor above to
+      // construct more interesting Pictures.
+      IO.pure(Picture.circle(5).fillColor(Color.hotpink).noStroke.at(location))
 
     frame
       .canvas()
       .use { canvas =>
-        val clicks = canvas.mouseClick
+        // A stream of mouse clicks
+        val clicks: Stream[IO, Point] = canvas.mouseClick
 
-        clicks
-          .evalMap(pt => point(pt))
-          .scan(Picture.empty)((pts, pt) => pt.on(pts))
-          .evalMap(picture => canvas.render(picture))
-          .compile
-          .drain
-          .as(ExitCode.Success)
+        // Call canvas.render with a Picture[Unit] to render that Picture.
+        IO.pure(ExitCode.Success)
       }
   }
 }
