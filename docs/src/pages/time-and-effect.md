@@ -1,8 +1,11 @@
 # Streams as Effects over Time
 
 In the [previous section](list.md) we approached `Stream` as a fancy `List`. 
-In this section we'll develop a much more useful model for understanding `Stream`: as effects over time.
+In this section we'll develop a more useful model for understanding `Stream`: as effects over time. 
 Let's look at this in two parts, considering first values over time and then effects.
+
+We highly recommend the [Aquascape][aquascape] site as a companion for this section.
+It has graphical descriptions of the methods we'll encounter.
 
 
 ## Values in Time and Space
@@ -11,6 +14,8 @@ We can think of a `List` as values arranged in *space*; in particular in the com
 Each value inside a `List` lives somewhere in the computer's memory, and they are there for all time. (Ok, they are not actually there forever but from the point the `List` is created until it is garbage collected. However we cannot attempt to observe a `List` before or after it is created ---Scala is *memory safe*---so from the point of view of our program the values are always there whenever we go looking for them.)
 
 A `Stream`, however, can represent values arranged in *time*. At any point in time a `Stream` may produce additional values. This can model, for example, data arriving from the network or disk, or user input. The corollary of data arranged over time is that at some point in time there may be no data. This could be because no data has yet arrived, or because we've processed all the data that has arrived and we're waiting for more (which may or may not arrive).
+
+See the [Aquascape section for time][aquascape-time] for a detailed description of available methods that deal with time.
 
 
 ## Effects
@@ -132,4 +137,22 @@ Stream(1, 2, 3).evalMap(a => IO.println(a).as(a)).compile.drain.unsafeRunSync()
 ```
 @:@
 
+
+@:exercise(Time for Time)
+Create a `Stream` that emits a value once every second. You can emit any values you like (a few numbers is a good choice).
+@:@
+
+@:solution
+In the solution below I use `delay` to emit a value every second, and `evalMap` to add the effect of printing the values so that I can see they are indeed emitted over time.
+
+```scala
+Stream(1, 2, 3).delay(1.second).evalMap(IO.println).compile.drain.unsafeRunSync()
+// 1
+// 2
+// 3
+```
+@:@
+
 [cats-effect-tutorial]: https://creativescala.org/cats-effect-tutorial
+[aquascape]: https://zainab-ali.github.io/aquascape/
+[aquascape-time]: https://zainab-ali.github.io/aquascape/reference/time.html
