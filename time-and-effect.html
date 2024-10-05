@@ -45,13 +45,16 @@
         <main class="content">
             <h1 id="streams-as-effects-over-time" class="title">Streams as Effects over Time</h1>
             <p>In the <a href="list.html">previous section</a> we approached <code>Stream</code> as a fancy <code>List</code>. 
-            In this section we&#39;ll develop a much more useful model for understanding <code>Stream</code>: as effects over time.
+            In this section we&#39;ll develop a more useful model for understanding <code>Stream</code>: as effects over time. 
             Let&#39;s look at this in two parts, considering first values over time and then effects.</p>
+            <p>We highly recommend the <a href="https://zainab-ali.github.io/aquascape/">Aquascape</a> site as a companion for this section.
+            It has graphical descriptions of the methods we&#39;ll encounter.</p>
             
             <h2 id="values-in-time-and-space" class="section">Values in Time and Space</h2>
             <p>We can think of a <code>List</code> as values arranged in <em>space</em>; in particular in the computer&#39;s memory.
             Each value inside a <code>List</code> lives somewhere in the computer&#39;s memory, and they are there for all time. (Ok, they are not actually there forever but from the point the <code>List</code> is created until it is garbage collected. However we cannot attempt to observe a <code>List</code> before or after it is created ---Scala is <em>memory safe</em>---so from the point of view of our program the values are always there whenever we go looking for them.)</p>
             <p>A <code>Stream</code>, however, can represent values arranged in <em>time</em>. At any point in time a <code>Stream</code> may produce additional values. This can model, for example, data arriving from the network or disk, or user input. The corollary of data arranged over time is that at some point in time there may be no data. This could be because no data has yet arrived, or because we&#39;ve processed all the data that has arrived and we&#39;re waiting for more (which may or may not arrive).</p>
+            <p>See the <a href="https://zainab-ali.github.io/aquascape/reference/time.html">Aquascape section for time</a> for a detailed description of available methods that deal with time.</p>
             
             <h2 id="effects" class="section">Effects</h2>
             <p>A <code>Stream</code> can also represent <em>effects</em> that occur to produce the values that make up the <code>Stream</code>. Disk, network, and user input all are effects, and <code>Stream</code> allows us to model them as such.</p>
@@ -131,6 +134,20 @@
 </span><span class="comment">// Hello streams!</span></code></pre>
                 <p>And an example of the latter:</p>
                 <pre><code class="nohighlight"><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>).</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="identifier">a</span><span>).</span><span class="identifier">as</span><span>(</span><span class="identifier">a</span><span>)).</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()
+</span><span class="comment">// 1
+// 2
+// 3</span></code></pre>
+              </div>
+            </div>
+            <div class="exercise">
+              
+              <h4 id="exercise-time-for-time">Exercise: Time for Time</h4>
+              <p>Create a <code>Stream</code> that emits a value once every second. You can emit any values you like (a few numbers is a good choice).</p>
+            </div>
+            <div class="solution">
+              <div class="solution-body">
+                <p>In the solution below I use <code>delay</code> to emit a value every second, and <code>evalMap</code> to add the effect of printing the values so that I can see they are indeed emitted over time.</p>
+                <pre><code class="nohighlight"><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>).</span><span class="identifier">delay</span><span>(</span><span class="number-literal">1</span><span>.</span><span class="identifier">second</span><span>).</span><span class="identifier">evalMap</span><span>(</span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>).</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()
 </span><span class="comment">// 1
 // 2
 // 3</span></code></pre>
