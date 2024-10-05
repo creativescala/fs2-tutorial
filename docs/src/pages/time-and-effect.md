@@ -17,14 +17,15 @@ A `Stream`, however, can represent values arranged in *time*. At any point in ti
 
 See the [Aquascape section for time][aquascape-time] for a detailed description of available methods that deal with time.
 
-@callout(info)
+@:callout(info)
 
 #### Type Inference and Temporal Instances
 
 The methods that manipulate time have an `implicit` parameter / `using` clause that looks for an instance of a type class `Temporal`. This will often fail to find an instance if you call these methods on a `Pure` `Stream`. When this happens you see an error message like
 
 ```
-No given instance of type cats.effect.kernel.Temporal[[x] =>> fs2.Pure[x]] was found for a context parameter of method metered in class Stream.
+No given instance of type cats.effect.kernel.Temporal[[x] =>> fs2.Pure[x]] 
+was found for a context parameter of method metered in class Stream.
 ... lots more stuff here ...
 ```
 The solution is to simply specify the type parameter to give type inference the help it needs. That is, instead of writing, say,
