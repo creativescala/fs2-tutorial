@@ -63,10 +63,7 @@
 was found for a context parameter of method metered in class Stream.
 ... lots more stuff here ...</code></pre>
               <p>The solution is to simply specify the type parameter to give type inference the help it needs. That is, instead of writing, say,</p>
-              <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
-</span><span class="keyword">import</span><span> </span><span class="identifier">scala</span><span>.</span><span class="identifier">concurrent</span><span>.</span><span class="identifier">duration</span><span>.*
-
-</span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>).</span><span class="identifier">metered</span><span>(</span><span class="number-literal">1</span><span>.</span><span class="identifier">second</span><span>)</span></code></pre>
+              <pre><code class="nohighlight"><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>).</span><span class="identifier">metered</span><span>(</span><span class="number-literal">1</span><span>.</span><span class="identifier">second</span><span>)</span></code></pre>
               <p>you should write</p>
               <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
 </span><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.*
@@ -88,10 +85,7 @@ was found for a context parameter of method metered in class Stream.
             
             <h2 id="running-streams" class="section">Running Streams</h2>
             <p>In our previous examples we have converted <code>Stream</code> into <code>List</code>. This only works because our <code>Streams</code> are <code>Pure</code>. If they have some other effect type the method is not callable.</p>
-            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.*
-</span><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.*
-
-</span><span class="keyword">val</span><span> </span><span class="identifier">effect</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">Int</span><span>] = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>)
+            <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">effect</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">Int</span><span>] = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>)
 </span><span class="identifier">effect</span><span>.</span><span class="identifier">toList</span><span>
 </span><span class="comment">// -- [E008] Not Found Error: -----------------------------------------------------
 // 1 |effect.toList
@@ -167,9 +161,7 @@ was found for a context parameter of method metered in class Stream.
               <div class="solution-body">
                 <p>In the solution below I use <code>metered</code> to emit a value every second. Of the available combinators I think this is the best choice, but you could reasonably use other combinators, such as <code>spaced</code>, for this task. The semantics are slightly different, but the description of the task is not precise enough to require a particular choice of combinator. </p>
                 <p>I used <code>evalMap</code> to add the effect of printing the values so that I can see they are indeed emitted over time.</p>
-                <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">scala</span><span>.</span><span class="identifier">concurrent</span><span>.</span><span class="identifier">duration</span><span>.*
-
-</span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>).</span><span class="identifier">metered</span><span>[</span><span class="type-name">IO</span><span>](</span><span class="number-literal">1</span><span>.</span><span class="identifier">second</span><span>).</span><span class="identifier">evalMap</span><span>(</span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>)</span></code></pre>
+                <pre><code class="nohighlight"><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>).</span><span class="identifier">metered</span><span>[</span><span class="type-name">IO</span><span>](</span><span class="number-literal">1</span><span>.</span><span class="identifier">second</span><span>).</span><span class="identifier">evalMap</span><span>(</span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>)</span></code></pre>
               </div>
             </div>
             <div class="flex flex-row justify-between">

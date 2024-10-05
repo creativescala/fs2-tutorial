@@ -44,8 +44,39 @@
     <div id="content">
         <main class="content">
             <h1 id="pointillism" class="title">Pointillism</h1>
+            <p>This exercise asks you to work with effects and streams in a more involved way.
+            There is a demonstration below. Click on the blue box to see how it works.</p>
             <div class="doodle" id="canvas"></div>
             <script>EffectPointillism.draw("canvas")</script>
+            <p>Now go and implement your version of it, using the code at <a href="https://github.com/creativescala/fs2-tutorial/blob/main/code/src/main/scala/effect/Pointillism.scala"><code>code/src/main/scala/effect/Pointillism.scala</code></a>
+            as a starting point.
+            You don&#39;t have to copy exactly what we did. 
+            Add your own flair!</p>
+            <p>Be aware that on the Java platform mouse clicks are not delivered if the mouse moves between the button going down and going up. 
+            Due to this you may feel like some of your clicks are being dropped.</p>
+            <div class="solution">
+              <div class="solution-body">
+                <p>Here&#39;s the code I implemented, but I&#39;m sure you came up with something much more interesting.</p>
+                <pre><code class="nohighlight"><span class="keyword">def</span><span> </span><span class="declaration-name">point</span><span>(</span><span class="identifier">location</span><span>: </span><span class="type-name">Point</span><span>): </span><span class="type-name">IO</span><span>[</span><span class="type-name">Picture</span><span>[</span><span class="type-name">Unit</span><span>]] =
+  (</span><span class="identifier">randomSize</span><span>, </span><span class="identifier">randomColor</span><span>).</span><span class="identifier">mapN</span><span> { (</span><span class="identifier">size</span><span>, </span><span class="identifier">color</span><span>) =&gt;
+    </span><span class="type-name">Picture</span><span>.</span><span class="identifier">circle</span><span>(</span><span class="identifier">size</span><span>).</span><span class="identifier">fillColor</span><span>(</span><span class="identifier">color</span><span>).</span><span class="identifier">noStroke</span><span>.</span><span class="identifier">at</span><span>(</span><span class="identifier">location</span><span>)
+  }
+
+</span><span class="identifier">frame</span><span>
+  .</span><span class="identifier">canvas</span><span>()
+  .</span><span class="identifier">use</span><span> { </span><span class="identifier">canvas</span><span> =&gt;
+    </span><span class="keyword">val</span><span> </span><span class="identifier">clicks</span><span> = </span><span class="identifier">canvas</span><span>.</span><span class="identifier">mouseClick</span><span>
+
+    </span><span class="identifier">clicks</span><span>
+      .</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">pt</span><span> =&gt; </span><span class="identifier">point</span><span>(</span><span class="identifier">pt</span><span>))
+      .</span><span class="identifier">scan</span><span>(</span><span class="type-name">Picture</span><span>.</span><span class="identifier">empty</span><span>)((</span><span class="identifier">pts</span><span>, </span><span class="identifier">pt</span><span>) =&gt; </span><span class="identifier">pt</span><span>.</span><span class="identifier">on</span><span>(</span><span class="identifier">pts</span><span>))
+      .</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">picture</span><span> =&gt; </span><span class="identifier">canvas</span><span>.</span><span class="identifier">render</span><span>(</span><span class="identifier">picture</span><span>))
+      .</span><span class="identifier">compile</span><span>
+      .</span><span class="identifier">drain</span><span>
+      .</span><span class="identifier">as</span><span>(</span><span class="type-name">ExitCode</span><span>.</span><span class="type-name">Success</span><span>)
+  }</span></code></pre>
+              </div>
+            </div>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="time-and-effect.html">←Streams as Effects over Time</a> 
             </div>
