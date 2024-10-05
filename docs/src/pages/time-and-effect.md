@@ -17,6 +17,35 @@ A `Stream`, however, can represent values arranged in *time*. At any point in ti
 
 See the [Aquascape section for time][aquascape-time] for a detailed description of available methods that deal with time.
 
+@callout(info)
+
+#### Type Inference and Temporal Instances
+
+The methods that manipulate time have an `implicit` parameter / `using` clause that looks for an instance of a type class `Temporal`. This will often fail to find an instance if you call these methods on a `Pure` `Stream`. When this happens you see an error message like
+
+```
+No given instance of type cats.effect.kernel.Temporal[[x] =>> fs2.Pure[x]] was found for a context parameter of method metered in class Stream.
+... lots more stuff here ...
+```
+The solution is to simply specify the type parameter to give type inference the help it needs. That is, instead of writing, say,
+
+```scala
+import fs2.*
+import scala.concurrent.duration.*
+
+Stream(1, 2, 3).metered(1.second)
+```
+
+you should write
+
+```scala mdoc:silent
+import fs2.*
+import cats.effect.*
+import scala.concurrent.duration.*
+
+Stream(1, 2, 3).metered[IO](1.second)
+```
+@:@
 
 ## Effects
 
@@ -143,13 +172,14 @@ Create a `Stream` that emits a value once every second. You can emit any values 
 @:@
 
 @:solution
-In the solution below I use `delay` to emit a value every second, and `evalMap` to add the effect of printing the values so that I can see they are indeed emitted over time.
+In the solution below I use `metered` to emit a value every second. Of the available combinators I think this is the best choice, but you could reasonably use other combinators, such as `spaced`, for this task. The semantics are slightly different, but the description of the task is not precise enough to require a particular choice of combinator. 
 
-```scala
-Stream(1, 2, 3).delay(1.second).evalMap(IO.println).compile.drain.unsafeRunSync()
-// 1
-// 2
-// 3
+I used `evalMap` to add the effect of printing the values so that I can see they are indeed emitted over time.
+
+```scala mdoc:silent
+import scala.concurrent.duration.*
+
+Stream(1, 2, 3).metered[IO](1.second).evalMap(IO.println)
 ```
 @:@
 
