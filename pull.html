@@ -91,7 +91,36 @@ b: 4</code></pre>
             A stage <code>x</code> is downstream of another stage <code>y</code> if it consumes data directly from <code>y</code>, or it consumes data from a stage that is downstream of <code>y</code>.
             Likewise we can say that <code>y</code> is upstream of <code>x</code> if <code>x</code> is downstream of <code>y</code>.</p>
             <p>When we run a stage, we only run it and all stages that are upstream from it.
-            In the example above, <code>a</code> is not upstream of <code>b</code> so it does not run when <code>b</code> runs.</p>
+            In the example above, <code>a</code> is not upstream of <code>b</code> so it does not run when <code>b</code> runs.
+            If we want to make <code>a</code> run as well, we need a way to create a stage that is downstream of both.
+            In other words, we need a way to <a href="https://www.youtube.com/watch?v=TEq24JyFWzo">&quot;cross the streams&quot;</a> by joining <code>a</code> and <code>b</code>.
+            This is an example of <strong>fan-in</strong>, where we collect results from multiple streams.</p>
+            <p>FS2 provides several ways to express fan-in:</p>
+            <ul>
+              <li>We can use <code>merge</code> if we don&#39;t care about what order we get elements from the upstream streams, and both upstream streams have the same type.</li>
+              <li>We can use <code>zip</code> if we want to pair up elements from two upstream streams.</li>
+              <li>We can use <code>either</code> if we don&#39;t care about order (like <code>merge</code>) but the two upstream streams have different types.</li>
+            </ul>
+            <p>Write a stream <code>sink</code> that uses one of the methods above to express fan-in of <code>a</code> and <code>b</code>.
+            What do you think you&#39;ll see when you run <code>sink</code>? Does the actual output match your expectations?</p>
+            <div class="solution">
+              <div class="solution-body">
+                <p>In our example both <code>a</code> and <code>b</code> have the same type (<code>Unit</code>) and order doesn&#39;t seem important. So I chose <code>merge</code>.</p>
+                <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">sink</span><span> = </span><span class="identifier">a</span><span>.</span><span class="identifier">merge</span><span>(</span><span class="identifier">b</span><span>)</span></code></pre>
+                <p>The output of</p>
+                <pre><code class="nohighlight"><span class="identifier">sink</span><span>.</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
+                <p>is</p>
+                <pre><code>a: 1
+b: 1
+a: 2
+b: 2
+a: 3
+b: 3
+a: 4
+b: 4</code></pre>
+                <p>so we can see that both <code>a</code> and <code>b</code> receive all the values from <code>data</code>.</p>
+              </div>
+            </div>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="pointillism.html">←Pointillism</a> 
             </div>
