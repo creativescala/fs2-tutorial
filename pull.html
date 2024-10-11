@@ -69,6 +69,29 @@ b: 4</code></pre>
                 <p>Notice that the <code>a</code> branch does not run. Did you expect this behaviour?</p>
               </div>
             </div>
+            <p>The simple reason that we see output from <code>b</code> but not from <code>a</code> is that we didn&#39;t run <code>a</code>. 
+            However, to understand why <code>a</code> does not run introduces some of the core concepts in FS2.
+            Remember that a <code>Stream</code> is a description.
+            This is, it&#39;s a data structure that describes what we want to happen.
+            We build a <code>Stream</code> from upstream (which produces data) to downstream (which consumes data.)
+            The downstream data structures have references to those upstream of them.
+            When we write</p>
+            <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">data</span><span> = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>)
+</span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))
+</span><span class="keyword">val</span><span> </span><span class="identifier">b</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">b</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;b: </span><span class="substitution">$b</span><span class="string-literal">&quot;</span><span>))</span></code></pre>
+            <p>we create three data structures:</p>
+            <ol class="arabic">
+              <li><code>data</code>, which is the source of data;</li>
+              <li><code>a</code>, which is downstream of <code>data</code> and has a reference to <code>data</code>; and</li>
+              <li><code>b</code>, which is also downstream of <code>data</code> and has a reference to <code>data</code>.</li>
+            </ol>
+            <p>Notice that <code>b</code> does not have any reference to <code>a</code>. 
+            So when we run <code>b</code> we <em>cannot</em> run <code>a</code>, because we have no reference to it.</p>
+            <p>We&#39;ll call each data structure a <strong>stage</strong>.
+            A stage <code>x</code> is downstream of another stage <code>y</code> if it consumes data directly from <code>y</code>, or it consumes data from a stage that is downstream of <code>y</code>.
+            Likewise we can say that <code>y</code> is upstream of <code>x</code> if <code>x</code> is downstream of <code>y</code>.</p>
+            <p>When we run a stage, we only run it and all stages that are upstream from it.
+            In the example above, <code>a</code> is not upstream of <code>b</code> so it does not run when <code>b</code> runs.</p>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="pointillism.html">←Pointillism</a> 
             </div>
