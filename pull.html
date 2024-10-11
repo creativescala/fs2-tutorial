@@ -46,6 +46,29 @@
     <div id="content">
         <main class="content">
             <h1 id="stream-as-stages-and-pulls" class="title">Stream as Stages and Pulls</h1>
+            <p>In this section we&#39;ll learn our final model for FS2 streams: as consisting of stages and pulls. 
+            This is the &quot;real&quot; model of FS2.</p>
+            <p>Let&#39;s start with a simple example.</p>
+            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="type-name">IO</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.</span><span class="type-name">Stream</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="identifier">unsafe</span><span>.</span><span class="identifier">implicits</span><span>.</span><span class="identifier">global</span><span>
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">data</span><span> = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>)
+</span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))
+</span><span class="keyword">val</span><span> </span><span class="identifier">b</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">b</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;b: </span><span class="substitution">$b</span><span class="string-literal">&quot;</span><span>))</span></code></pre>
+            <p>What do you think happens when run the following? 
+            Take a guess before trying out the code.</p>
+            <pre><code class="nohighlight"><span class="identifier">b</span><span>.</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
+            <div class="solution">
+              <div class="solution-body">
+                <p>You should see output like the below.</p>
+                <pre><code>b: 1
+b: 2
+b: 3
+b: 4</code></pre>
+                <p>Notice that the <code>a</code> branch does not run. Did you expect this behaviour?</p>
+              </div>
+            </div>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="pointillism.html">←Pointillism</a> 
             </div>

@@ -4455,16 +4455,16 @@ function $p_Leffect_Pointillism$__point$1__Lcats_effect_IO__Lcats_effect_IO__Ldo
   return $as_Lcats_effect_IO(new $c_Lcats_syntax_Tuple2SemigroupalOps(t2).mapN__F2__Lcats_Functor__Lcats_Semigroupal__O(new $c_sjsr_AnonFunction2(((size, color) => {
     var size$1 = $uD(size);
     var color$1 = $as_Ldoodle_core_Color(color);
-    var this$9 = $m_Ldoodle_syntax_package$all$();
-    var this$7 = $m_Ldoodle_syntax_package$all$();
-    var this$5 = $m_Ldoodle_syntax_package$all$();
+    var this$8 = $m_Ldoodle_syntax_package$all$();
+    var this$6 = $m_Ldoodle_syntax_package$all$();
+    var this$4 = $m_Ldoodle_syntax_package$all$();
     var picture = new $c_Ldoodle_algebra_ShapeConstructor$$anon$4(size$1);
-    var this$6 = new $c_Ldoodle_syntax_StyleSyntax$StylePictureOps(this$5, picture);
-    var picture$1 = new $c_Ldoodle_syntax_StyleSyntax$$anon$1(color$1, this$6);
-    var this$8 = new $c_Ldoodle_syntax_StyleSyntax$StylePictureOps(this$7, picture$1);
-    var picture$2 = new $c_Ldoodle_syntax_StyleSyntax$$anon$10(this$8);
-    var this$10 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$9, picture$2);
-    return new $c_Ldoodle_syntax_LayoutSyntax$$anon$10(location, this$10);
+    var this$5 = new $c_Ldoodle_syntax_StyleSyntax$StylePictureOps(this$4, picture);
+    var picture$1 = new $c_Ldoodle_syntax_StyleSyntax$$anon$1(color$1, this$5);
+    var this$7 = new $c_Ldoodle_syntax_StyleSyntax$StylePictureOps(this$6, picture$1);
+    var picture$2 = new $c_Ldoodle_syntax_StyleSyntax$$anon$10(this$7);
+    var this$9 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$8, picture$2);
+    return new $c_Ldoodle_syntax_LayoutSyntax$$anon$10(location, this$9);
   })), $m_Lcats_effect_IO$().Lcats_effect_IO$__f__asyncForIO, $m_Lcats_effect_IO$().Lcats_effect_IO$__f__asyncForIO));
 }
 /** @constructor */
@@ -4478,47 +4478,47 @@ function $h_Leffect_Pointillism$() {
 $h_Leffect_Pointillism$.prototype = $c_Leffect_Pointillism$.prototype;
 $c_Leffect_Pointillism$.prototype.draw__T__V = (function(id) {
   var frame = $n($n($m_Ldoodle_svg_effect_Frame$().apply__T__Ldoodle_svg_effect_Frame(id)).withSize__D__D__Ldoodle_svg_effect_Frame(600.0, 600.0)).withBackground__Ldoodle_core_Color__Ldoodle_svg_effect_Frame($m_Ldoodle_core_Color$().Ldoodle_core_Color$__f_midnightBlue);
-  var this$3 = $m_Lcats_effect_IO$();
+  var this$2 = $m_Lcats_effect_IO$();
   var thunk = new $c_sjsr_AnonFunction0((() => {
-    var this$2 = $m_s_util_Random$();
-    return $n(this$2.s_util_Random__f_self).nextInt__I__I(7);
+    var this$1 = $m_s_util_Random$();
+    return $n(this$1.s_util_Random__f_self).nextInt__I__I(7);
   }));
-  var randomSize = $n($n(this$3.delay__F0__Lcats_effect_IO(thunk)).map__F1__Lcats_effect_IO(new $c_sjsr_AnonFunction1(((_$1) => {
+  var randomSize = $n($n(this$2.delay__F0__Lcats_effect_IO(thunk)).map__F1__Lcats_effect_IO(new $c_sjsr_AnonFunction1(((_$1) => {
     var _$1$1 = $uI(_$1);
     return ((5 + _$1$1) | 0);
   })))).map__F1__Lcats_effect_IO(new $c_sjsr_AnonFunction1(((_$2) => {
     var _$2$1 = $uI(_$2);
     return _$2$1;
   })));
-  var this$6 = $m_Lcats_effect_IO$();
+  var this$4 = $m_Lcats_effect_IO$();
   var thunk$1 = new $c_sjsr_AnonFunction0((() => {
-    var this$5 = $m_s_util_Random$();
-    return ((0.5 * $n(this$5.s_util_Random__f_self).nextDouble__D()) + 0.5);
+    var this$3 = $m_s_util_Random$();
+    return ((0.5 * $n(this$3.s_util_Random__f_self).nextDouble__D()) + 0.5);
   }));
-  var randomAlpha = $n(this$6.delay__F0__Lcats_effect_IO(thunk$1)).map__F1__Lcats_effect_IO(new $c_sjsr_AnonFunction1(((v1) => {
+  var randomAlpha = $n(this$4.delay__F0__Lcats_effect_IO(thunk$1)).map__F1__Lcats_effect_IO(new $c_sjsr_AnonFunction1(((v1) => {
     var _$3 = $uD(v1);
-    var this$7 = $m_Ldoodle_syntax_package$all$();
-    var this$8 = new $c_Ldoodle_syntax_NormalizedSyntax$ToNormalizedOps(this$7, _$3);
-    return new $c_Ldoodle_core_Normalized($m_Ldoodle_core_Normalized$().clip__D__D(this$8.Ldoodle_syntax_NormalizedSyntax$ToNormalizedOps__f_value));
+    var this$5 = $m_Ldoodle_syntax_package$all$();
+    var this$6 = new $c_Ldoodle_syntax_NormalizedSyntax$ToNormalizedOps(this$5, _$3);
+    return new $c_Ldoodle_core_Normalized($m_Ldoodle_core_Normalized$().clip__D__D(this$6.Ldoodle_syntax_NormalizedSyntax$ToNormalizedOps__f_value));
   })));
   var randomColor = $n(randomAlpha).map__F1__Lcats_effect_IO(new $c_sjsr_AnonFunction1(((alpha) => {
     var alpha$1 = ((alpha === null) ? $uD(null) : $n($as_Ldoodle_core_Normalized(alpha)).Ldoodle_core_Normalized__f_get);
     return $n($m_Ldoodle_core_Color$().Ldoodle_core_Color$__f_hotpink).alpha__D__Ldoodle_core_Color(alpha$1);
   })));
-  var this$9 = $m_Ldoodle_syntax_package$all$();
-  $n($as_Lcats_effect_IO($n(new $c_Ldoodle_syntax_AbstractRendererSyntax$RendererFrameOps(this$9, frame).canvas__Ldoodle_effect_Renderer__Lcats_effect_kernel_Resource($m_Ldoodle_svg_package$().Ldoodle_svg_package$__f_svgRenderer)).use__F1__Lcats_effect_kernel_MonadCancel__O(new $c_sjsr_AnonFunction1(((canvas) => {
+  var this$7 = $m_Ldoodle_syntax_package$all$();
+  $n($as_Lcats_effect_IO($n(new $c_Ldoodle_syntax_AbstractRendererSyntax$RendererFrameOps(this$7, frame).canvas__Ldoodle_effect_Renderer__Lcats_effect_kernel_Resource($m_Ldoodle_svg_package$().Ldoodle_svg_package$__f_svgRenderer)).use__F1__Lcats_effect_kernel_MonadCancel__O(new $c_sjsr_AnonFunction1(((canvas) => {
     var canvas$1 = $as_Ldoodle_svg_effect_Canvas(canvas);
     var clicks = $n(canvas$1).Ldoodle_svg_effect_Canvas__f_mouseClick;
-    var this$16 = $n($n($n($n(clicks).evalMap__F1__Lfs2_Stream(new $c_sjsr_AnonFunction1(((pt) => {
+    var this$15 = $n($n($n($n(clicks).evalMap__F1__Lfs2_Stream(new $c_sjsr_AnonFunction1(((pt) => {
       var pt$1 = $as_Ldoodle_core_Point(pt);
       return $p_Leffect_Pointillism$__point$1__Lcats_effect_IO__Lcats_effect_IO__Ldoodle_core_Point__Lcats_effect_IO(this, randomSize, randomColor, pt$1);
     })))).scan__O__F2__Lfs2_Stream(new $c_Ldoodle_algebra_ShapeConstructor$$anon$5(), new $c_sjsr_AnonFunction2(((pts, pt$2) => {
       var pts$1 = $as_Ldoodle_algebra_Picture(pts);
       var pt$3 = $as_Ldoodle_algebra_Picture(pt$2);
-      var this$11 = $m_Ldoodle_syntax_package$all$();
-      var this$13 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$11, pt$3);
+      var this$10 = $m_Ldoodle_syntax_package$all$();
+      var this$12 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$10, pt$3);
       var s = $m_Lcats_kernel_instances_unit_package$().Lcats_kernel_instances_unit_package$__f_catsKernelStdAlgebraForUnit;
-      return new $c_Ldoodle_syntax_LayoutSyntax$$anon$1(pts$1, s, this$13);
+      return new $c_Ldoodle_syntax_LayoutSyntax$$anon$1(pts$1, s, this$12);
     })))).evalMap__F1__Lfs2_Stream(new $c_sjsr_AnonFunction1(((picture) => {
       var picture$1 = $as_Ldoodle_algebra_Picture(picture);
       return $n(canvas$1).render__Ldoodle_algebra_Picture__Lcats_effect_IO(picture$1);
@@ -4527,7 +4527,7 @@ $c_Leffect_Pointillism$.prototype.draw__T__V = (function(id) {
     var evidence$1 = $m_Lcats_effect_IO$().Lcats_effect_IO$__f__asyncForIO;
     var F = new $c_Lfs2_Compiler$Target$ConcurrentTarget(evidence$1);
     var compiler = new $c_Lfs2_CompilerLowPriority1$$anon$2(F);
-    return $as_Lcats_effect_IO(new $c_Lfs2_Stream$CompileOps(this$16.Lfs2_Stream__f_underlying, compiler).drain__O());
+    return $as_Lcats_effect_IO(new $c_Lfs2_Stream$CompileOps(this$15.Lfs2_Stream__f_underlying, compiler).drain__O());
   })), $m_Lcats_effect_IO$().Lcats_effect_IO$__f__asyncForIO))).unsafeRunAsync__F1__Lcats_effect_unsafe_IORuntime__V(new $c_sjsr_AnonFunction1(((_$4) => {
     $as_s_util_Either(_$4);
   })), $m_Lcats_effect_unsafe_IORuntime$().global__Lcats_effect_unsafe_IORuntime());
