@@ -18,7 +18,7 @@ import laika.config.LinkConfig
 import laika.config.ApiLinks
 import laika.theme.Theme
 
-lazy val scala3 = "3.3.3"
+lazy val scala3 = "3.5.1"
 
 ThisBuild / tlBaseVersion := "0.1" // your current series x.y
 ThisBuild / organization := "org.creativescala"
