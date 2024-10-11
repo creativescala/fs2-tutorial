@@ -64,3 +64,45 @@ Likewise we can say that `y` is upstream of `x` if `x` is downstream of `y`.
 
 When we run a stage, we only run it and all stages that are upstream from it.
 In the example above, `a` is not upstream of `b` so it does not run when `b` runs.
+If we want to make `a` run as well, we need a way to create a stage that is downstream of both.
+In other words, we need a way to ["cross the streams"][ghostbusters] by joining `a` and `b`.
+This is an example of **fan-in**, where we collect results from multiple streams.
+
+FS2 provides several ways to express fan-in:
+
+* We can use `merge` if we don't care about what order we get elements from the upstream streams, and both upstream streams have the same type.
+* We can use `zip` if we want to pair up elements from two upstream streams.
+* We can use `either` if we don't care about order (like `merge`) but the two upstream streams have different types.
+
+Write a stream `sink` that uses one of the methods above to express fan-in of `a` and `b`.
+What do you think you'll see when you run `sink`? Does the actual output match your expectations?
+
+@:solution
+In our example both `a` and `b` have the same type (`Unit`) and order doesn't seem important. So I chose `merge`.
+
+```scala mdoc:silent
+val sink = a.merge(b)
+```
+
+The output of
+
+```scala mdoc:compile-only
+sink.compile.drain.unsafeRunSync()
+```
+is
+
+```
+a: 1
+b: 1
+a: 2
+b: 2
+a: 3
+b: 3
+a: 4
+b: 4
+```
+
+so we can see that both `a` and `b` receive all the values from `data`.
+@:@
+
+[ghostbusters]: https://www.youtube.com/watch?v=TEq24JyFWzo
