@@ -1,4 +1,4 @@
-# Streams as Effects over Time
+# Effects over Time
 
 In the [previous section](list.md) we approached `Stream` as a fancy `List`. 
 In this section we'll develop a more useful model for understanding `Stream`: as effects over time. 

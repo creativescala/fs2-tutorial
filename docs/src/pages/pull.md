@@ -1,4 +1,4 @@
-# Stream as Stages and Pulls
+# Stages and Pulls
 
 In this section we'll learn our final model for FS2 streams: as consisting of stages and pulls. 
 This is the "real" model of FS2.
