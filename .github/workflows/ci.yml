@@ -35,7 +35,8 @@ jobs:
     timeout-minutes: 60
     steps:
       - name: Install sbt
-        uses: sbt/setup-sbt@v1
+        if: contains(runner.os, 'macos')
+        run: brew install sbt
 
       - name: Checkout current branch (full)
         uses: actions/checkout@v4
@@ -103,7 +104,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install sbt
-        uses: sbt/setup-sbt@v1
+        if: contains(runner.os, 'macos')
+        run: brew install sbt
 
       - name: Checkout current branch (full)
         uses: actions/checkout@v4
@@ -177,7 +179,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install sbt
-        uses: sbt/setup-sbt@v1
+        if: contains(runner.os, 'macos')
+        run: brew install sbt
 
       - name: Checkout current branch (full)
         uses: actions/checkout@v4
@@ -212,7 +215,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install sbt
-        uses: sbt/setup-sbt@v1
+        if: contains(runner.os, 'macos')
+        run: brew install sbt
 
       - name: Checkout current branch (full)
         uses: actions/checkout@v4
