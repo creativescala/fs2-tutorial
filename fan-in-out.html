@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Laika 1.0.0" />
+    <title>Fan-in and Fan-out</title>
+    
+    
+    <meta name="description" content="docs" />
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600"
+        rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Pro:400" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/creative-scala.css" />
+    <script src="js/toc.js"></script><script src="js/solution.js"></script><script src="main.js"></script>
+    <script> /* for avoiding page load transitions */</script>
+</head>
+
+<body>
+    <nav id="topbar">
+      <details>
+        <summary>FS2 Tutorial</summary>
+        <ul class="nav-list">
+          <li class="level1 nav-leaf"><a href="list.html">Stream as a List</a></li>
+          <li class="level1 nav-leaf"><a href="time-and-effect.html">Effects over Time</a></li>
+          <li class="level1 nav-leaf"><a href="pointillism.html">Pointillism</a></li>
+          <li class="level1 nav-leaf"><a href="pull.html">Stages and Pulls</a></li>
+          <li class="level1 active nav-leaf"><a href="#">Fan-in and Fan-out</a></li>
+        </ul>
+      </details>
+    </nav>
+    <nav id="sidebar">
+        <ul class="nav-list">
+          <li class="level1 nav-leaf"><a href="index.html">FS2 Tutorial</a></li>
+          <li class="level1 nav-leaf"><a href="list.html">Stream as a List</a></li>
+          <li class="level1 nav-leaf"><a href="time-and-effect.html">Effects over Time</a></li>
+          <li class="level1 nav-leaf"><a href="pointillism.html">Pointillism</a></li>
+          <li class="level1 nav-leaf"><a href="pull.html">Stages and Pulls</a></li>
+          <li class="level1 active nav-leaf"><a href="#">Fan-in and Fan-out</a></li>
+        </ul>
+    </nav>
+
+    <div id="content">
+        <main class="content">
+            <h1 id="fan-in-and-fan-out" class="title">Fan-in and Fan-out</h1>
+            <p>Let&#39;s start with a simple example.</p>
+            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="type-name">IO</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.</span><span class="type-name">Stream</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="identifier">unsafe</span><span>.</span><span class="identifier">implicits</span><span>.</span><span class="identifier">global</span><span>
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">data</span><span> = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>)
+</span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))
+</span><span class="keyword">val</span><span> </span><span class="identifier">b</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">b</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;b: </span><span class="substitution">$b</span><span class="string-literal">&quot;</span><span>))</span></code></pre>
+            <p>What do you think happens when run the following? 
+            Take a guess before trying out the code.</p>
+            <pre><code class="nohighlight"><span class="identifier">b</span><span>.</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
+            <div class="solution">
+              <div class="solution-body">
+                <p>You should see output like the below.</p>
+                <pre><code>b: 1
+b: 2
+b: 3
+b: 4</code></pre>
+                <p>Notice that the <code>a</code> branch does not run. Did you expect this behaviour?</p>
+              </div>
+            </div>
+            <p>The simple reason that we see output from <code>b</code> but not from <code>a</code> is that we didn&#39;t run <code>a</code>. 
+            However, to understand why <code>a</code> does not run introduces some of the core concepts in FS2.
+            Remember that a <code>Stream</code> is a description.
+            This is, it&#39;s a data structure that describes what we want to happen.
+            We build a <code>Stream</code> from upstream (which produces data) to downstream (which consumes data.)
+            The downstream data structures have references to those upstream of them.
+            When we write</p>
+            <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">data</span><span> = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>)
+</span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))
+</span><span class="keyword">val</span><span> </span><span class="identifier">b</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">b</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;b: </span><span class="substitution">$b</span><span class="string-literal">&quot;</span><span>))</span></code></pre>
+            <p>we create three data structures:</p>
+            <ol class="arabic">
+              <li><code>data</code>, which is the source of data;</li>
+              <li><code>a</code>, which is downstream of <code>data</code> and has a reference to <code>data</code>; and</li>
+              <li><code>b</code>, which is also downstream of <code>data</code> and has a reference to <code>data</code>.</li>
+            </ol>
+            <p>Notice that <code>b</code> does not have any reference to <code>a</code>. 
+            So when we run <code>b</code> we <em>cannot</em> run <code>a</code>, because we have no reference to it.</p>
+            <p>We&#39;ll call each data structure a <strong>stage</strong>.
+            A stage <code>x</code> is downstream of another stage <code>y</code> if it consumes data directly from <code>y</code>, or it consumes data from a stage that is downstream of <code>y</code>.
+            Likewise we can say that <code>y</code> is upstream of <code>x</code> if <code>x</code> is downstream of <code>y</code>.</p>
+            <p>When we run a stage, we only run it and all stages that are upstream from it.
+            In the example above, <code>a</code> is not upstream of <code>b</code> so it does not run when <code>b</code> runs.
+            If we want to make <code>a</code> run as well, we need a way to create a stage that is downstream of both.
+            In other words, we need a way to <a href="https://www.youtube.com/watch?v=TEq24JyFWzo">&quot;cross the streams&quot;</a> by joining <code>a</code> and <code>b</code>.
+            This is an example of <strong>fan-in</strong>, where we collect results from multiple streams.</p>
+            <p>FS2 provides several ways to express fan-in:</p>
+            <ul>
+              <li>We can use <code>merge</code> if we don&#39;t care about what order we get elements from the upstream streams, and both upstream streams have the same type.</li>
+              <li>We can use <code>zip</code> if we want to pair up elements from two upstream streams.</li>
+              <li>We can use <code>either</code> if we don&#39;t care about order (like <code>merge</code>) but the two upstream streams have different types.</li>
+            </ul>
+            <p>Write a stream <code>sink</code> that uses one of the methods above to express fan-in of <code>a</code> and <code>b</code>.
+            What do you think you&#39;ll see when you run <code>sink</code>? Does the actual output match your expectations?</p>
+            <div class="solution">
+              <div class="solution-body">
+                <p>In our example both <code>a</code> and <code>b</code> have the same type (<code>Unit</code>) and order doesn&#39;t seem important. So I chose <code>merge</code>.</p>
+                <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">sink</span><span> = </span><span class="identifier">a</span><span>.</span><span class="identifier">merge</span><span>(</span><span class="identifier">b</span><span>)</span></code></pre>
+                <p>The output of</p>
+                <pre><code class="nohighlight"><span class="identifier">sink</span><span>.</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
+                <p>is</p>
+                <pre><code>a: 1
+b: 1
+a: 2
+b: 2
+a: 3
+b: 3
+a: 4
+b: 4</code></pre>
+                <p>so we can see that both <code>a</code> and <code>b</code> receive all the values from <code>data</code>.</p>
+              </div>
+            </div>
+            <div class="flex flex-row justify-between">
+                <a class="pageNavigation" href="pull.html">←Stages and Pulls</a> 
+            </div>
+        </main>
+        <footer>Creative Scala is copyright Noel Welsh</footer>
+    </div>
+
+    </div>
+</body>
+
+</html>

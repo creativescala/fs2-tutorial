@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="Laika 1.0.0" />
-    <title>Stream as Stages and Pulls</title>
+    <title>Stages and Pulls</title>
     
     
     <meta name="description" content="docs" />
@@ -27,9 +27,10 @@
         <summary>FS2 Tutorial</summary>
         <ul class="nav-list">
           <li class="level1 nav-leaf"><a href="list.html">Stream as a List</a></li>
-          <li class="level1 nav-leaf"><a href="time-and-effect.html">Streams as Effects over Time</a></li>
+          <li class="level1 nav-leaf"><a href="time-and-effect.html">Effects over Time</a></li>
           <li class="level1 nav-leaf"><a href="pointillism.html">Pointillism</a></li>
-          <li class="level1 active nav-leaf"><a href="#">Stream as Stages and Pulls</a></li>
+          <li class="level1 active nav-leaf"><a href="#">Stages and Pulls</a></li>
+          <li class="level1 nav-leaf"><a href="fan-in-out.html">Fan-in and Fan-out</a></li>
         </ul>
       </details>
     </nav>
@@ -37,45 +38,31 @@
         <ul class="nav-list">
           <li class="level1 nav-leaf"><a href="index.html">FS2 Tutorial</a></li>
           <li class="level1 nav-leaf"><a href="list.html">Stream as a List</a></li>
-          <li class="level1 nav-leaf"><a href="time-and-effect.html">Streams as Effects over Time</a></li>
+          <li class="level1 nav-leaf"><a href="time-and-effect.html">Effects over Time</a></li>
           <li class="level1 nav-leaf"><a href="pointillism.html">Pointillism</a></li>
-          <li class="level1 active nav-leaf"><a href="#">Stream as Stages and Pulls</a></li>
+          <li class="level1 active nav-leaf"><a href="#">Stages and Pulls</a></li>
+          <li class="level1 nav-leaf"><a href="fan-in-out.html">Fan-in and Fan-out</a></li>
         </ul>
     </nav>
 
     <div id="content">
         <main class="content">
-            <h1 id="stream-as-stages-and-pulls" class="title">Stream as Stages and Pulls</h1>
-            <p>In this section we&#39;ll learn our final model for FS2 streams: as consisting of stages and pulls. 
-            This is the &quot;real&quot; model of FS2.</p>
-            <p>Let&#39;s start with a simple example.</p>
+            <h1 id="stages-and-pulls" class="title">Stages and Pulls</h1>
+            <p>In this section we&#39;ll learn a more detailed model for FS2 streams: as consisting of stages and pulls. </p>
+            
+            <h2 id="stages" class="section">Stages</h2>
+            <p>Take the following simple example of a stream.</p>
             <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="type-name">IO</span><span>
 </span><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.</span><span class="type-name">Stream</span><span>
-</span><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="identifier">unsafe</span><span>.</span><span class="identifier">implicits</span><span>.</span><span class="identifier">global</span><span>
 
 </span><span class="keyword">val</span><span> </span><span class="identifier">data</span><span> = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>)
-</span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))
-</span><span class="keyword">val</span><span> </span><span class="identifier">b</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">b</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;b: </span><span class="substitution">$b</span><span class="string-literal">&quot;</span><span>))</span></code></pre>
-            <p>What do you think happens when run the following? 
-            Take a guess before trying out the code.</p>
-            <pre><code class="nohighlight"><span class="identifier">b</span><span>.</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
-            <div class="solution">
-              <div class="solution-body">
-                <p>You should see output like the below.</p>
-                <pre><code>b: 1
-b: 2
-b: 3
-b: 4</code></pre>
-                <p>Notice that the <code>a</code> branch does not run. Did you expect this behaviour?</p>
-              </div>
-            </div>
-            <p>The simple reason that we see output from <code>b</code> but not from <code>a</code> is that we didn&#39;t run <code>a</code>. 
-            However, to understand why <code>a</code> does not run introduces some of the core concepts in FS2.
-            Remember that a <code>Stream</code> is a description.
-            This is, it&#39;s a data structure that describes what we want to happen.
+</span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))</span></code></pre>
+            <p>This stream consists of two <strong>stages</strong>: <code>data</code>, which produces values, and <code>a</code>, which uses those values. We say that <code>a</code> is <strong>downstream</strong> of <code>data</code> (and <code>data</code> is <strong>upstream</strong> of <code>a</code>) as data flows from <code>data</code> to <code>a</code>.</p>
+            <p>Remember that a <code>Stream</code> is a description.
+            Concretely, it&#39;s a data structure that describes what we want to happen.
             We build a <code>Stream</code> from upstream (which produces data) to downstream (which consumes data.)
-            The downstream data structures have references to those upstream of them.
-            When we write</p>
+            The downstream data structures have references to those upstream of them.</p>
+            <p>When we write</p>
             <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">data</span><span> = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>)
 </span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))
 </span><span class="keyword">val</span><span> </span><span class="identifier">b</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">b</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;b: </span><span class="substitution">$b</span><span class="string-literal">&quot;</span><span>))</span></code></pre>
@@ -85,44 +72,33 @@ b: 4</code></pre>
               <li><code>a</code>, which is downstream of <code>data</code> and has a reference to <code>data</code>; and</li>
               <li><code>b</code>, which is also downstream of <code>data</code> and has a reference to <code>data</code>.</li>
             </ol>
-            <p>Notice that <code>b</code> does not have any reference to <code>a</code>. 
-            So when we run <code>b</code> we <em>cannot</em> run <code>a</code>, because we have no reference to it.</p>
-            <p>We&#39;ll call each data structure a <strong>stage</strong>.
-            A stage <code>x</code> is downstream of another stage <code>y</code> if it consumes data directly from <code>y</code>, or it consumes data from a stage that is downstream of <code>y</code>.
-            Likewise we can say that <code>y</code> is upstream of <code>x</code> if <code>x</code> is downstream of <code>y</code>.</p>
-            <p>When we run a stage, we only run it and all stages that are upstream from it.
-            In the example above, <code>a</code> is not upstream of <code>b</code> so it does not run when <code>b</code> runs.
-            If we want to make <code>a</code> run as well, we need a way to create a stage that is downstream of both.
-            In other words, we need a way to <a href="https://www.youtube.com/watch?v=TEq24JyFWzo">&quot;cross the streams&quot;</a> by joining <code>a</code> and <code>b</code>.
-            This is an example of <strong>fan-in</strong>, where we collect results from multiple streams.</p>
-            <p>FS2 provides several ways to express fan-in:</p>
-            <ul>
-              <li>We can use <code>merge</code> if we don&#39;t care about what order we get elements from the upstream streams, and both upstream streams have the same type.</li>
-              <li>We can use <code>zip</code> if we want to pair up elements from two upstream streams.</li>
-              <li>We can use <code>either</code> if we don&#39;t care about order (like <code>merge</code>) but the two upstream streams have different types.</li>
-            </ul>
-            <p>Write a stream <code>sink</code> that uses one of the methods above to express fan-in of <code>a</code> and <code>b</code>.
-            What do you think you&#39;ll see when you run <code>sink</code>? Does the actual output match your expectations?</p>
-            <div class="solution">
-              <div class="solution-body">
-                <p>In our example both <code>a</code> and <code>b</code> have the same type (<code>Unit</code>) and order doesn&#39;t seem important. So I chose <code>merge</code>.</p>
-                <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">sink</span><span> = </span><span class="identifier">a</span><span>.</span><span class="identifier">merge</span><span>(</span><span class="identifier">b</span><span>)</span></code></pre>
-                <p>The output of</p>
-                <pre><code class="nohighlight"><span class="identifier">sink</span><span>.</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
-                <p>is</p>
-                <pre><code>a: 1
-b: 1
-a: 2
-b: 2
-a: 3
-b: 3
-a: 4
-b: 4</code></pre>
-                <p>so we can see that both <code>a</code> and <code>b</code> receive all the values from <code>data</code>.</p>
-              </div>
-            </div>
+            <p>Notice that <code>b</code> does not have any reference to <code>a</code>. It is neither upstream nor downstream from <code>a</code>.</p>
+            <p>We can state this relationship more abstractly: A stage <code>y</code> is downstream of another stage <code>x</code> if it consumes data directly from <code>x</code>, or it consumes data from a stage that is downstream of <code>x</code>.
+            Likewise we can say that <code>x</code> is upstream of <code>y</code> if <code>y</code> is downstream of <code>x</code>.</p>
+            <p>Finally, we will call the most upstream stage the <strong>source</strong> and the most downstream stage the <strong>sink</strong>. In the example above the source is <code>data</code> and the sink is <code>a</code> (or <code>b</code>).</p>
+            
+            <h2 id="pulls" class="section">Pulls</h2>
+            <p>Data flows from upstream to downstream, but it only flows in response to demand for data. This demand is called a <strong>pull</strong>, and it flows from downstream to upstream (i.e. in the opposite direction from data.) There are several important implications of this:</p>
+            <ol class="arabic">
+              <li>data will not flow if there is no demand; and hence</li>
+              <li>data does not start being processed when it arrives at the source of the stream but when it the sink pulls it; and hence</li>
+              <li>back-pressure, which is control of the production of data in response to speed of processing, is automatic, as the sink will not pull more data until it has finished processing it&#39;s current input.</li>
+            </ol>
+            <p>Finally, unless otherwise noted in the description of a method, stages in FS2 do not cache data. Thus each pull causes a complete traversal of the stream, from source to sink. There is never partially processed data sitting in the stream (except in special cases).</p>
+            <p>We can observe pulls happening with the following <code>Stream</code>.</p>
+            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">scala</span><span>.</span><span class="identifier">util</span><span>.</span><span class="type-name">Random</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">scala</span><span>.</span><span class="identifier">concurrent</span><span>.</span><span class="identifier">duration</span><span>.*
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">source</span><span> = </span><span class="type-name">Stream</span><span>.</span><span class="identifier">repeatEval</span><span>(</span><span class="type-name">IO</span><span>.</span><span class="identifier">print</span><span>(</span><span class="string-literal">&quot;Source -&gt; &quot;</span><span>) &gt;&gt; </span><span class="type-name">IO</span><span>(</span><span class="type-name">Random</span><span>.</span><span class="identifier">nextInt</span><span>()))
+</span><span class="keyword">val</span><span> </span><span class="identifier">intermediary</span><span> = </span><span class="identifier">source</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">int</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">print</span><span>(</span><span class="string-literal">&quot;Intermediary -&gt; &quot;</span><span>).</span><span class="identifier">as</span><span>(</span><span class="identifier">int</span><span>))
+</span><span class="keyword">val</span><span> </span><span class="identifier">sink</span><span> = </span><span class="identifier">intermediary</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">int</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">&quot;Sink&quot;</span><span>) &gt;&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">sleep</span><span>(</span><span class="number-literal">1</span><span>.</span><span class="identifier">second</span><span>)).</span><span class="identifier">take</span><span>(</span><span class="number-literal">4</span><span>)</span></code></pre>
+            <p>Run it in the usual way:</p>
+            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="identifier">unsafe</span><span>.</span><span class="identifier">implicits</span><span>.</span><span class="identifier">global</span><span>
+
+</span><span class="identifier">sink</span><span>.</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
+            <p>Pay careful attention to the output when you run this. You should see <code>Source -&gt; Intermediate -&gt; Sink</code> being immediately printed, and then a pause before each subsequent iteration. If the <code>Source</code> produced data as soon as it was ready we would see the output arriving in a different order.</p>
             <div class="flex flex-row justify-between">
-                <a class="pageNavigation" href="pointillism.html">←Pointillism</a> 
+                <a class="pageNavigation" href="pointillism.html">←Pointillism</a> <a class="pageNavigation" href="fan-in-out.html">Fan-in and Fan-out→</a>
             </div>
         </main>
         <footer>Creative Scala is copyright Noel Welsh</footer>
