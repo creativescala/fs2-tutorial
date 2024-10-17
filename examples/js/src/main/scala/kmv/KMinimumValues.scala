@@ -22,40 +22,41 @@ import doodle.core.*
 import doodle.svg.*
 import doodle.svg.effect.Frame
 import doodle.syntax.all.*
-import kmv.KMV.arithmeticMean
 
 import java.util.Arrays
 import scala.scalajs.js.annotation.JSExport
 import scala.scalajs.js.annotation.JSExportTopLevel
 import scala.util.Random
 
-final class KMV(_elements: Array[Double]) {
+final class KMV(values: Array[Double]) {
   def add(element: Double): KMV = {
-    val idx = Arrays.binarySearch(_elements, element)
-    // element is larger than all the values in _elements
-    if idx >= _elements.size then this
-    // element is already in _elements
-    else if _elements(idx) == element then this
+    val idx = Arrays.binarySearch(values, element)
+    // element is larger than all the values in values
+    if idx >= values.size then this
+    // element is already in values
+    else if values(idx) == element then this
     else {
-      // Shift all the larger _elements out of the way and insert element
-      System.arraycopy(_elements, idx, _elements, idx + 1, _elements.size - idx)
-      _elements(idx) = element
+      // Shift all the larger values out of the way and insert element
+      System.arraycopy(values, idx, values, idx + 1, values.size - idx)
+      values(idx) = element
       this
     }
   }
 
+  val k: Int = values.size
+
   def elements: IArray[Double] =
-    IArray.from(_elements)
+    IArray.from(values)
 
   def averageDistance: Double = {
-    KMV.harmonicMean(_elements)
+    KMV.arithmeticMean(elements)
   }
 
   def cardinality: Long =
     KMV.estimateCardinality(averageDistance)
 }
 object KMV {
-  def arithmeticMean(elements: Array[Double]): Double = {
+  def arithmeticMean(elements: IArray[Double]): Double = {
     def loop(idx: Int, sum: Double): Double =
       if idx == 0 then loop(idx + 1, elements(0))
       else if idx == elements.size then (sum / elements.size)
@@ -64,7 +65,7 @@ object KMV {
     loop(0, 0.0)
   }
 
-  def harmonicMean(elements: Array[Double]): Double = {
+  def harmonicMean(elements: IArray[Double]): Double = {
     def loop(idx: Int, sum: Double): Double =
       if idx == 0 then loop(idx + 1, 1.0 / elements(0))
       else if idx == elements.size then (elements.size / sum)
@@ -74,7 +75,7 @@ object KMV {
   }
 
   def estimateCardinality(mean: Double): Long = {
-    val estimatedCardinality = Math.round((1.0 / mean) - 1)
+    val estimatedCardinality = Math.round(1.0 / mean) - 1
 
     estimatedCardinality
   }
@@ -104,15 +105,14 @@ object KMinimumValues {
         .fillColor(Color.hotpink)
         .at((600.0 * value) - 300.0, 0.0)
 
-    def nPoints = 16
+    def nPoints = 32
+    def k = 16
     def points: Seq[Double] =
-      List.fill(nPoints)(Random.nextDouble())
+      List.fill(nPoints)(Random.nextDouble()).sorted.take(k)
 
     val kmv = new KMV(points.toArray)
-    val averageDistance = KMV.arithmeticMean(kmv.elements.toArray)
+    val averageDistance = KMV.arithmeticMean(kmv.elements)
     val cardinality = kmv.cardinality
-    val cardinalityArithmeticMean =
-      KMV.estimateCardinality(arithmeticMean(kmv.elements.toArray))
 
     points
       .map(point)
@@ -124,17 +124,18 @@ object KMinimumValues {
           .text(s"Average distance between regions: $averageDistance")
           .margin(0, 0, 10, 0)
           .above(
-            Picture.text(
-              s"Estimated set cardinality (harmonic mean): $cardinality"
-            )
-          )
-          .margin(0, 0, 10, 0)
-          .above(
             Picture
               .text(
-                s"Estimated set cardinality (arithmetic mean): $cardinalityArithmeticMean"
+                s"Estimated set cardinality: $cardinality"
               )
           )
+          .margin(0, 0, 10, 0)
+          .above{
+            Picture
+              .text(
+                s"Actual set cardinality: $nPoints"
+              )
+          }
           .fillColor(Color.black)
       )
       .drawWithFrame(frame)
