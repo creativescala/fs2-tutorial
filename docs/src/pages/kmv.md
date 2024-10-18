@@ -56,9 +56,15 @@ We won't be so lucky with real data.
 However there is a trick we can use: we can hash the data.
 A good hash function will give us a result that is uniformly distributed in the range of its output, which is typically 32-bits to 512-bits.
 For our purposes 32-bits will do, which will give us an integer we can convert to a fractional `Double` without loss of precision.
+In Scala we can use [scala.util.hashing.MurmurHash3][murmur3].
 
 
+## Implementing k-Minimum Values
 
 ## References
 
 http://www.vldb.org/pvldb/vol11/p499-harmouch.pdf
+
+
+
+[murmur3]: https://www.scala-lang.org/api/current/scala/util/hashing/MurmurHash3$.html#
