@@ -11659,7 +11659,7 @@ function $h_Lkmv_KMinimumValues$() {
 }
 $h_Lkmv_KMinimumValues$.prototype = $c_Lkmv_KMinimumValues$.prototype;
 $c_Lkmv_KMinimumValues$.prototype.numberLine__T__V = (function(id) {
-  var frame = $n($n($m_Ldoodle_svg_effect_Frame$().apply__T__Ldoodle_svg_effect_Frame(id)).withSize__D__D__Ldoodle_svg_effect_Frame(600.0, 300.0)).withBackground__Ldoodle_core_Color__Ldoodle_svg_effect_Frame($m_Ldoodle_core_Color$().Ldoodle_core_Color$__f_white);
+  var frame = $n($n($m_Ldoodle_svg_effect_Frame$().apply__T__Ldoodle_svg_effect_Frame(id)).withSize__D__D__Ldoodle_svg_effect_Frame(600.0, 200.0)).withBackground__Ldoodle_core_Color__Ldoodle_svg_effect_Frame($m_Ldoodle_core_Color$().Ldoodle_core_Color$__f_white);
   var this$5 = $m_Ldoodle_syntax_package$all$();
   var this$3 = $m_Ldoodle_syntax_package$all$();
   var this$1 = $m_Ldoodle_syntax_package$all$();
