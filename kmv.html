@@ -50,37 +50,34 @@
     <div id="content">
         <main class="content">
             <h1 id="k-minimum-values" class="title">k-Minimum Values</h1>
-            <p>In this section we&#39;re going to break from learning FS2 fundamentals to see a relatively involved example of an algorithm designed for streaming data. This will allow us to explore practical usage of FS2 as well as learn about what you&#39;ll hopefully find a very interesting algorithm: <strong>k-Minimum Values</strong> (kMV).</p>
-            <p>Our task is to estimate <strong>set cardinality</strong>, which is a fancy way of saying &quot;the number of elements in a set&quot;. We&#39;re going to assume our input is actually a multi-set, meaning the same element can occur multiple times, and we want to know how many unique elements there are. (If we could guarantee we would never see any duplicates we could just count the elements directly.) This is a very typical problem in data analysis, where we want to know, for example, the number of unique visitors to a web site over a day or other time period.</p>
-            <p>We&#39;ll make our problem interesting by requiring we only visit each data point exactly once.
-            Hence the running time of the algorithm has order \(O(n)\).
-            This means we require a <strong>streaming algorithm</strong>.
-            This requirement could be because there is too much data to load into memory, 
-            or the data must be processed too quickly to store.
-            This means the straightforward solution, of just loading everything into a <code>Set</code> data structure, won&#39;t work, as this has running time of order \(O(n log n)\).</p>
-            <p>k-Minimum Values is a streaming algorithm, and it is also an example of a <strong>data sketch</strong>.
-            Not only is it&#39;s running time \(O(n)\), but the memory it requires is <strong>sub-linear</strong>.
-            In fact the memory requirement is fixed, with order \(O(k)\).
-            These features come with a tradeoff: we will not get a exact answer, but one that is close to correct with high probability.</p>
+            <p>In this section we&#39;re dive into a relatively involved case study using FS2 in a typical application of data streaming: counting unique items. This allows us to explore practical usage of FS2 as well as learn about what you&#39;ll hopefully find a very interesting algorithm: <strong>k-Minimum Values</strong> (kMV).</p>
+            <p>Our task is to estimate the number of <strong>distinct values</strong> in a data stream. That is, the number of values remaining if we remove all values that have already occurred. If we want to use fancy words, we can say we&#39;re estimating <strong>cardinality</strong>, which is the name of &quot;the number of elements in a set&quot;. This kind of problem arises very often in data analysis. Examples of distinct values problems in practice include calculating the number of unique visitors to a web site, or the number unique clients connecting to a network.</p>
+            <p>Distinct value problems are easy to solve when the amount of data is small. In Scala we could just put all the data into a <code>Set</code> data structure and call the <code>size</code> method. However, there are situations where there is too much data, or it arrives too quickly, for this to work. Using a <code>Set</code> requires we store all the distinct values, which means the amount of memory used grows in direct proportion to number of distinct values. In the terminology of computational complexity we&#39;d say memory usage has order \(O(n)\), where \(n\) is the number of elements we observe. Similarly the time taken to insert an item into a <code>Set</code> is in the worst case proportional to \(log n\), so for \(n\) elements the total time is of order \(O(n log n)\).</p>
+            <p>We can solve both our memory and time problems by using k-Minimum Values.
+            k-Minimum Values is both a <strong>streaming algorithm</strong> and a <strong>sketch</strong>.
+            A stream algorithm is one that requires only a single pass over the data, never needing to return data it has already seen.
+            A sketch means we&#39;ll represent the data with some summary that takes dramatically less memory to store than the data itself.
+            In the case of k-Minimum Values the amount of memory required is constant, with order \(O(k)\).
+            These features come with a tradeoff: we will not get a exact answer, but only one that is close to correct with high probability.</p>
             
             <h2 id="a-sketch-of-k-minimum-values" class="section">A Sketch of k-Minimum Values</h2>
             <p>Let&#39;s start with an intuitive explanation of k-Minimum Values. Detailed mathematical analysis can be found in the references.</p>
-            <p>Our task is to estimate the number of distinct elements in a multi-set. 
+            <p>Our task is to estimate the number of distinct elements in a data set. 
             Imagine that each element is a random number, uniformly distributed in the range \([0, 1]\). 
             Just one distinct element splits the range into two regions. 
             Two elements splits it into three regions, three elements into four regions, and so on. </p>
             <p>Let&#39;s now think about the average length of the regions. 
             With two regions (when there is one element) the average length is \(\frac{1}{2}\), as the sum of the lengths must be \(1\).
             With three regions it must be \(\frac{1}{3}\), with four regions \(\frac{1}{4}\), and so on.
-            What this tells us is that the average length of the regions tells us how many elements there are in the multi-set, which is what we are trying to learn.
+            What this tells us is that the average length of the regions tells us how many distinct values there are, which is what we are trying to learn.
             Specifically, with \(n\) elements the average length of the regions is \(\frac{1}{n + 1}\).</p>
             <p>If we keep around <em>all</em> the elements we see we can get an exact measurement of the number of the elements from the average length of the regions.
             This is, however, a bit pointless. 
-            Not only could we just count the number of elements directly, but what we&#39;re trying to do is explicitly <em>not</em> keep around all the elements.
+            Not only could we just count the number of elements directly, but what we&#39;re trying to do is explicitly <em>not</em> keep them all around.
             The leap that k-Minimum Values takes is to realize that the average length of a subset of the regions is a noisy estimate of the average length of all the regions, so we only need to keep around, say, \(k\) elements. 
             Which elements should we choose?
             We need to keep around a contiguous block, so that we correctly estimate the average length.
-            The smallest values will do.
+            The smallest \(k\) values will do.
             And there we have it: k-Minimum Values.</p>
             <p>So, in summary, k-Minimum Values works as follows:</p>
             <ol class="arabic">
@@ -88,13 +85,10 @@
               <li>We keep the \(k\) smallest values we observe.</li>
               <li>We can estimate the total number of distinct element from the average length of the \(k\) regions between \(0\) and the largest value we keep.</li>
             </ol>
-            <p>At this point you probably have one of three reactions:</p>
-            <ol class="arabic">
-              <li>what the heck, I am so confused!?</li>
-              <li>this is nonsense and will never work!</li>
-              <li>this is incredibly clever and elegant!</li>
-            </ol>
-            <p>Either way, an example will probably help.</p>
+            <p>Does it actually work? 
+            Below is an example where we draw 32 random values and keep only 16 of them (i.e. \(k\) is 16.)
+            From the 16 samples we keep we estimate the total size. 
+            You can reload the page a few times to see how the estimate changes.</p>
             <div class="doodle" id="number-line"></div>
             <script>KMinimumValues.numberLine("number-line")</script>
             <p>There is only one problem: we have assumed that elements are uniformly distributed in \([0, 1]\). 
