@@ -124,14 +124,14 @@ object KMinimumValues {
           .above(
             Picture
               .text(
-                s"Estimated set cardinality: $cardinality"
+                s"Estimated distinct values: $cardinality"
               )
           )
           .margin(0, 0, 10, 0)
           .above {
             Picture
               .text(
-                s"Actual set cardinality: $n"
+                s"Actual distinct values: $n"
               )
           }
           .fillColor(Color.black)
