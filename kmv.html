@@ -90,7 +90,10 @@
             From the 16 samples we keep we estimate the total size. 
             You can reload the page a few times to see how the estimate changes.</p>
             <div class="doodle" id="number-line"></div>
-            <script>KMinimumValues.numberLine("number-line")</script>
+            <script>KMinimumValues.numberLine32("number-line")</script>
+            <p>For contrast, here&#39;s another example with \(k\) set to 16, and a total of 16384 values.</p>
+            <div class="doodle" id="number-line"></div>
+            <script>KMinimumValues.numberLine16384("number-line")</script>
             <p>There is only one problem: we have assumed that elements are uniformly distributed in \([0, 1]\). 
             We won&#39;t be so lucky with real data.
             However there is a trick we can use: we can hash the data.
