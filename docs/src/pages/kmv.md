@@ -49,7 +49,11 @@ Below is an example where we draw 32 random values and keep only 16 of them (i.e
 From the 16 samples we keep we estimate the total size. 
 You can reload the page a few times to see how the estimate changes.
 
-@:doodle("number-line", "KMinimumValues.numberLine")
+@:doodle("number-line", "KMinimumValues.numberLine32")
+
+For contrast, here's another example with \\(k\\) set to 16, and a total of 16384 values.
+
+@:doodle("number-line", "KMinimumValues.numberLine16384")
 
 There is only one problem: we have assumed that elements are uniformly distributed in \\(\[0, 1\]\\). 
 We won't be so lucky with real data.

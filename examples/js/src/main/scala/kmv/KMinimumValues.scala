@@ -79,43 +79,41 @@ object KMV {
 
     estimatedCardinality
   }
+
+  def fromRandomData(k: Int, n: Int): KMV = {
+    val points: Seq[Double] =
+      List.fill(n)(Random.nextDouble()).sorted.take(k)
+
+    val kmv = new KMV(points.toArray)
+    kmv
+  }
 }
 
 @JSExportTopLevel("KMinimumValues")
 object KMinimumValues {
-  @JSExport
-  def numberLine(id: String): Unit = {
-    val frame =
-      Frame(id)
-        .withSize(600, 200)
-        .withBackground(Color.white)
+  val line: Picture[Unit] =
+    OpenPath.empty
+      .moveTo(-300, 0)
+      .lineTo(300, 0)
+      .path
+      .strokeColor(Color.midnightBlue)
+      .strokeWidth(3)
 
-    val line: Picture[Unit] =
-      OpenPath.empty
-        .moveTo(-300, 0)
-        .lineTo(300, 0)
-        .path
-        .strokeColor(Color.midnightBlue)
-        .strokeWidth(3)
+  def point(value: Double): Picture[Unit] =
+    Picture
+      .circle(11)
+      .noStroke
+      .fillColor(Color.hotpink)
+      .at((600.0 * value) - 300.0, 0.0)
 
-    def point(value: Double): Picture[Unit] =
-      Picture
-        .circle(11)
-        .noStroke
-        .fillColor(Color.hotpink)
-        .at((600.0 * value) - 300.0, 0.0)
-
-    def nPoints = 32
-    def k = 16
-    def points: Seq[Double] =
-      List.fill(nPoints)(Random.nextDouble()).sorted.take(k)
-
-    val kmv = new KMV(points.toArray)
+  def numberLine(k: Int, n: Int): Picture[Unit] = {
+    val kmv = KMV.fromRandomData(16, 32)
     val averageDistance = KMV.arithmeticMean(kmv.elements)
     val cardinality = kmv.cardinality
 
-    points
+    kmv.elements
       .map(point)
+      .toList
       .allOn
       .on(line)
       .margin(0, 0, 20, 0)
@@ -130,14 +128,33 @@ object KMinimumValues {
               )
           )
           .margin(0, 0, 10, 0)
-          .above{
+          .above {
             Picture
               .text(
-                s"Actual set cardinality: $nPoints"
+                s"Actual set cardinality: $n"
               )
           }
           .fillColor(Color.black)
       )
-      .drawWithFrame(frame)
+  }
+
+  @JSExport
+  def numberLine32(id: String): Unit = {
+    val frame =
+      Frame(id)
+        .withSize(600, 200)
+        .withBackground(Color.white)
+
+    numberLine(16, 32).drawWithFrame(frame)
+  }
+
+  @JSExport
+  def numberLine16384(id: String): Unit = {
+    val frame =
+      Frame(id)
+        .withSize(600, 200)
+        .withBackground(Color.white)
+
+    numberLine(16, 16384).drawWithFrame(frame)
   }
 }
