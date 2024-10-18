@@ -107,7 +107,7 @@ object KMinimumValues {
       .at((600.0 * value) - 300.0, 0.0)
 
   def numberLine(k: Int, n: Int): Picture[Unit] = {
-    val kmv = KMV.fromRandomData(16, 32)
+    val kmv = KMV.fromRandomData(k, n)
     val averageDistance = KMV.arithmeticMean(kmv.elements)
     val cardinality = kmv.cardinality
 
@@ -142,7 +142,7 @@ object KMinimumValues {
   def numberLine32(id: String): Unit = {
     val frame =
       Frame(id)
-        .withSize(600, 200)
+        .withSize(620, 200)
         .withBackground(Color.white)
 
     numberLine(16, 32).drawWithFrame(frame)
@@ -152,7 +152,7 @@ object KMinimumValues {
   def numberLine16384(id: String): Unit = {
     val frame =
       Frame(id)
-        .withSize(600, 200)
+        .withSize(620, 200)
         .withBackground(Color.white)
 
     numberLine(16, 16384).drawWithFrame(frame)
