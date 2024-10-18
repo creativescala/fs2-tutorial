@@ -11817,13 +11817,13 @@ $c_Lkmv_KMinimumValues$.prototype.numberLine16384__T__V = (function(id) {
   var picture = this.numberLine__I__I__Ldoodle_algebra_Picture(16, 16384);
   new $c_Ldoodle_syntax_AbstractRendererSyntax$RendererPictureOps(this$1, picture).drawWithFrame__O__Ldoodle_effect_Renderer__Lcats_effect_unsafe_IORuntime__V(frame, $m_Ldoodle_svg_package$().Ldoodle_svg_package$__f_svgRenderer, $m_Lcats_effect_unsafe_IORuntime$().global__Lcats_effect_unsafe_IORuntime());
 });
-$c_Lkmv_KMinimumValues$.prototype.numberLine16384 = (function(arg) {
-  var prep0 = $as_T(arg);
-  this.numberLine16384__T__V(prep0);
-});
 $c_Lkmv_KMinimumValues$.prototype.numberLine32 = (function(arg) {
   var prep0 = $as_T(arg);
   this.numberLine32__T__V(prep0);
+});
+$c_Lkmv_KMinimumValues$.prototype.numberLine16384 = (function(arg) {
+  var prep0 = $as_T(arg);
+  this.numberLine16384__T__V(prep0);
 });
 var $d_Lkmv_KMinimumValues$ = new $TypeData().initClass($c_Lkmv_KMinimumValues$, "kmv.KMinimumValues$", ({
   Lkmv_KMinimumValues$: 1
