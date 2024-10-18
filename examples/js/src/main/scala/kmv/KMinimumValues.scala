@@ -87,7 +87,7 @@ object KMinimumValues {
   def numberLine(id: String): Unit = {
     val frame =
       Frame(id)
-        .withSize(600, 300)
+        .withSize(600, 200)
         .withBackground(Color.white)
 
     val line: Picture[Unit] =
