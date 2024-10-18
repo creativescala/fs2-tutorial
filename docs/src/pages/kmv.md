@@ -61,6 +61,19 @@ In Scala we can use [scala.util.hashing.MurmurHash3][murmur3].
 
 ## Implementing k-Minimum Values
 
+Your first mission is to implement the k-Minimum Values algorithm.
+At this point we're not worrying about connecting it to FS2.
+
+
+## Hashing Data
+
+
+## Pipes
+
+
+## Reading and Processing Text
+
+
 ## References
 
 http://www.vldb.org/pvldb/vol11/p499-harmouch.pdf
