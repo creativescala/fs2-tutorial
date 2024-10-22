@@ -9406,6 +9406,36 @@ $c_ju_Arrays$.prototype.binarySearch__AI__I__I = (function(a, key) {
     }
   }
 });
+$c_ju_Arrays$.prototype.binarySearch__AD__I__I__D__I = (function(a, startIndex, endIndex, key) {
+  if ((startIndex > endIndex)) {
+    throw $ct_jl_IllegalArgumentException__T__(new $c_jl_IllegalArgumentException(), (((("fromIndex(" + startIndex) + ") > toIndex(") + endIndex) + ")"));
+  }
+  if ((startIndex < 0)) {
+    $n(a).get(startIndex);
+  }
+  if ((endIndex > 0)) {
+    var i = (((-1) + endIndex) | 0);
+    $n(a).get(i);
+  }
+  var startIndex$1 = startIndex;
+  var endIndex$1 = endIndex;
+  while (true) {
+    if ((startIndex$1 === endIndex$1)) {
+      return (((-1) - startIndex$1) | 0);
+    } else {
+      var mid = ((((startIndex$1 + endIndex$1) | 0) >>> 1) | 0);
+      var elem = $n(a).get(mid);
+      var cmp = $m_jl_Double$().compare__D__D__I(key, elem);
+      if ((cmp < 0)) {
+        endIndex$1 = mid;
+      } else if ((cmp === 0)) {
+        return mid;
+      } else {
+        startIndex$1 = ((1 + mid) | 0);
+      }
+    }
+  }
+});
 $c_ju_Arrays$.prototype.equals__AJ__AJ__Z = (function(a, b) {
   if ((a === b)) {
     return true;
@@ -11496,146 +11526,87 @@ var $d_ju_regex_PatternCompiler$CompiledCharClass = new $TypeData().initClass($c
   ju_regex_PatternCompiler$CompiledCharClass: 1
 }));
 /** @constructor */
-function $c_Lkmv_KMV(values) {
-  this.Lkmv_KMV__f_values = null;
-  this.Lkmv_KMV__f_values = values;
-  $n(values);
+function $c_Lkmv_KMinimumValues(k) {
+  this.Lkmv_KMinimumValues__f_k = 0;
+  this.Lkmv_KMinimumValues__f_values = null;
+  this.Lkmv_KMinimumValues__f_used = 0;
+  this.Lkmv_KMinimumValues__f_k = k;
+  var dimensions = new $ac_I(new Int32Array([k]));
+  this.Lkmv_KMinimumValues__f_values = $asArrayOf_D($m_jl_reflect_Array$().newInstance__jl_Class__AI__O($d_D.getClassOf(), dimensions), 1);
+  this.Lkmv_KMinimumValues__f_used = 0;
 }
-$c_Lkmv_KMV.prototype = new $h_O();
-$c_Lkmv_KMV.prototype.constructor = $c_Lkmv_KMV;
+$c_Lkmv_KMinimumValues.prototype = new $h_O();
+$c_Lkmv_KMinimumValues.prototype.constructor = $c_Lkmv_KMinimumValues;
 /** @constructor */
-function $h_Lkmv_KMV() {
+function $h_Lkmv_KMinimumValues() {
 }
-$h_Lkmv_KMV.prototype = $c_Lkmv_KMV.prototype;
-$c_Lkmv_KMV.prototype.elements__AD = (function() {
-  var it = $m_s_Predef$().wrapDoubleArray__AD__scm_ArraySeq$ofDouble(this.Lkmv_KMV__f_values);
-  var this$4 = $n(it);
-  var n = this$4.length__I();
-  if ((n > (-1))) {
-    var elements = new $ac_D(n);
-    var this$5 = $n(it);
-    var iterator = new $c_sc_ArrayOps$ArrayIterator$mcD$sp(this$5.scm_ArraySeq$ofDouble__f_array);
-    var i = 0;
-    while ((i < n)) {
-      elements.set(i, iterator.next$mcD$sp__D());
-      i = ((1 + i) | 0);
-    }
-    var s = elements;
-  } else {
-    var capacity = 0;
-    var size = 0;
-    var jsElems = null;
-    capacity = 0;
-    size = 0;
-    jsElems = [];
-    var this$8 = $n(it);
-    var iterator$2 = new $c_sc_ArrayOps$ArrayIterator$mcD$sp(this$8.scm_ArraySeq$ofDouble__f_array);
-    while (iterator$2.hasNext__Z()) {
-      var elem = iterator$2.next$mcD$sp__D();
-      jsElems.push(elem);
-    }
-    var s = new $ac_D(new Float64Array(jsElems));
-  }
+$h_Lkmv_KMinimumValues.prototype = $c_Lkmv_KMinimumValues.prototype;
+$c_Lkmv_KMinimumValues.prototype.elements__AD = (function() {
+  var s = this.Lkmv_KMinimumValues__f_values;
   return s;
 });
-$c_Lkmv_KMV.prototype.cardinality__J = (function() {
-  var $x_2 = $m_Lkmv_KMV$();
-  var xs = this.Lkmv_KMV__f_values;
-  var $x_1 = $n(xs).u.length;
-  var xs$1 = this.Lkmv_KMV__f_values;
-  return $x_2.estimateCardinality__I__D__J($x_1, $uD($m_sc_ArrayOps$().last$extension__O__O(xs$1)));
-});
-var $d_Lkmv_KMV = new $TypeData().initClass($c_Lkmv_KMV, "kmv.KMV", ({
-  Lkmv_KMV: 1
-}));
-function $p_Lkmv_KMV$__loop$1__AD__I__D__D($thiz, elements$1, idx, sum) {
-  var sum$tailLocal1 = sum;
-  var idx$tailLocal1 = idx;
-  while (true) {
-    if ((idx$tailLocal1 === 0)) {
-      var idx$tailLocal1$tmp1 = ((1 + idx$tailLocal1) | 0);
-      var sum$tailLocal1$tmp1 = $n(elements$1).get(0);
-      idx$tailLocal1 = idx$tailLocal1$tmp1;
-      sum$tailLocal1 = sum$tailLocal1$tmp1;
-    } else if ((idx$tailLocal1 === $n(elements$1).u.length)) {
-      return (sum$tailLocal1 / $n(elements$1).u.length);
-    } else {
-      var idx$tailLocal1$tmp2 = ((1 + idx$tailLocal1) | 0);
-      var $x_2 = sum$tailLocal1;
-      var n = idx$tailLocal1;
-      var $x_1 = $n(elements$1).get(n);
-      var n$1 = (((-1) + idx$tailLocal1) | 0);
-      var sum$tailLocal1$tmp2 = ($x_2 + ($x_1 - $n(elements$1).get(n$1)));
-      idx$tailLocal1 = idx$tailLocal1$tmp2;
-      sum$tailLocal1 = sum$tailLocal1$tmp2;
-    }
-  }
-}
-/** @constructor */
-function $c_Lkmv_KMV$() {
-}
-$c_Lkmv_KMV$.prototype = new $h_O();
-$c_Lkmv_KMV$.prototype.constructor = $c_Lkmv_KMV$;
-/** @constructor */
-function $h_Lkmv_KMV$() {
-}
-$h_Lkmv_KMV$.prototype = $c_Lkmv_KMV$.prototype;
-$c_Lkmv_KMV$.prototype.estimateCardinality__I__D__J = (function(k, length) {
-  var a = (k / length);
-  var this$2 = $m_RTLong$();
-  var value = $uD(Math.round(a));
-  var lo = this$2.org$scalajs$linker$runtime$RuntimeLong$$fromDoubleImpl__D__I(value);
-  var hi = this$2.RTLong$__f_org$scalajs$linker$runtime$RuntimeLong$$hiReturn;
-  var lo$1 = (((-1) + lo) | 0);
-  var hi$1 = ((lo$1 !== (-1)) ? hi : (((-1) + hi) | 0));
-  return new $c_RTLong(lo$1, hi$1);
-});
-$c_Lkmv_KMV$.prototype.fromRandomData__I__I__Lkmv_KMV = (function(k, n) {
-  var b = new $c_scm_ListBuffer();
-  var i = 0;
-  while ((i < n)) {
-    var this$2 = $m_s_util_Random$();
-    var elem = $n(this$2.s_util_Random__f_self).nextDouble__D();
-    b.addOne__O__scm_ListBuffer(elem);
-    i = ((1 + i) | 0);
-  }
-  var this$3 = $n(b.toList__sci_List());
-  var ord = $m_s_math_Ordering$DeprecatedDoubleOrdering$();
-  var points = $n($as_sci_List($f_sc_SeqOps__sorted__s_math_Ordering__O(this$3, ord))).take__I__sci_List(k);
-  var this$5 = $n(points);
-  if ((this$5.knownSize__I() >= 0)) {
-    var len = this$5.knownSize__I();
-    var destination = new $ac_D(len);
-    $f_sc_IterableOnceOps__copyToArray__O__I__I__I(this$5, destination, 0, 2147483647);
-    var $x_1 = destination;
+$c_Lkmv_KMinimumValues.prototype.add__D__Lkmv_KMinimumValues = (function(element) {
+  var a = this.Lkmv_KMinimumValues__f_values;
+  var endIndex = this.Lkmv_KMinimumValues__f_used;
+  var idx = $m_ju_Arrays$().binarySearch__AD__I__I__D__I(a, 0, endIndex, element);
+  if ((idx >= 0)) {
+    return this;
   } else {
-    var capacity = 0;
-    var size = 0;
-    var jsElems = null;
-    capacity = 0;
-    size = 0;
-    jsElems = [];
-    var it = this$5.iterator__sc_Iterator();
-    while ($n(it).hasNext__Z()) {
-      var elem$1 = $n(it).next__O();
-      var unboxedElem = ((elem$1 === null) ? 0.0 : elem$1);
-      jsElems.push(unboxedElem);
+    var $x_1 = this.Lkmv_KMinimumValues__f_used;
+    var xs = this.Lkmv_KMinimumValues__f_values;
+    if (($x_1 < $n(xs).u.length)) {
+      this.Lkmv_KMinimumValues__f_used = ((1 + this.Lkmv_KMinimumValues__f_used) | 0);
     }
-    var $x_1 = new $ac_D(new Float64Array(jsElems));
+    var insertionPoint = (((-1) - idx) | 0);
+    var xs$1 = this.Lkmv_KMinimumValues__f_values;
+    if ((insertionPoint >= $n(xs$1).u.length)) {
+      return this;
+    } else {
+      var src = this.Lkmv_KMinimumValues__f_values;
+      var dest = this.Lkmv_KMinimumValues__f_values;
+      var destPos = ((1 + insertionPoint) | 0);
+      var xs$2 = this.Lkmv_KMinimumValues__f_values;
+      var length = (((-1) + (($n(xs$2).u.length - insertionPoint) | 0)) | 0);
+      $systemArraycopy($n(src), insertionPoint, $n(dest), destPos, length);
+      $n(this.Lkmv_KMinimumValues__f_values).set(insertionPoint, element);
+      return this;
+    }
   }
-  var kmv = new $c_Lkmv_KMV($x_1);
-  return kmv;
 });
-var $d_Lkmv_KMV$ = new $TypeData().initClass($c_Lkmv_KMV$, "kmv.KMV$", ({
-  Lkmv_KMV$: 1
-}));
-var $n_Lkmv_KMV$;
-function $m_Lkmv_KMV$() {
-  if ((!$n_Lkmv_KMV$)) {
-    $n_Lkmv_KMV$ = new $c_Lkmv_KMV$();
+$c_Lkmv_KMinimumValues.prototype.averageDistance__D = (function() {
+  var xs = this.Lkmv_KMinimumValues__f_values;
+  return ($uD($m_sc_ArrayOps$().last$extension__O__O(xs)) / this.Lkmv_KMinimumValues__f_k);
+});
+$c_Lkmv_KMinimumValues.prototype.distinctValues__J = (function() {
+  var $x_1 = this.Lkmv_KMinimumValues__f_used;
+  var xs = this.Lkmv_KMinimumValues__f_values;
+  if (($x_1 < $n(xs).u.length)) {
+    var value = this.Lkmv_KMinimumValues__f_used;
+    var hi = (value >> 31);
+    return new $c_RTLong(value, hi);
+  } else {
+    var $x_2 = this.Lkmv_KMinimumValues__f_k;
+    var xs$1 = this.Lkmv_KMinimumValues__f_values;
+    var a = (($x_2 / $uD($m_sc_ArrayOps$().last$extension__O__O(xs$1))) - 1.0);
+    var this$6 = $m_RTLong$();
+    var value$1 = $uD(Math.round(a));
+    var lo = this$6.org$scalajs$linker$runtime$RuntimeLong$$fromDoubleImpl__D__I(value$1);
+    var hi$1 = this$6.RTLong$__f_org$scalajs$linker$runtime$RuntimeLong$$hiReturn;
+    return new $c_RTLong(lo, hi$1);
   }
-  return $n_Lkmv_KMV$;
+});
+function $as_Lkmv_KMinimumValues(obj) {
+  return (((obj instanceof $c_Lkmv_KMinimumValues) || (obj === null)) ? obj : $throwClassCastException(obj, "kmv.KMinimumValues"));
 }
+function $isArrayOf_Lkmv_KMinimumValues(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lkmv_KMinimumValues)));
+}
+function $asArrayOf_Lkmv_KMinimumValues(obj, depth) {
+  return (($isArrayOf_Lkmv_KMinimumValues(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lkmv.KMinimumValues;", depth));
+}
+var $d_Lkmv_KMinimumValues = new $TypeData().initClass($c_Lkmv_KMinimumValues, "kmv.KMinimumValues", ({
+  Lkmv_KMinimumValues: 1
+}));
 /** @constructor */
 function $c_Lkmv_KMinimumValues$() {
   this.Lkmv_KMinimumValues$__f_line = null;
@@ -11658,6 +11629,32 @@ $c_Lkmv_KMinimumValues$.prototype.constructor = $c_Lkmv_KMinimumValues$;
 function $h_Lkmv_KMinimumValues$() {
 }
 $h_Lkmv_KMinimumValues$.prototype = $c_Lkmv_KMinimumValues$.prototype;
+$c_Lkmv_KMinimumValues$.prototype.fromRandomData__I__I__Lkmv_KMinimumValues = (function(k, n) {
+  var b = new $c_scm_ListBuffer();
+  var i = 0;
+  while ((i < n)) {
+    var this$2 = $m_s_util_Random$();
+    var elem = $n(this$2.s_util_Random__f_self).nextDouble__D();
+    b.addOne__O__scm_ListBuffer(elem);
+    i = ((1 + i) | 0);
+  }
+  var this$3 = $n(b.toList__sci_List());
+  var ord = $m_s_math_Ordering$DeprecatedDoubleOrdering$();
+  var points = $n($as_sci_List($f_sc_SeqOps__sorted__s_math_Ordering__O(this$3, ord))).take__I__sci_List(k);
+  var this$4 = $n(points);
+  var z = new $c_Lkmv_KMinimumValues(k);
+  var acc = z;
+  var these = this$4;
+  while ((!$n(these).isEmpty__Z())) {
+    var arg1 = acc;
+    var arg2 = $n(these).head__O();
+    var kmv = $as_Lkmv_KMinimumValues(arg1);
+    var elt = $uD(arg2);
+    acc = $n(kmv).add__D__Lkmv_KMinimumValues(elt);
+    these = $as_sc_LinearSeq($n(these).tail__O());
+  }
+  return $as_Lkmv_KMinimumValues(acc);
+});
 $c_Lkmv_KMinimumValues$.prototype.point__D__Ldoodle_algebra_Picture = (function(value) {
   var this$6 = $m_Ldoodle_syntax_package$all$();
   var this$4 = $m_Ldoodle_syntax_package$all$();
@@ -11673,17 +11670,15 @@ $c_Lkmv_KMinimumValues$.prototype.point__D__Ldoodle_algebra_Picture = (function(
   return new $c_Ldoodle_syntax_LayoutSyntax$$anon$7(x, 0.0, this$7);
 });
 $c_Lkmv_KMinimumValues$.prototype.numberLine__I__I__Ldoodle_algebra_Picture = (function(k, n) {
-  var kmv = $m_Lkmv_KMV$().fromRandomData__I__I__Lkmv_KMV(k, n);
-  var this$1 = $m_Lkmv_KMV$();
-  var elements = $n(kmv).elements__AD();
-  var averageDistance = $p_Lkmv_KMV$__loop$1__AD__I__D__D(this$1, elements, 0, 0.0);
-  var t = $n(kmv).cardinality__J();
+  var kmv = this.fromRandomData__I__I__Lkmv_KMinimumValues(k, n);
+  var averageDistance = $n(kmv).averageDistance__D();
+  var t = $n(kmv).distinctValues__J();
   var lo = t.RTLong__f_lo;
   var hi = t.RTLong__f_hi;
-  var this$16 = $m_Ldoodle_syntax_package$all$();
-  var this$14 = $m_Ldoodle_syntax_package$all$();
-  var this$11 = $m_Ldoodle_syntax_package$all$();
-  var this$9 = $m_Ldoodle_syntax_package$all$();
+  var this$15 = $m_Ldoodle_syntax_package$all$();
+  var this$13 = $m_Ldoodle_syntax_package$all$();
+  var this$10 = $m_Ldoodle_syntax_package$all$();
+  var this$8 = $m_Ldoodle_syntax_package$all$();
   var $x_10 = $m_s_IArray$package$IArray$();
   var arr = $n(kmv).elements__AD();
   var f = ((value) => {
@@ -11771,42 +11766,42 @@ $c_Lkmv_KMinimumValues$.prototype.numberLine__I__I__Ldoodle_algebra_Picture = (f
       throw new $c_s_MatchError(arr);
     }
   }
-  var this$7 = $n($x_10.wrapRefArray__AO__sci_ArraySeq$ofRef(ys));
-  var t$2 = $m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(this$7);
-  var picture = new $c_Ldoodle_syntax_TraverseSyntax$TraverseOps(this$9, t$2).allOn__Lcats_Traverse__Ldoodle_algebra_Picture(($m_Lcats_UnorderedFoldable$(), $as_Lcats_Traverse($m_Lcats_instances_package$list$().Lcats_instances_package$list$__f_catsStdInstancesForList)));
-  var this$13 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$11, picture);
+  var this$6 = $n($x_10.wrapRefArray__AO__sci_ArraySeq$ofRef(ys));
+  var t$2 = $m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(this$6);
+  var picture = new $c_Ldoodle_syntax_TraverseSyntax$TraverseOps(this$8, t$2).allOn__Lcats_Traverse__Ldoodle_algebra_Picture(($m_Lcats_UnorderedFoldable$(), $as_Lcats_Traverse($m_Lcats_instances_package$list$().Lcats_instances_package$list$__f_catsStdInstancesForList)));
+  var this$12 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$10, picture);
   var that = this.Lkmv_KMinimumValues$__f_line;
   var s = $m_Lcats_kernel_instances_unit_package$().Lcats_kernel_instances_unit_package$__f_catsKernelStdAlgebraForUnit;
-  var picture$1 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$1(that, s, this$13);
-  var this$15 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$14, picture$1);
-  var picture$2 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 20.0, 0.0, this$15);
-  var this$33 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$16, picture$2);
-  var this$30 = $m_Ldoodle_syntax_package$all$();
-  var this$26 = $m_Ldoodle_syntax_package$all$();
-  var this$24 = $m_Ldoodle_syntax_package$all$();
-  var this$20 = $m_Ldoodle_syntax_package$all$();
-  var this$18 = $m_Ldoodle_syntax_package$all$();
+  var picture$1 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$1(that, s, this$12);
+  var this$14 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$13, picture$1);
+  var picture$2 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 20.0, 0.0, this$14);
+  var this$32 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$15, picture$2);
+  var this$29 = $m_Ldoodle_syntax_package$all$();
+  var this$25 = $m_Ldoodle_syntax_package$all$();
+  var this$23 = $m_Ldoodle_syntax_package$all$();
+  var this$19 = $m_Ldoodle_syntax_package$all$();
+  var this$17 = $m_Ldoodle_syntax_package$all$();
   var text = ("Average distance between regions: " + averageDistance);
   var picture$3 = new $c_Ldoodle_algebra_TextConstructor$$anon$1(text);
-  var this$19 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$18, picture$3);
-  var picture$4 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 10.0, 0.0, this$19);
-  var this$23 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$20, picture$4);
+  var this$18 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$17, picture$3);
+  var picture$4 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 10.0, 0.0, this$18);
+  var this$22 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$19, picture$4);
   var text$1 = ("Estimated distinct values: " + new $c_RTLong(lo, hi));
   var that$1 = new $c_Ldoodle_algebra_TextConstructor$$anon$1(text$1);
   var s$1 = $m_Lcats_kernel_instances_unit_package$().Lcats_kernel_instances_unit_package$__f_catsKernelStdAlgebraForUnit;
-  var picture$5 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$1, s$1, this$23);
-  var this$25 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$24, picture$5);
-  var picture$6 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 10.0, 0.0, this$25);
-  var this$29 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$26, picture$6);
+  var picture$5 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$1, s$1, this$22);
+  var this$24 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$23, picture$5);
+  var picture$6 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 10.0, 0.0, this$24);
+  var this$28 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$25, picture$6);
   var text$2 = ("Actual distinct values: " + n);
   var that$2 = new $c_Ldoodle_algebra_TextConstructor$$anon$1(text$2);
   var s$2 = $m_Lcats_kernel_instances_unit_package$().Lcats_kernel_instances_unit_package$__f_catsKernelStdAlgebraForUnit;
-  var picture$7 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$2, s$2, this$29);
-  var this$31 = new $c_Ldoodle_syntax_StyleSyntax$StylePictureOps(this$30, picture$7);
+  var picture$7 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$2, s$2, this$28);
+  var this$30 = new $c_Ldoodle_syntax_StyleSyntax$StylePictureOps(this$29, picture$7);
   var fillColor = $m_Ldoodle_core_Color$().Ldoodle_core_Color$__f_black;
-  var that$3 = new $c_Ldoodle_syntax_StyleSyntax$$anon$1(fillColor, this$31);
+  var that$3 = new $c_Ldoodle_syntax_StyleSyntax$$anon$1(fillColor, this$30);
   var s$3 = $m_Lcats_kernel_instances_unit_package$().Lcats_kernel_instances_unit_package$__f_catsKernelStdAlgebraForUnit;
-  return new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$3, s$3, this$33);
+  return new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$3, s$3, this$32);
 });
 $c_Lkmv_KMinimumValues$.prototype.numberLine32__T__V = (function(id) {
   var frame = $n($n($m_Ldoodle_svg_effect_Frame$().apply__T__Ldoodle_svg_effect_Frame(id)).withSize__D__D__Ldoodle_svg_effect_Frame(620.0, 200.0)).withBackground__Ldoodle_core_Color__Ldoodle_svg_effect_Frame($m_Ldoodle_core_Color$().Ldoodle_core_Color$__f_white);
@@ -23874,9 +23869,6 @@ $c_s_LowPriorityImplicits.prototype.wrapRefArray__AO__scm_ArraySeq$ofRef = (func
   } else {
     return new $c_scm_ArraySeq$ofRef(xs);
   }
-});
-$c_s_LowPriorityImplicits.prototype.wrapDoubleArray__AD__scm_ArraySeq$ofDouble = (function(xs) {
-  return ((xs !== null) ? new $c_scm_ArraySeq$ofDouble(xs) : null);
 });
 /** @constructor */
 function $c_s_Option$() {

@@ -50,15 +50,16 @@
     <div id="content">
         <main class="content">
             <h1 id="fan-in-and-fan-out" class="title">Fan-in and Fan-out</h1>
-            <p>Let&#39;s start with a simple example.</p>
+            <p>In this section we&#39;ll talk about how to connect one upstream stage to several downstream stages, known as <strong>fan-out</strong>, and several upstream stages to one downstream stage, known as <strong>fan-in</strong>.</p>
+            <p>Let&#39;s start with a simple example of fan-out, where we connect one upstream stage to two downstream stages.</p>
             <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="type-name">IO</span><span>
-</span><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.</span><span class="type-name">Stream</span><span>
 </span><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="identifier">unsafe</span><span>.</span><span class="identifier">implicits</span><span>.</span><span class="identifier">global</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.</span><span class="type-name">Stream</span><span>
 
 </span><span class="keyword">val</span><span> </span><span class="identifier">data</span><span> = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>)
 </span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))
 </span><span class="keyword">val</span><span> </span><span class="identifier">b</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">b</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;b: </span><span class="substitution">$b</span><span class="string-literal">&quot;</span><span>))</span></code></pre>
-            <p>What do you think happens when run the following? 
+            <p>What do you think happens when the following is run? 
             Take a guess before trying out the code.</p>
             <pre><code class="nohighlight"><span class="identifier">b</span><span>.</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
             <div class="solution">
@@ -72,35 +73,14 @@ b: 4</code></pre>
               </div>
             </div>
             <p>The simple reason that we see output from <code>b</code> but not from <code>a</code> is that we didn&#39;t run <code>a</code>. 
-            However, to understand why <code>a</code> does not run introduces some of the core concepts in FS2.
-            Remember that a <code>Stream</code> is a description.
-            This is, it&#39;s a data structure that describes what we want to happen.
-            We build a <code>Stream</code> from upstream (which produces data) to downstream (which consumes data.)
-            The downstream data structures have references to those upstream of them.
-            When we write</p>
-            <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">data</span><span> = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>)
-</span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))
-</span><span class="keyword">val</span><span> </span><span class="identifier">b</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">b</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;b: </span><span class="substitution">$b</span><span class="string-literal">&quot;</span><span>))</span></code></pre>
-            <p>we create three data structures:</p>
-            <ol class="arabic">
-              <li><code>data</code>, which is the source of data;</li>
-              <li><code>a</code>, which is downstream of <code>data</code> and has a reference to <code>data</code>; and</li>
-              <li><code>b</code>, which is also downstream of <code>data</code> and has a reference to <code>data</code>.</li>
-            </ol>
-            <p>Notice that <code>b</code> does not have any reference to <code>a</code>. 
-            So when we run <code>b</code> we <em>cannot</em> run <code>a</code>, because we have no reference to it.</p>
-            <p>We&#39;ll call each data structure a <strong>stage</strong>.
-            A stage <code>x</code> is downstream of another stage <code>y</code> if it consumes data directly from <code>y</code>, or it consumes data from a stage that is downstream of <code>y</code>.
-            Likewise we can say that <code>y</code> is upstream of <code>x</code> if <code>x</code> is downstream of <code>y</code>.</p>
-            <p>When we run a stage, we only run it and all stages that are upstream from it.
-            In the example above, <code>a</code> is not upstream of <code>b</code> so it does not run when <code>b</code> runs.
-            If we want to make <code>a</code> run as well, we need a way to create a stage that is downstream of both.
-            In other words, we need a way to <a href="https://www.youtube.com/watch?v=TEq24JyFWzo">&quot;cross the streams&quot;</a> by joining <code>a</code> and <code>b</code>.
-            This is an example of <strong>fan-in</strong>, where we collect results from multiple streams.</p>
-            <p>FS2 provides several ways to express fan-in:</p>
+            When we call <code>b.compile.drain.unsafeRunSync()</code> this creates demand on <code>b</code>, which in turns creates demand on stages upstream of <code>b</code>. 
+            As <code>a</code> is not upstream of <code>b</code> it has no demand and hence does not run.
+            There is a lesson from this: if you&#39;re not thinking about how you do fan-in and fan-out you&#39;re probably doing it wrong.</p>
+            <p>Let&#39;s start with fan-in.
+            FS2 provides several ways to express fan-in:</p>
             <ul>
-              <li>We can use <code>merge</code> if we don&#39;t care about what order we get elements from the upstream streams, and both upstream streams have the same type.</li>
               <li>We can use <code>zip</code> if we want to pair up elements from two upstream streams.</li>
+              <li>We can use <code>merge</code> if we don&#39;t care about what order we get elements from the upstream streams, and both upstream streams have the same type.</li>
               <li>We can use <code>either</code> if we don&#39;t care about order (like <code>merge</code>) but the two upstream streams have different types.</li>
             </ul>
             <p>Write a stream <code>sink</code> that uses one of the methods above to express fan-in of <code>a</code> and <code>b</code>.
@@ -121,6 +101,36 @@ b: 3
 a: 4
 b: 4</code></pre>
                 <p>so we can see that both <code>a</code> and <code>b</code> receive all the values from <code>data</code>.</p>
+              </div>
+            </div>
+            <p>Now let&#39;s look at the example of fan-in below. 
+            It&#39;s a modification of our previous example where we have an effectful source, 
+            which generates random data.</p>
+            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="type-name">IO</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="identifier">unsafe</span><span>.</span><span class="identifier">implicits</span><span>.</span><span class="identifier">global</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.</span><span class="type-name">Stream</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">scala</span><span>.</span><span class="identifier">util</span><span>.</span><span class="type-name">Random</span><span>
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">source</span><span> = </span><span class="type-name">Stream</span><span>.</span><span class="identifier">eval</span><span>(</span><span class="type-name">IO</span><span>(</span><span class="type-name">Random</span><span>.</span><span class="identifier">nextDouble</span><span>())).</span><span class="identifier">repeat</span><span>
+</span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">source</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))
+</span><span class="keyword">val</span><span> </span><span class="identifier">b</span><span> = </span><span class="identifier">source</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">b</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;b: </span><span class="substitution">$b</span><span class="string-literal">&quot;</span><span>))
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">sink</span><span> = </span><span class="identifier">a</span><span>.</span><span class="identifier">merge</span><span>(</span><span class="identifier">b</span><span>)</span></code></pre>
+            <p>What do you think you&#39;ll see when the following is run?
+            Will <code>a</code> and <code>b</code> both see the same values?
+            How many times will each run?</p>
+            <pre><code class="nohighlight"><span class="comment">// We use take(4) to avoid running forever
+</span><span class="identifier">sink</span><span>.</span><span class="identifier">take</span><span>(</span><span class="number-literal">4</span><span>).</span><span class="identifier">compile</span><span>.</span><span class="identifier">drain</span><span>.</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
+            <div class="solution">
+              <div class="solution-body">
+                <p>Here&#39;s some example output I saw when I ran the code.</p>
+                <pre><code>b: 0.7958715143801504
+a: 0.0859159273103528
+b: 0.7907351218379188
+a: 0.7568956320150807
+b: 0.16689974459747392
+a: 0.2762585354975654</code></pre>
+                <p>Notice that <code>a</code> and <code>b</code> saw different data!</p>
               </div>
             </div>
             <div class="flex flex-row justify-between">
