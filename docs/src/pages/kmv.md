@@ -1,6 +1,6 @@
 # k-Minimum Values
 
-In this section we're dive into a relatively involved case study using FS2 in a typical application of data streaming: counting unique items. This allows us to explore practical usage of FS2 as well as learn about what you'll hopefully find a very interesting algorithm: **k-Minimum Values** (kMV).
+In this section we are diving into a relatively involved case study using FS2 in a typical application of data streaming: counting unique items. This allows us to explore practical usage of FS2 as well as learn about what you'll hopefully find a very interesting algorithm: **k-Minimum Values** (kMV).
 
 Our task is to estimate the number of **distinct values** in a data stream. That is, the number of values remaining if we remove all values that have already occurred. If we want to use fancy words, we can say we're estimating **cardinality**, which is the name of "the number of elements in a set". This kind of problem arises very often in data analysis. Examples of distinct values problems in practice include calculating the number of unique visitors to a web site, or the number unique clients connecting to a network.
 
