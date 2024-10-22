@@ -103,14 +103,93 @@
             In Scala we can use <a href="https://www.scala-lang.org/api/current/scala/util/hashing/MurmurHash3$.html#">scala.util.hashing.MurmurHash3</a>.</p>
             
             <h2 id="implementing-k-minimum-values" class="section">Implementing k-Minimum Values</h2>
+            <p>We&#39;re going to implement a distinct values estimate system using k-Minimum Values.
+            This means implementing the core algorithm as well as the support code around it that feeds it data. 
+            This latter part is where FS2 will come in.</p>
+            
+            <h3 id="the-algorithm" class="section">The Algorithm</h3>
             <p>Your first mission is to implement the k-Minimum Values algorithm.
-            At this point we&#39;re not worrying about connecting it to FS2.</p>
+            There is a code skeleton in <code>code/src/main/scala/kmv/KMinimumValues.scala</code>.
+            There are also simple tests in <code>code/src/test/scala/kmv/KMinimumValuesSuite.scala</code>.</p>
+            <div class="solution">
+              <div class="solution-body">
+                <p>My solution uses a mutable array. I felt this like challenging myself to muck around with array indices and other concepts that I don&#39;t use much in my day-to-day programming. A solution using an immutable data structure would be a lot simpler to write.</p>
+                <pre><code class="nohighlight"><span class="keyword">final</span><span> </span><span class="keyword">class</span><span> </span><span class="type-name">KMinimumValues</span><span>(</span><span class="identifier">k</span><span>: </span><span class="type-name">Int</span><span>) {
+  </span><span class="comment">// The k minimum values, stored in a mutable array
+</span><span>  </span><span class="keyword">private</span><span> </span><span class="keyword">val</span><span> </span><span class="identifier">values</span><span> = </span><span class="type-name">Array</span><span>.</span><span class="identifier">ofDim</span><span>[</span><span class="type-name">Double</span><span>](</span><span class="identifier">k</span><span>)
+
+  </span><span class="comment">// Values will be initialized to contain all zeros, which will be less than
+</span><span>  </span><span class="comment">// most reasonable input. Hence we need to track how many elements in values
+</span><span>  </span><span class="comment">// have been initialized with real data.
+</span><span>  </span><span class="keyword">private</span><span> </span><span class="keyword">var</span><span> </span><span class="identifier">used</span><span> = </span><span class="number-literal">0</span><span>
+
+  </span><span class="keyword">def</span><span> </span><span class="declaration-name">add</span><span>(</span><span class="identifier">element</span><span>: </span><span class="type-name">Double</span><span>): </span><span class="type-name">KMinimumValues</span><span> = {
+    </span><span class="keyword">import</span><span> </span><span class="identifier">java</span><span>.</span><span class="identifier">util</span><span>.</span><span class="type-name">Arrays</span><span>
+
+    </span><span class="comment">// A +ve index indicates the element is in the array.
+</span><span>    </span><span class="comment">//
+</span><span>    </span><span class="comment">// A -ve index indicates the element is not in the array, and gives the
+</span><span>    </span><span class="comment">// insertion point - 1 for the element.
+</span><span>    </span><span class="comment">//
+</span><span>    </span><span class="comment">// Only search in the elements of values that have been used
+</span><span>    </span><span class="keyword">val</span><span> </span><span class="identifier">idx</span><span> = </span><span class="type-name">Arrays</span><span>.</span><span class="identifier">binarySearch</span><span>(</span><span class="identifier">values</span><span>, </span><span class="number-literal">0</span><span>, </span><span class="identifier">used</span><span>, </span><span class="identifier">element</span><span>)
+
+    </span><span class="comment">// Element is already in the array
+</span><span>    </span><span class="keyword">if</span><span> </span><span class="identifier">idx</span><span> &gt;= </span><span class="number-literal">0</span><span> </span><span class="identifier">then</span><span> </span><span class="keyword">this</span><span>
+    </span><span class="keyword">else</span><span> {
+      </span><span class="keyword">if</span><span> </span><span class="identifier">used</span><span> &lt; </span><span class="identifier">values</span><span>.</span><span class="identifier">size</span><span> </span><span class="identifier">then</span><span> </span><span class="identifier">used</span><span> = </span><span class="identifier">used</span><span> + </span><span class="number-literal">1</span><span>
+
+      </span><span class="keyword">val</span><span> </span><span class="identifier">insertionPoint</span><span> = -</span><span class="identifier">idx</span><span> - </span><span class="number-literal">1</span><span>
+      </span><span class="comment">// Element is larger than any existing value
+</span><span>      </span><span class="keyword">if</span><span> </span><span class="identifier">insertionPoint</span><span> &gt;= </span><span class="identifier">values</span><span>.</span><span class="identifier">size</span><span> </span><span class="identifier">then</span><span> </span><span class="keyword">this</span><span>
+      </span><span class="keyword">else</span><span> {
+        </span><span class="comment">// Shift all the larger values out of the way and insert element
+</span><span>        </span><span class="type-name">System</span><span>.</span><span class="identifier">arraycopy</span><span>(
+          </span><span class="identifier">values</span><span>,
+          </span><span class="identifier">insertionPoint</span><span>,
+          </span><span class="identifier">values</span><span>,
+          </span><span class="identifier">insertionPoint</span><span> + </span><span class="number-literal">1</span><span>,
+          </span><span class="identifier">values</span><span>.</span><span class="identifier">size</span><span> - </span><span class="identifier">insertionPoint</span><span> - </span><span class="number-literal">1</span><span>
+        )
+        </span><span class="identifier">values</span><span>(</span><span class="identifier">insertionPoint</span><span>) = </span><span class="identifier">element</span><span>
+        </span><span class="keyword">this</span><span>
+      }
+    }
+  }
+
+  </span><span class="keyword">def</span><span> </span><span class="declaration-name">distinctValues</span><span>: </span><span class="type-name">Long</span><span> =
+    </span><span class="comment">// If we have seen fewer than k values we can return the exact number of
+</span><span>    </span><span class="comment">// distinct values
+</span><span>    </span><span class="keyword">if</span><span> </span><span class="identifier">used</span><span> &lt; </span><span class="identifier">values</span><span>.</span><span class="identifier">size</span><span> </span><span class="identifier">then</span><span> </span><span class="identifier">used</span><span>.</span><span class="identifier">toLong</span><span>
+    </span><span class="keyword">else</span><span> </span><span class="type-name">Math</span><span>.</span><span class="identifier">round</span><span>(</span><span class="identifier">k</span><span>.</span><span class="identifier">toDouble</span><span> / </span><span class="identifier">values</span><span>.</span><span class="identifier">last</span><span> - </span><span class="number-literal">1.0</span><span>)
+}</span></code></pre>
+              </div>
+            </div>
             
-            <h2 id="hashing-data" class="section">Hashing Data</h2>
+            <h3 id="building-a-data-pipeline" class="section">Building a Data Pipeline</h3>
+            <p>We&#39;re now going to build the pipeline that will feed the k-Minimum Values algorithm.
+            This will have the following stages:</p>
+            <ul>
+              <li>reading text from storage;</li>
+              <li>segmenting the text into words; and</li>
+              <li>hashing the words into <code>Double</code> values between 0 and 1.</li>
+            </ul>
+            <p>For all of these parts we will use FS2.</p>
+            <p>For data we will use two sources:</p>
+            <ol class="arabic">
+              <li>
+                <p>The 1934 version of Webster&#39;s Dictionary, now in the public domain. This file has one word per line, and every word is unique, so it gives us an easy way to test our algorithm.</p>
+              </li>
+              <li>
+                <p>The complete works of William Shakespeare. This is much bigger than the dictionary, contains duplicates, and requires more processing, and so is a more realistic test.</p>
+              </li>
+            </ol>
             
-            <h2 id="pipes" class="section">Pipes</h2>
+            <h4 id="reading-and-processing-text" class="section">Reading and Processing Text</h4>
             
-            <h2 id="reading-and-processing-text" class="section">Reading and Processing Text</h2>
+            <h4 id="hashing-data" class="section">Hashing Data</h4>
+            
+            <h4 id="pipes" class="section">Pipes</h4>
             
             <h2 id="references" class="section">References</h2>
             <p><a href="http://www.vldb.org/pvldb/vol11/p499-harmouch.pdf">http://www.vldb.org/pvldb/vol11/p499-harmouch.pdf</a></p>

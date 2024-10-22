@@ -11538,6 +11538,13 @@ $c_Lkmv_KMV.prototype.elements__AD = (function() {
   }
   return s;
 });
+$c_Lkmv_KMV.prototype.cardinality__J = (function() {
+  var $x_2 = $m_Lkmv_KMV$();
+  var xs = this.Lkmv_KMV__f_values;
+  var $x_1 = $n(xs).u.length;
+  var xs$1 = this.Lkmv_KMV__f_values;
+  return $x_2.estimateCardinality__I__D__J($x_1, $uD($m_sc_ArrayOps$().last$extension__O__O(xs$1)));
+});
 var $d_Lkmv_KMV = new $TypeData().initClass($c_Lkmv_KMV, "kmv.KMV", ({
   Lkmv_KMV: 1
 }));
@@ -11573,8 +11580,8 @@ $c_Lkmv_KMV$.prototype.constructor = $c_Lkmv_KMV$;
 function $h_Lkmv_KMV$() {
 }
 $h_Lkmv_KMV$.prototype = $c_Lkmv_KMV$.prototype;
-$c_Lkmv_KMV$.prototype.estimateCardinality__D__J = (function(mean) {
-  var a = (1.0 / mean);
+$c_Lkmv_KMV$.prototype.estimateCardinality__I__D__J = (function(k, length) {
+  var a = (k / length);
   var this$2 = $m_RTLong$();
   var value = $uD(Math.round(a));
   var lo = this$2.org$scalajs$linker$runtime$RuntimeLong$$fromDoubleImpl__D__I(value);
@@ -11670,18 +11677,14 @@ $c_Lkmv_KMinimumValues$.prototype.numberLine__I__I__Ldoodle_algebra_Picture = (f
   var this$1 = $m_Lkmv_KMV$();
   var elements = $n(kmv).elements__AD();
   var averageDistance = $p_Lkmv_KMV$__loop$1__AD__I__D__D(this$1, elements, 0, 0.0);
-  var this$2 = $n(kmv);
-  var $x_1 = $m_Lkmv_KMV$();
-  var this$3 = $m_Lkmv_KMV$();
-  var elements$1 = this$2.elements__AD();
-  var t = $x_1.estimateCardinality__D__J($p_Lkmv_KMV$__loop$1__AD__I__D__D(this$3, elements$1, 0, 0.0));
+  var t = $n(kmv).cardinality__J();
   var lo = t.RTLong__f_lo;
   var hi = t.RTLong__f_hi;
-  var this$18 = $m_Ldoodle_syntax_package$all$();
   var this$16 = $m_Ldoodle_syntax_package$all$();
-  var this$13 = $m_Ldoodle_syntax_package$all$();
+  var this$14 = $m_Ldoodle_syntax_package$all$();
   var this$11 = $m_Ldoodle_syntax_package$all$();
-  var $x_11 = $m_s_IArray$package$IArray$();
+  var this$9 = $m_Ldoodle_syntax_package$all$();
+  var $x_10 = $m_s_IArray$package$IArray$();
   var arr = $n(kmv).elements__AD();
   var f = ((value) => {
     var value$1 = $uD(value);
@@ -11694,116 +11697,116 @@ $c_Lkmv_KMinimumValues$.prototype.numberLine__I__I__Ldoodle_algebra_Picture = (f
     if ((arr instanceof $ac_O)) {
       var x2 = $asArrayOf_O(arr, 1);
       while ((i < len)) {
-        var $x_2 = i;
+        var $x_1 = i;
         var arg1 = $n(x2).get(i);
-        ys.set($x_2, f(arg1));
+        ys.set($x_1, f(arg1));
         i = ((1 + i) | 0);
       }
     } else if ((arr instanceof $ac_I)) {
       var x3 = $asArrayOf_I(arr, 1);
       while ((i < len)) {
-        var $x_3 = i;
+        var $x_2 = i;
         var arg1$1 = $n(x3).get(i);
-        ys.set($x_3, f(arg1$1));
+        ys.set($x_2, f(arg1$1));
         i = ((1 + i) | 0);
       }
     } else if ((arr !== null)) {
       while ((i < len)) {
-        var $x_4 = i;
+        var $x_3 = i;
         var arg1$2 = $n(arr).get(i);
-        ys.set($x_4, f(arg1$2));
+        ys.set($x_3, f(arg1$2));
         i = ((1 + i) | 0);
       }
     } else if ((arr instanceof $ac_J)) {
       var x5 = $asArrayOf_J(arr, 1);
       while ((i < len)) {
-        var $x_5 = i;
+        var $x_4 = i;
         var t$1 = $n(x5).get(i);
         var lo$1 = t$1.RTLong__f_lo;
         var hi$1 = t$1.RTLong__f_hi;
-        ys.set($x_5, f(new $c_RTLong(lo$1, hi$1)));
+        ys.set($x_4, f(new $c_RTLong(lo$1, hi$1)));
         i = ((1 + i) | 0);
       }
     } else if ((arr instanceof $ac_F)) {
       var x6 = $asArrayOf_F(arr, 1);
       while ((i < len)) {
-        var $x_6 = i;
+        var $x_5 = i;
         var arg1$3 = $n(x6).get(i);
-        ys.set($x_6, f(arg1$3));
+        ys.set($x_5, f(arg1$3));
         i = ((1 + i) | 0);
       }
     } else if ((arr instanceof $ac_C)) {
       var x7 = $asArrayOf_C(arr, 1);
       while ((i < len)) {
-        var $x_7 = i;
+        var $x_6 = i;
         var arg1$4 = $n(x7).get(i);
-        ys.set($x_7, f($bC(arg1$4)));
+        ys.set($x_6, f($bC(arg1$4)));
         i = ((1 + i) | 0);
       }
     } else if ((arr instanceof $ac_B)) {
       var x8 = $asArrayOf_B(arr, 1);
       while ((i < len)) {
-        var $x_8 = i;
+        var $x_7 = i;
         var arg1$5 = $n(x8).get(i);
-        ys.set($x_8, f(arg1$5));
+        ys.set($x_7, f(arg1$5));
         i = ((1 + i) | 0);
       }
     } else if ((arr instanceof $ac_S)) {
       var x9 = $asArrayOf_S(arr, 1);
       while ((i < len)) {
-        var $x_9 = i;
+        var $x_8 = i;
         var arg1$6 = $n(x9).get(i);
-        ys.set($x_9, f(arg1$6));
+        ys.set($x_8, f(arg1$6));
         i = ((1 + i) | 0);
       }
     } else if ((arr instanceof $ac_Z)) {
       var x10 = $asArrayOf_Z(arr, 1);
       while ((i < len)) {
-        var $x_10 = i;
+        var $x_9 = i;
         var arg1$7 = $n(x10).get(i);
-        ys.set($x_10, f(arg1$7));
+        ys.set($x_9, f(arg1$7));
         i = ((1 + i) | 0);
       }
     } else {
       throw new $c_s_MatchError(arr);
     }
   }
-  var this$9 = $n($x_11.wrapRefArray__AO__sci_ArraySeq$ofRef(ys));
-  var t$2 = $m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(this$9);
-  var picture = new $c_Ldoodle_syntax_TraverseSyntax$TraverseOps(this$11, t$2).allOn__Lcats_Traverse__Ldoodle_algebra_Picture(($m_Lcats_UnorderedFoldable$(), $as_Lcats_Traverse($m_Lcats_instances_package$list$().Lcats_instances_package$list$__f_catsStdInstancesForList)));
-  var this$15 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$13, picture);
+  var this$7 = $n($x_10.wrapRefArray__AO__sci_ArraySeq$ofRef(ys));
+  var t$2 = $m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(this$7);
+  var picture = new $c_Ldoodle_syntax_TraverseSyntax$TraverseOps(this$9, t$2).allOn__Lcats_Traverse__Ldoodle_algebra_Picture(($m_Lcats_UnorderedFoldable$(), $as_Lcats_Traverse($m_Lcats_instances_package$list$().Lcats_instances_package$list$__f_catsStdInstancesForList)));
+  var this$13 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$11, picture);
   var that = this.Lkmv_KMinimumValues$__f_line;
   var s = $m_Lcats_kernel_instances_unit_package$().Lcats_kernel_instances_unit_package$__f_catsKernelStdAlgebraForUnit;
-  var picture$1 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$1(that, s, this$15);
-  var this$17 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$16, picture$1);
-  var picture$2 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 20.0, 0.0, this$17);
-  var this$35 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$18, picture$2);
-  var this$32 = $m_Ldoodle_syntax_package$all$();
-  var this$28 = $m_Ldoodle_syntax_package$all$();
+  var picture$1 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$1(that, s, this$13);
+  var this$15 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$14, picture$1);
+  var picture$2 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 20.0, 0.0, this$15);
+  var this$33 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$16, picture$2);
+  var this$30 = $m_Ldoodle_syntax_package$all$();
   var this$26 = $m_Ldoodle_syntax_package$all$();
-  var this$22 = $m_Ldoodle_syntax_package$all$();
+  var this$24 = $m_Ldoodle_syntax_package$all$();
   var this$20 = $m_Ldoodle_syntax_package$all$();
+  var this$18 = $m_Ldoodle_syntax_package$all$();
   var text = ("Average distance between regions: " + averageDistance);
   var picture$3 = new $c_Ldoodle_algebra_TextConstructor$$anon$1(text);
-  var this$21 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$20, picture$3);
-  var picture$4 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 10.0, 0.0, this$21);
-  var this$25 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$22, picture$4);
+  var this$19 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$18, picture$3);
+  var picture$4 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 10.0, 0.0, this$19);
+  var this$23 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$20, picture$4);
   var text$1 = ("Estimated distinct values: " + new $c_RTLong(lo, hi));
   var that$1 = new $c_Ldoodle_algebra_TextConstructor$$anon$1(text$1);
   var s$1 = $m_Lcats_kernel_instances_unit_package$().Lcats_kernel_instances_unit_package$__f_catsKernelStdAlgebraForUnit;
-  var picture$5 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$1, s$1, this$25);
-  var this$27 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$26, picture$5);
-  var picture$6 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 10.0, 0.0, this$27);
-  var this$31 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$28, picture$6);
+  var picture$5 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$1, s$1, this$23);
+  var this$25 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$24, picture$5);
+  var picture$6 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$16(0.0, 0.0, 10.0, 0.0, this$25);
+  var this$29 = new $c_Ldoodle_syntax_LayoutSyntax$LayoutPictureOps(this$26, picture$6);
   var text$2 = ("Actual distinct values: " + n);
   var that$2 = new $c_Ldoodle_algebra_TextConstructor$$anon$1(text$2);
   var s$2 = $m_Lcats_kernel_instances_unit_package$().Lcats_kernel_instances_unit_package$__f_catsKernelStdAlgebraForUnit;
-  var picture$7 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$2, s$2, this$31);
-  var this$33 = new $c_Ldoodle_syntax_StyleSyntax$StylePictureOps(this$32, picture$7);
+  var picture$7 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$2, s$2, this$29);
+  var this$31 = new $c_Ldoodle_syntax_StyleSyntax$StylePictureOps(this$30, picture$7);
   var fillColor = $m_Ldoodle_core_Color$().Ldoodle_core_Color$__f_black;
-  var that$3 = new $c_Ldoodle_syntax_StyleSyntax$$anon$1(fillColor, this$33);
+  var that$3 = new $c_Ldoodle_syntax_StyleSyntax$$anon$1(fillColor, this$31);
   var s$3 = $m_Lcats_kernel_instances_unit_package$().Lcats_kernel_instances_unit_package$__f_catsKernelStdAlgebraForUnit;
-  return new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$3, s$3, this$35);
+  return new $c_Ldoodle_syntax_LayoutSyntax$$anon$3(that$3, s$3, this$33);
 });
 $c_Lkmv_KMinimumValues$.prototype.numberLine32__T__V = (function(id) {
   var frame = $n($n($m_Ldoodle_svg_effect_Frame$().apply__T__Ldoodle_svg_effect_Frame(id)).withSize__D__D__Ldoodle_svg_effect_Frame(620.0, 200.0)).withBackground__Ldoodle_core_Color__Ldoodle_svg_effect_Frame($m_Ldoodle_core_Color$().Ldoodle_core_Color$__f_white);
@@ -11817,13 +11820,13 @@ $c_Lkmv_KMinimumValues$.prototype.numberLine16384__T__V = (function(id) {
   var picture = this.numberLine__I__I__Ldoodle_algebra_Picture(16, 16384);
   new $c_Ldoodle_syntax_AbstractRendererSyntax$RendererPictureOps(this$1, picture).drawWithFrame__O__Ldoodle_effect_Renderer__Lcats_effect_unsafe_IORuntime__V(frame, $m_Ldoodle_svg_package$().Ldoodle_svg_package$__f_svgRenderer, $m_Lcats_effect_unsafe_IORuntime$().global__Lcats_effect_unsafe_IORuntime());
 });
-$c_Lkmv_KMinimumValues$.prototype.numberLine32 = (function(arg) {
-  var prep0 = $as_T(arg);
-  this.numberLine32__T__V(prep0);
-});
 $c_Lkmv_KMinimumValues$.prototype.numberLine16384 = (function(arg) {
   var prep0 = $as_T(arg);
   this.numberLine16384__T__V(prep0);
+});
+$c_Lkmv_KMinimumValues$.prototype.numberLine32 = (function(arg) {
+  var prep0 = $as_T(arg);
+  this.numberLine32__T__V(prep0);
 });
 var $d_Lkmv_KMinimumValues$ = new $TypeData().initClass($c_Lkmv_KMinimumValues$, "kmv.KMinimumValues$", ({
   Lkmv_KMinimumValues$: 1
