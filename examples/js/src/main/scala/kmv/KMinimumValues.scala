@@ -28,78 +28,68 @@ import scala.scalajs.js.annotation.JSExport
 import scala.scalajs.js.annotation.JSExportTopLevel
 import scala.util.Random
 
-final class KMV(values: Array[Double]) {
-  def add(element: Double): KMV = {
-    val idx = Arrays.binarySearch(values, element)
-    // element is larger than all the values in values
-    if idx >= values.size then this
-    // element is already in values
-    else if values(idx) == element then this
+final class KMinimumValues(k: Int) {
+  // The k minimum values, stored in a mutable array
+  private val values = Array.ofDim[Double](k)
+
+  // Values will be initialized to contain all zeros, which will be less than
+  // most reasonable input. Hence we need to track how many elements in values
+  // have been initialized with real data.
+  private var used = 0
+
+  def elements: IArray[Double] =
+    IArray.unsafeFromArray(values)
+
+  def add(element: Double): KMinimumValues = {
+    // A +ve index indicates the element is in the array.
+    //
+    // A -ve index indicates the element is not in the array, and gives the
+    // insertion point - 1 for the element.
+    //
+    // Only search in the elements of values that have been used
+    val idx = Arrays.binarySearch(values, 0, used, element)
+
+    // Element is already in the array
+    if idx >= 0 then this
     else {
-      // Shift all the larger values out of the way and insert element
-      System.arraycopy(values, idx, values, idx + 1, values.size - idx)
-      values(idx) = element
-      this
+      if used < values.size then used = used + 1
+
+      val insertionPoint = -idx - 1
+      // Element is larger than any existing value
+      if insertionPoint >= values.size then this
+      else {
+        // Shift all the larger values out of the way and insert element
+        System.arraycopy(
+          values,
+          insertionPoint,
+          values,
+          insertionPoint + 1,
+          values.size - insertionPoint - 1
+        )
+        values(insertionPoint) = element
+        this
+      }
     }
   }
 
-  val k: Int = values.size
+  def averageDistance: Double =
+    values.last / k.toDouble
 
-  def elements: IArray[Double] =
-    IArray.from(values)
-
-  def averageDistance: Double = {
-    KMV.arithmeticMean(elements)
-  }
-
-  def cardinality: Long =
-    KMV.estimateCardinality(values.size, values.last)
+  def distinctValues: Long =
+    // If we have seen fewer than k values we can return the exact number of
+    // distinct values
+    if used < values.size then used.toLong
+    else Math.round(k.toDouble / values.last - 1.0)
 }
-object KMV {
-  def arithmeticMean(elements: IArray[Double]): Double = {
-    def loop(idx: Int, sum: Double): Double =
-      if idx == 0 then loop(idx + 1, elements(0))
-      else if idx == elements.size then (sum / elements.size)
-      else loop(idx + 1, sum + (elements(idx) - elements(idx - 1)))
+@JSExportTopLevel("KMinimumValues")
+object KMinimumValues {
 
-    loop(0, 0.0)
-  }
-
-  def harmonicMean(elements: IArray[Double]): Double = {
-    def loop(idx: Int, sum: Double): Double =
-      if idx == 0 then loop(idx + 1, 1.0 / elements(0))
-      else if idx == elements.size then (elements.size / sum)
-      else loop(idx + 1, sum + (1.0 / (elements(idx) - elements(idx - 1))))
-
-    loop(0, 0.0)
-  }
-
-  /** Estimate the cardinality from the distance from 0 to the kth element */
-  def estimateCardinality(k: Int, length: Double): Long = {
-    // length estimates k / (n + 1)
-    val estimatedCardinality = Math.round(k.toDouble / length) - 1
-
-    estimatedCardinality
-  }
-
-  /** Estimate the cardinality from the average length of regions */
-  def estimateCardinality(mean: Double): Long = {
-    val estimatedCardinality = Math.round(1.0 / mean) - 1
-
-    estimatedCardinality
-  }
-
-  def fromRandomData(k: Int, n: Int): KMV = {
+  def fromRandomData(k: Int, n: Int): KMinimumValues = {
     val points: Seq[Double] =
       List.fill(n)(Random.nextDouble()).sorted.take(k)
 
-    val kmv = new KMV(points.toArray)
-    kmv
+    points.foldLeft(KMinimumValues(k))((kmv, elt) => kmv.add(elt))
   }
-}
-
-@JSExportTopLevel("KMinimumValues")
-object KMinimumValues {
   val line: Picture[Unit] =
     OpenPath.empty
       .moveTo(-300, 0)
@@ -116,9 +106,9 @@ object KMinimumValues {
       .at((600.0 * value) - 300.0, 0.0)
 
   def numberLine(k: Int, n: Int): Picture[Unit] = {
-    val kmv = KMV.fromRandomData(k, n)
-    val averageDistance = KMV.arithmeticMean(kmv.elements)
-    val cardinality = kmv.cardinality
+    val kmv = fromRandomData(k, n)
+    val averageDistance = kmv.averageDistance
+    val distinctValues = kmv.distinctValues
 
     kmv.elements
       .map(point)
@@ -133,7 +123,7 @@ object KMinimumValues {
           .above(
             Picture
               .text(
-                s"Estimated distinct values: $cardinality"
+                s"Estimated distinct values: $distinctValues"
               )
           )
           .margin(0, 0, 10, 0)
