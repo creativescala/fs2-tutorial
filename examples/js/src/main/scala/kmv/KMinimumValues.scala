@@ -53,7 +53,7 @@ final class KMV(values: Array[Double]) {
   }
 
   def cardinality: Long =
-    KMV.estimateCardinality(averageDistance)
+    KMV.estimateCardinality(values.size, values.last)
 }
 object KMV {
   def arithmeticMean(elements: IArray[Double]): Double = {
@@ -74,6 +74,15 @@ object KMV {
     loop(0, 0.0)
   }
 
+  /** Estimate the cardinality from the distance from 0 to the kth element */
+  def estimateCardinality(k: Int, length: Double): Long = {
+    // length estimates k / (n + 1)
+    val estimatedCardinality = Math.round(k.toDouble / length) - 1
+
+    estimatedCardinality
+  }
+
+  /** Estimate the cardinality from the average length of regions */
   def estimateCardinality(mean: Double): Long = {
     val estimatedCardinality = Math.round(1.0 / mean) - 1
 

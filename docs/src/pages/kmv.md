@@ -66,17 +66,98 @@ In Scala we can use [scala.util.hashing.MurmurHash3][murmur3].
 
 ## Implementing k-Minimum Values
 
+We're going to implement a distinct values estimate system using k-Minimum Values.
+This means implementing the core algorithm as well as the support code around it that feeds it data. 
+This latter part is where FS2 will come in.
+
+
+### The Algorithm
+
 Your first mission is to implement the k-Minimum Values algorithm.
-At this point we're not worrying about connecting it to FS2.
+There is a code skeleton in `code/src/main/scala/kmv/KMinimumValues.scala`.
+There are also simple tests in `code/src/test/scala/kmv/KMinimumValuesSuite.scala`.
+
+@:solution
+My solution uses a mutable array. I felt this like challenging myself to muck around with array indices and other concepts that I don't use much in my day-to-day programming. A solution using an immutable data structure would be a lot simpler to write.
+
+```scala
+final class KMinimumValues(k: Int) {
+  // The k minimum values, stored in a mutable array
+  private val values = Array.ofDim[Double](k)
+
+  // Values will be initialized to contain all zeros, which will be less than
+  // most reasonable input. Hence we need to track how many elements in values
+  // have been initialized with real data.
+  private var used = 0
+
+  def add(element: Double): KMinimumValues = {
+    import java.util.Arrays
+
+    // A +ve index indicates the element is in the array.
+    //
+    // A -ve index indicates the element is not in the array, and gives the
+    // insertion point - 1 for the element.
+    //
+    // Only search in the elements of values that have been used
+    val idx = Arrays.binarySearch(values, 0, used, element)
+
+    // Element is already in the array
+    if idx >= 0 then this
+    else {
+      if used < values.size then used = used + 1
+
+      val insertionPoint = -idx - 1
+      // Element is larger than any existing value
+      if insertionPoint >= values.size then this
+      else {
+        // Shift all the larger values out of the way and insert element
+        System.arraycopy(
+          values,
+          insertionPoint,
+          values,
+          insertionPoint + 1,
+          values.size - insertionPoint - 1
+        )
+        values(insertionPoint) = element
+        this
+      }
+    }
+  }
+
+  def distinctValues: Long =
+    // If we have seen fewer than k values we can return the exact number of
+    // distinct values
+    if used < values.size then used.toLong
+    else Math.round(k.toDouble / values.last - 1.0)
+}
+```
+@:@
 
 
-## Hashing Data
+### Building a Data Pipeline
+
+We're now going to build the pipeline that will feed the k-Minimum Values algorithm.
+This will have the following stages:
+
+- reading text from storage;
+- segmenting the text into words; and
+- hashing the words into `Double` values between 0 and 1.
+
+For all of these parts we will use FS2.
+
+For data we will use two sources:
+
+1. The 1934 version of Webster's Dictionary, now in the public domain. This file has one word per line, and every word is unique, so it gives us an easy way to test our algorithm.
+
+2. The complete works of William Shakespeare. This is much bigger than the dictionary, contains duplicates, and requires more processing, and so is a more realistic test.
 
 
-## Pipes
+#### Reading and Processing Text
 
+#### Hashing Data
 
-## Reading and Processing Text
+#### Pipes
+
 
 
 ## References
