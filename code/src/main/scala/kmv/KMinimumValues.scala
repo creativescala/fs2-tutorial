@@ -20,53 +20,13 @@ package kmv
   * decisions up to you.
   */
 final class KMinimumValues(k: Int) {
-  // The k minimum values, stored in a mutable array
-  private val values = Array.ofDim[Double](k)
-
-  // Values will be initialized to contain all zeros, which will be less than
-  // most reasonable input. Hence we need to track how many elements in values
-  // have been initialized with real data.
-  private var used = 0
-
   /** Add the given element to this KMinimumValues sketch.
     *
     * In implementing this method you can choose to imperatively update internal
     * state, which might give you a more efficient implementation, or a pure
     * implementation that does not mutate state and is easier to reason about.
     */
-  def add(element: Double): KMinimumValues = {
-    import java.util.Arrays
-
-    // A +ve index indicates the element is in the array.
-    //
-    // A -ve index indicates the element is not in the array, and gives the
-    // insertion point - 1 for the element.
-    //
-    // Only search in the elements of values that have been used
-    val idx = Arrays.binarySearch(values, 0, used, element)
-
-    // Element is already in the array
-    if idx >= 0 then this
-    else {
-      if used < values.size then used = used + 1
-
-      val insertionPoint = -idx - 1
-      // Element is larger than any existing value
-      if insertionPoint >= values.size then this
-      else {
-        // Shift all the larger values out of the way and insert element
-        System.arraycopy(
-          values,
-          insertionPoint,
-          values,
-          insertionPoint + 1,
-          values.size - insertionPoint - 1
-        )
-        values(insertionPoint) = element
-        this
-      }
-    }
-  }
+  def add(element: Double): KMinimumValues = ???
 
   /** Get the estimated distinct values from this KMinimumValues sketch.
     *
@@ -80,10 +40,5 @@ final class KMinimumValues(k: Int) {
     *
     * This requires less computation.
     */
-  def distinctValues: Long =
-    // If we have seen fewer than k values we can return the exact number of
-    // distinct values
-    if used < values.size then used.toLong
-    else Math.round(k.toDouble / values.last - 1.0)
-
+  def distinctValues: Long = ???
 }
