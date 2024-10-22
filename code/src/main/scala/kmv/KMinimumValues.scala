@@ -20,6 +20,7 @@ package kmv
   * decisions up to you.
   */
 final class KMinimumValues(k: Int) {
+
   /** Add the given element to this KMinimumValues sketch.
     *
     * In implementing this method you can choose to imperatively update internal

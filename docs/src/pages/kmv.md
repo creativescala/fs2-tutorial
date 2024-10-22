@@ -151,6 +151,11 @@ For data we will use two sources:
 
 2. The complete works of William Shakespeare. This is much bigger than the dictionary, contains duplicates, and requires more processing, and so is a more realistic test.
 
+Neither of our test cases are big enough that we really need to use k-Minimum Values; we could use a traditional algorithm instead. 
+This is intentional. 
+It is useful to be able to compare to a known correct result,
+and working with truly big data requires file sizes and processing times that are onerous.
+
 
 #### Reading and Processing Text
 
