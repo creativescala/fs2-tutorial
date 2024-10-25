@@ -59,7 +59,7 @@
 
 </span><span class="keyword">val</span><span> </span><span class="identifier">data</span><span> = </span><span class="type-name">Stream</span><span>(</span><span class="number-literal">1</span><span>, </span><span class="number-literal">2</span><span>, </span><span class="number-literal">3</span><span>, </span><span class="number-literal">4</span><span>)
 </span><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="identifier">data</span><span>.</span><span class="identifier">evalMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;a: </span><span class="substitution">$a</span><span class="string-literal">&quot;</span><span>))</span></code></pre>
-            <p>This stream consists of two <strong>stages</strong>: <code>data</code>, which produces values, and <code>a</code>, which uses those values. We say that <code>a</code> is <strong>downstream</strong> of <code>data</code> (and <code>data</code> is <strong>upstream</strong> of <code>a</code>) as data flows from <code>data</code> to <code>a</code>.</p>
+            <p>This stream consists of two <em>stages</em>: <code>data</code>, which produces values, and <code>a</code>, which uses those values. We say that <code>a</code> is <em>downstream</em> of <code>data</code> (and <code>data</code> is <em>upstream</em> of <code>a</code>) as data flows from <code>data</code> to <code>a</code>.</p>
             <p>Remember that a <code>Stream</code> is a description.
             Concretely, it&#39;s a data structure that describes what we want to happen.
             We build a <code>Stream</code> from upstream (which produces data) to downstream (which consumes data.)
@@ -77,10 +77,10 @@
             <p>Notice that <code>b</code> does not have any reference to <code>a</code>. It is neither upstream nor downstream from <code>a</code>.</p>
             <p>We can state this relationship more abstractly: A stage <code>y</code> is downstream of another stage <code>x</code> if it consumes data directly from <code>x</code>, or it consumes data from a stage that is downstream of <code>x</code>.
             Likewise we can say that <code>x</code> is upstream of <code>y</code> if <code>y</code> is downstream of <code>x</code>.</p>
-            <p>Finally, we will call the most upstream stage the <strong>source</strong> and the most downstream stage the <strong>sink</strong>. In the example above the source is <code>data</code> and the sink is <code>a</code> (or <code>b</code>).</p>
+            <p>Finally, we will call the most upstream stage the <em>source</em> and the most downstream stage the <em>sink</em>. In the example above the source is <code>data</code> and the sink is <code>a</code> (or <code>b</code>).</p>
             
             <h2 id="pulls" class="section">Pulls</h2>
-            <p>Data flows from upstream to downstream, but it only flows in response to demand for data. This demand is called a <strong>pull</strong>, and it flows from downstream to upstream (i.e. in the opposite direction from data.) There are several important implications of this:</p>
+            <p>Data flows from upstream to downstream, but it only flows in response to demand for data. This demand is called a <em>pull</em>, and it flows from downstream to upstream (i.e. in the opposite direction from data.) There are several important implications of this:</p>
             <ol class="arabic">
               <li>data will not flow if there is no demand; and hence</li>
               <li>data does not start being processed when it arrives at the source of the stream but when it the sink pulls it; and hence</li>
