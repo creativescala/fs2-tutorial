@@ -1,6 +1,6 @@
 # Fan-in and Fan-out
 
-In this section we'll talk about how to connect one upstream stage to several downstream stages, known as **fan-out**, and several upstream stages to one downstream stage, known as **fan-in**.
+In this section we'll talk about how to connect one upstream stage to several downstream stages, known as *fan-out*, and several upstream stages to one downstream stage, known as *fan-in*.
 
 Let's start with a simple example of fan-out, where we connect one upstream stage to two downstream stages.
 

@@ -14,7 +14,7 @@ val data = Stream(1, 2, 3, 4)
 val a = data.evalMap(a => IO.println(s"a: $a"))
 ```
 
-This stream consists of two **stages**: `data`, which produces values, and `a`, which uses those values. We say that `a` is **downstream** of `data` (and `data` is **upstream** of `a`) as data flows from `data` to `a`.
+This stream consists of two *stages*: `data`, which produces values, and `a`, which uses those values. We say that `a` is *downstream* of `data` (and `data` is *upstream* of `a`) as data flows from `data` to `a`.
 
 Remember that a `Stream` is a description.
 Concretely, it's a data structure that describes what we want to happen.
@@ -40,12 +40,12 @@ Notice that `b` does not have any reference to `a`. It is neither upstream nor d
 We can state this relationship more abstractly: A stage `y` is downstream of another stage `x` if it consumes data directly from `x`, or it consumes data from a stage that is downstream of `x`.
 Likewise we can say that `x` is upstream of `y` if `y` is downstream of `x`.
 
-Finally, we will call the most upstream stage the **source** and the most downstream stage the **sink**. In the example above the source is `data` and the sink is `a` (or `b`).
+Finally, we will call the most upstream stage the *source* and the most downstream stage the *sink*. In the example above the source is `data` and the sink is `a` (or `b`).
 
 
 ## Pulls
 
-Data flows from upstream to downstream, but it only flows in response to demand for data. This demand is called a **pull**, and it flows from downstream to upstream (i.e. in the opposite direction from data.) There are several important implications of this:
+Data flows from upstream to downstream, but it only flows in response to demand for data. This demand is called a *pull*, and it flows from downstream to upstream (i.e. in the opposite direction from data.) There are several important implications of this:
 
 1. data will not flow if there is no demand; and hence
 2. data does not start being processed when it arrives at the source of the stream but when it the sink pulls it; and hence
