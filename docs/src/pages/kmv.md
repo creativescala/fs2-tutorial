@@ -147,7 +147,7 @@ For all of these parts we will use FS2.
 
 For data we will use two sources:
 
-1. The 1934 version of Webster's Dictionary, now in the public domain. This file has one word per line, and every word is unique, so it gives us an easy way to test our algorithm.
+1. A list of English words. This file has one word per line, and every word is unique, so it gives us an easy way to test our algorithm.
 
 2. The complete works of William Shakespeare. This is much bigger than the dictionary, contains duplicates, and requires more processing, and so is a more realistic test.
 
@@ -158,6 +158,11 @@ and working with truly big data requires file sizes and processing times that ar
 
 
 #### Reading and Processing Text
+
+There are several freely available word lists. [This word list][wordlist.10000] has a mere 10,000 words, while [this one][wordlist] has about 270,000 words, and [this one][english-words] has over 460,000. In this case bigger is better, so go [grab the big one][english-words] unless your computer is struggling.
+
+If you downloaded the biggest list you'll have a file named `words.txt`, containing 466549 lines. Copy it into the directory `code/src/main/resources`. 
+
 
 #### Hashing Data
 
@@ -172,3 +177,9 @@ http://www.vldb.org/pvldb/vol11/p499-harmouch.pdf
 
 
 [murmur3]: https://www.scala-lang.org/api/current/scala/util/hashing/MurmurHash3$.html#
+
+
+
+[wordlist.10000]: https://www.mit.edu/~ecprice/wordlist.10000
+[wordlist]: https://proofingtoolgui.org/
+[english-words]: https://github.com/dwyl/english-words
