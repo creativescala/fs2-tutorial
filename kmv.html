@@ -214,8 +214,13 @@
             <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.</span><span class="identifier">io</span><span>.</span><span class="identifier">file</span><span>.*
 
 </span><span class="keyword">val</span><span> </span><span class="identifier">words</span><span> = </span><span class="type-name">Path</span><span>.</span><span class="identifier">fromNioPath</span><span>(</span><span class="identifier">nioPath</span><span>)</span></code></pre>
+            <p>Finally we create a <code>Stream</code>, which gives us each line as a separate item in the <code>Stream</code>.</p>
+            <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">stream</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">String</span><span>] = </span><span class="type-name">Files</span><span>.</span><span class="identifier">forIO</span><span>.</span><span class="identifier">readUtf8Lines</span><span>(</span><span class="identifier">words</span><span>)</span></code></pre>
+            <p>So quite a few lines of code, but it&#39;s not hard code to understand.</p>
+            <p><em>TODO</em> Splitting text into words</p>
             
             <h4 id="hashing-data" class="section">Hashing Data</h4>
+            <p>The next stage is to hash each word. This will give us an <code>Int</code> which is (approximately) uniformly distributed in across the range. We can then convert this to a <code>Double</code> in the range 0 to 1, which is what k-Minimum Values requires.</p>
             
             <h4 id="pipes" class="section">Pipes</h4>
             
