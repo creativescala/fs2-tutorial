@@ -18,7 +18,7 @@ import laika.config.LinkConfig
 import laika.config.ApiLinks
 import laika.theme.Theme
 
-lazy val scala3 = "3.5.1"
+lazy val scala3 = "3.5.2"
 
 ThisBuild / tlBaseVersion := "0.1" // your current series x.y
 ThisBuild / organization := "org.creativescala"
@@ -64,6 +64,7 @@ val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.creativescala" %%% "doodle" % "0.26.0",
     "co.fs2" %%% "fs2-core" % "3.11.0",
+    "co.fs2" %%% "fs2-io" % "3.11.0",
     "org.scalameta" %% "munit" % "1.0.2" % Test
   ),
   Compile / run / fork := true
