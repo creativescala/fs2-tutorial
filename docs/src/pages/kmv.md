@@ -161,7 +161,45 @@ and working with truly big data requires file sizes and processing times that ar
 
 There are several freely available word lists. [This word list][wordlist.10000] has a mere 10,000 words, while [this one][wordlist] has about 270,000 words, and [this one][english-words] has over 460,000. In this case bigger is better, so go [grab the big one][english-words] unless your computer is struggling.
 
-If you downloaded the biggest list you'll have a file named `words.txt`, containing 466549 lines. Copy it into the directory `code/src/main/resources`. 
+If you downloaded the biggest list you'll have a file named `words.txt` containing 466549 lines. Copy it into the directory `code/src/main/resources`. 
+
+@:callout(info)
+#### Resources and the JVM
+
+Resources are a moderately obscure, but very useful, feature of the JVM.
+Code often depends on some data. 
+In this case we depend on the word list.
+A web site might depend on some icons, and many programs depend on configuration.
+
+It is useful to be able to bundle this data with our code, so our code can always find it in the same place. 
+Resources allows us to do this. 
+Any file in `/src/main/resources` is a resource that is included with our code, and can be accessed in the same way no matter where we run our code from or where it is copied to.
+@:@
+
+
+We have to jump through a few hoops to load a resource into a FS2 `Stream`.
+First we construct a URI referring to the resource.
+
+```scala
+val resource = getClass().getResource("words.txt").toURI()
+```
+
+Then we construct a Java `Path` referring to the resource.
+
+```scala
+import java.nio.file.Paths
+
+val nioPath = Paths.get(resource)
+```
+
+Then we construct a FS2 `Path`, which is part of a useful library FS2 provides for dealing with files and paths.
+
+```scala
+import fs2.io.file.*
+
+val words = Path.fromNioPath(nioPath)
+```
+
 
 
 #### Hashing Data
