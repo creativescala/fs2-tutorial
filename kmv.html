@@ -191,7 +191,29 @@
             
             <h4 id="reading-and-processing-text" class="section">Reading and Processing Text</h4>
             <p>There are several freely available word lists. <a href="https://www.mit.edu/~ecprice/wordlist.10000">This word list</a> has a mere 10,000 words, while <a href="https://proofingtoolgui.org/">this one</a> has about 270,000 words, and <a href="https://github.com/dwyl/english-words">this one</a> has over 460,000. In this case bigger is better, so go <a href="https://github.com/dwyl/english-words">grab the big one</a> unless your computer is struggling.</p>
-            <p>If you downloaded the biggest list you&#39;ll have a file named <code>words.txt</code>, containing 466549 lines. Copy it into the directory <code>code/src/main/resources</code>. </p>
+            <p>If you downloaded the biggest list you&#39;ll have a file named <code>words.txt</code> containing 466549 lines. Copy it into the directory <code>code/src/main/resources</code>. </p>
+            <div class="callout info">
+              
+              <h4 id="resources-and-the-jvm">Resources and the JVM</h4>
+              <p>Resources are a moderately obscure, but very useful, feature of the JVM.
+              Code often depends on some data. 
+              In this case we depend on the word list.
+              A web site might depend on some icons, and many programs depend on configuration.</p>
+              <p>It is useful to be able to bundle this data with our code, so our code can always find it in the same place. 
+              Resources allows us to do this. 
+              Any file in <code>/src/main/resources</code> is a resource that is included with our code, and can be accessed in the same way no matter where we run our code from or where it is copied to.</p>
+            </div>
+            <p>We have to jump through a few hoops to load a resource into a FS2 <code>Stream</code>.
+            First we construct a URI referring to the resource.</p>
+            <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">resource</span><span> = </span><span class="identifier">getClass</span><span>().</span><span class="identifier">getResource</span><span>(</span><span class="string-literal">&quot;words.txt&quot;</span><span>).</span><span class="identifier">toURI</span><span>()</span></code></pre>
+            <p>Then we construct a Java <code>Path</code> referring to the resource.</p>
+            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">java</span><span>.</span><span class="identifier">nio</span><span>.</span><span class="identifier">file</span><span>.</span><span class="type-name">Paths</span><span>
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">nioPath</span><span> = </span><span class="type-name">Paths</span><span>.</span><span class="identifier">get</span><span>(</span><span class="identifier">resource</span><span>)</span></code></pre>
+            <p>Then we construct a FS2 <code>Path</code>, which is part of a useful library FS2 provides for dealing with files and paths.</p>
+            <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.</span><span class="identifier">io</span><span>.</span><span class="identifier">file</span><span>.*
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">words</span><span> = </span><span class="type-name">Path</span><span>.</span><span class="identifier">fromNioPath</span><span>(</span><span class="identifier">nioPath</span><span>)</span></code></pre>
             
             <h4 id="hashing-data" class="section">Hashing Data</h4>
             
