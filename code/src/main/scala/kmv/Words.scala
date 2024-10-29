@@ -20,8 +20,10 @@ import cats.effect.IO
 import fs2.Stream
 import fs2.io.file.*
 
+import java.math.BigDecimal
 import java.net.URI
 import java.nio.file.Paths
+import scala.util.hashing.MurmurHash3
 
 object Words {
   val resource: URI = getClass().getResource("words.txt").toURI()
@@ -29,4 +31,13 @@ object Words {
   val words = Path.fromNioPath(nioPath)
 
   val stream: Stream[IO, String] = Files.forIO.readUtf8Lines(words)
+
+  def hash(in: String): Int =
+    MurmurHash3.bytesHash(in.getBytes())
+
+  val unsignedIntOffset = BigDecimal(Integer.MinValue).abs()
+  val maxUnsignedInteger = BigDecimal(2).pow(32).subtract(BigDecimal(1))
+
+  def intToNormalizedDouble(in: Int): Double =
+    BigDecimal(in).add(unsignedIntOffset).divide(maxUnsignedInteger).doubleValue()
 }

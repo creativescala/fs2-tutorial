@@ -200,9 +200,24 @@ import fs2.io.file.*
 val words = Path.fromNioPath(nioPath)
 ```
 
+Finally we create a `Stream`, which gives us each line as a separate item in the `Stream`.
+
+```scala
+val stream: Stream[IO, String] = Files.forIO.readUtf8Lines(words)
+```
+
+So quite a few lines of code, but it's not hard code to understand.
+
+*TODO* Splitting text into words
 
 
 #### Hashing Data
+
+The next stage is to hash each word. This will give us an `Int` which is (approximately) uniformly distributed in across the range. We can then convert this to a `Double` in the range 0 to 1, which is what k-Minimum Values requires.
+
+
+
+
 
 #### Pipes
 
@@ -221,3 +236,5 @@ http://www.vldb.org/pvldb/vol11/p499-harmouch.pdf
 [wordlist.10000]: https://www.mit.edu/~ecprice/wordlist.10000
 [wordlist]: https://proofingtoolgui.org/
 [english-words]: https://github.com/dwyl/english-words
+
+[hashing]: https://github.com/mpilquist/blog-hashing/blob/main/README.md
