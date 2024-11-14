@@ -151,6 +151,8 @@ For data we will use two sources:
 
 2. The complete works of William Shakespeare. This is much bigger than the dictionary, contains duplicates, and requires more processing, and so is a more realistic test.
 
+We will start with the word list and, once we have k-Minimum Values working, move on to Billy S.
+
 Neither of our test cases are big enough that we really need to use k-Minimum Values; we could use a traditional algorithm instead. 
 This is intentional. 
 It is useful to be able to compare to a known correct result,
@@ -208,15 +210,49 @@ val stream: Stream[IO, String] = Files.forIO.readUtf8Lines(words)
 
 So quite a few lines of code, but it's not hard code to understand.
 
-*TODO* Splitting text into words
-
 
 #### Hashing Data
 
 The next stage is to hash each word. This will give us an `Int` which is (approximately) uniformly distributed in across the range. We can then convert this to a `Double` in the range 0 to 1, which is what k-Minimum Values requires.
 
+This might be a fun bit of code to write if you've done lower level programming before, so I'm not going to give you all the code right away. Instead I'm going to go through the pieces needed to construct the working code. Check the solution if you get stuck.
 
+The first piece we need is our hash function. In Scala we will use `scala.util.hashing.MurmurHash3`. We can convert a `String` to an `Array[Bytes]` using the `getBytes` method, and then hash those bytes to an `Int`.
 
+Once we have an `Int` we need to convert it to a `Double` in the range \\(\[0, 1\]\\) without losing information. This is a little bit trickier than it seems as an `Int` can have negative values. We can convert the `Int` to a `Long`, treating the `Int` as an unsigned value, covert that `Long` to a `Double`, and then divide by the maximum unsigned `Int`. This is where the small amount of bit-twiddling comes in. I'll give you one hint: you probably want to use `Integer.toUnsignedLong`.
+
+There is a code skeleton in `code/src/main/scala/kmv/Words.scala`, which also includes the code to load the word list from the resources (assuming you named the file `"words.txt"`.)
+
+@:solution
+
+Here's the complete code to read and hash the word list.
+
+```scala mdoc:silent
+import cats.effect.IO
+import fs2.Stream
+import fs2.io.file.*
+
+import java.net.URI
+import java.nio.file.Paths
+import scala.util.hashing.MurmurHash3
+
+object Words {
+  val resource: URI = getClass().getResource("words.txt").toURI()
+  val nioPath = Paths.get(resource)
+  val words = Path.fromNioPath(nioPath)
+
+  val stream: Stream[IO, String] = Files.forIO.readUtf8Lines(words)
+
+  def hash(in: String): Int =
+    MurmurHash3.bytesHash(in.getBytes())
+
+  val maxUnsignedInteger = 0x0000_0000_ffff_ffffL.toDouble
+
+  def intToNormalizedDouble(in: Int): Double =
+    Integer.toUnsignedLong(in).toDouble / maxUnsignedInteger
+}
+```
+@:@
 
 
 #### Pipes
@@ -230,8 +266,6 @@ http://www.vldb.org/pvldb/vol11/p499-harmouch.pdf
 
 
 [murmur3]: https://www.scala-lang.org/api/current/scala/util/hashing/MurmurHash3$.html#
-
-
 
 [wordlist.10000]: https://www.mit.edu/~ecprice/wordlist.10000
 [wordlist]: https://proofingtoolgui.org/
