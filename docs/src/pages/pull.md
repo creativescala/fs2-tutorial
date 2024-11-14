@@ -11,7 +11,7 @@ import cats.effect.IO
 import fs2.Stream
 
 val data = Stream(1, 2, 3, 4)
-val a = data.evalMap(a => IO.println(s"a: $a"))
+val a = data.evalMap(d => IO.println(s"a: $d"))
 ```
 
 This stream consists of two *stages*: `data`, which produces values, and `a`, which uses those values. We say that `a` is *downstream* of `data` (and `data` is *upstream* of `a`) as data flows from `data` to `a`.
@@ -25,8 +25,8 @@ When we write
 
 ```scala
 val data = Stream(1, 2, 3, 4)
-val a = data.evalMap(a => IO.println(s"a: $a"))
-val b = data.evalMap(b => IO.println(s"b: $b"))
+val a = data.evalMap(d => IO.println(s"a: $d"))
+val b = data.evalMap(d => IO.println(s"b: $d"))
 ```
 
 we create three data structures:
