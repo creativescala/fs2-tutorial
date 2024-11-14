@@ -20,7 +20,6 @@ import cats.effect.IO
 import fs2.Stream
 import fs2.io.file.*
 
-import java.math.BigDecimal
 import java.net.URI
 import java.nio.file.Paths
 import scala.util.hashing.MurmurHash3
@@ -35,9 +34,8 @@ object Words {
   def hash(in: String): Int =
     MurmurHash3.bytesHash(in.getBytes())
 
-  val unsignedIntOffset = BigDecimal(Integer.MinValue).abs()
-  val maxUnsignedInteger = BigDecimal(2).pow(32).subtract(BigDecimal(1))
+  val maxUnsignedInteger = 0x0000_0000_ffff_ffffL.toDouble
 
   def intToNormalizedDouble(in: Int): Double =
-    BigDecimal(in).add(unsignedIntOffset).divide(maxUnsignedInteger).doubleValue()
+    Integer.toUnsignedLong(in).toDouble / maxUnsignedInteger
 }
