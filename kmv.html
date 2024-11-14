@@ -184,6 +184,7 @@
                 <p>The complete works of William Shakespeare. This is much bigger than the dictionary, contains duplicates, and requires more processing, and so is a more realistic test.</p>
               </li>
             </ol>
+            <p>We will start with the word list and, once we have k-Minimum Values working, move on to Billy S.</p>
             <p>Neither of our test cases are big enough that we really need to use k-Minimum Values; we could use a traditional algorithm instead. 
             This is intentional. 
             It is useful to be able to compare to a known correct result,
@@ -217,10 +218,41 @@
             <p>Finally we create a <code>Stream</code>, which gives us each line as a separate item in the <code>Stream</code>.</p>
             <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">stream</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">String</span><span>] = </span><span class="type-name">Files</span><span>.</span><span class="identifier">forIO</span><span>.</span><span class="identifier">readUtf8Lines</span><span>(</span><span class="identifier">words</span><span>)</span></code></pre>
             <p>So quite a few lines of code, but it&#39;s not hard code to understand.</p>
-            <p><em>TODO</em> Splitting text into words</p>
             
             <h4 id="hashing-data" class="section">Hashing Data</h4>
             <p>The next stage is to hash each word. This will give us an <code>Int</code> which is (approximately) uniformly distributed in across the range. We can then convert this to a <code>Double</code> in the range 0 to 1, which is what k-Minimum Values requires.</p>
+            <p>This might be a fun bit of code to write if you&#39;ve done lower level programming before, so I&#39;m not going to give you all the code right away. Instead I&#39;m going to go through the pieces needed to construct the working code. Check the solution if you get stuck.</p>
+            <p>The first piece we need is our hash function. In Scala we will use <code>scala.util.hashing.MurmurHash3</code>. We can convert a <code>String</code> to an <code>Array[Bytes]</code> using the <code>getBytes</code> method, and then hash those bytes to an <code>Int</code>.</p>
+            <p>Once we have an <code>Int</code> we need to convert it to a <code>Double</code> in the range \([0, 1]\) without losing information. This is a little bit trickier than it seems as an <code>Int</code> can have negative values. We can convert the <code>Int</code> to a <code>Long</code>, treating the <code>Int</code> as an unsigned value, covert that <code>Long</code> to a <code>Double</code>, and then divide by the maximum unsigned <code>Int</code>. This is where the small amount of bit-twiddling comes in. I&#39;ll give you one hint: you probably want to use <code>Integer.toUnsignedLong</code>.</p>
+            <p>There is a code skeleton in <code>code/src/main/scala/kmv/Words.scala</code>, which also includes the code to load the word list from the resources (assuming you named the file <code>&quot;words.txt&quot;</code>.)</p>
+            <div class="solution">
+              <div class="solution-body">
+                <p>Here&#39;s the complete code to read and hash the word list.</p>
+                <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.</span><span class="type-name">IO</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.</span><span class="type-name">Stream</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">fs2</span><span>.</span><span class="identifier">io</span><span>.</span><span class="identifier">file</span><span>.*
+
+</span><span class="keyword">import</span><span> </span><span class="identifier">java</span><span>.</span><span class="identifier">net</span><span>.</span><span class="type-name">URI</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">java</span><span>.</span><span class="identifier">nio</span><span>.</span><span class="identifier">file</span><span>.</span><span class="type-name">Paths</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">scala</span><span>.</span><span class="identifier">util</span><span>.</span><span class="identifier">hashing</span><span>.</span><span class="type-name">MurmurHash3</span><span>
+
+</span><span class="keyword">object</span><span> </span><span class="type-name">Words</span><span> {
+  </span><span class="keyword">val</span><span> </span><span class="identifier">resource</span><span>: </span><span class="type-name">URI</span><span> = </span><span class="identifier">getClass</span><span>().</span><span class="identifier">getResource</span><span>(</span><span class="string-literal">&quot;words.txt&quot;</span><span>).</span><span class="identifier">toURI</span><span>()
+  </span><span class="keyword">val</span><span> </span><span class="identifier">nioPath</span><span> = </span><span class="type-name">Paths</span><span>.</span><span class="identifier">get</span><span>(</span><span class="identifier">resource</span><span>)
+  </span><span class="keyword">val</span><span> </span><span class="identifier">words</span><span> = </span><span class="type-name">Path</span><span>.</span><span class="identifier">fromNioPath</span><span>(</span><span class="identifier">nioPath</span><span>)
+
+  </span><span class="keyword">val</span><span> </span><span class="identifier">stream</span><span>: </span><span class="type-name">Stream</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">String</span><span>] = </span><span class="type-name">Files</span><span>.</span><span class="identifier">forIO</span><span>.</span><span class="identifier">readUtf8Lines</span><span>(</span><span class="identifier">words</span><span>)
+
+  </span><span class="keyword">def</span><span> </span><span class="declaration-name">hash</span><span>(</span><span class="identifier">in</span><span>: </span><span class="type-name">String</span><span>): </span><span class="type-name">Int</span><span> =
+    </span><span class="type-name">MurmurHash3</span><span>.</span><span class="identifier">bytesHash</span><span>(</span><span class="identifier">in</span><span>.</span><span class="identifier">getBytes</span><span>())
+
+  </span><span class="keyword">val</span><span> </span><span class="identifier">maxUnsignedInteger</span><span> = </span><span class="number-literal">0x0000_0000_ffff_ffffL</span><span>.</span><span class="identifier">toDouble</span><span>
+
+  </span><span class="keyword">def</span><span> </span><span class="declaration-name">intToNormalizedDouble</span><span>(</span><span class="identifier">in</span><span>: </span><span class="type-name">Int</span><span>): </span><span class="type-name">Double</span><span> =
+    </span><span class="type-name">Integer</span><span>.</span><span class="identifier">toUnsignedLong</span><span>(</span><span class="identifier">in</span><span>).</span><span class="identifier">toDouble</span><span> / </span><span class="identifier">maxUnsignedInteger</span><span>
+}</span></code></pre>
+              </div>
+            </div>
             
             <h4 id="pipes" class="section">Pipes</h4>
             
