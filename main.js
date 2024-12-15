@@ -3258,7 +3258,7 @@ function $h_Ldoodle_algebra_generic_package$Renderable$() {
 }
 $h_Ldoodle_algebra_generic_package$Renderable$.prototype = $c_Ldoodle_algebra_generic_package$Renderable$.prototype;
 $c_Ldoodle_algebra_generic_package$Renderable$.prototype.parallel__Ldoodle_core_Transform__Ldoodle_core_Transform__Lcats_data_IndexedStateT__Lcats_data_IndexedStateT__Lcats_Apply__Lcats_kernel_Semigroup__Lcats_data_IndexedStateT = (function(txLeft, txRight, left, right, evidence$1, evidence$2) {
-  var this$7 = $m_Lcats_data_IndexedStateT$();
+  var this$6 = $m_Lcats_data_IndexedStateT$();
   var f = new $c_sjsr_AnonFunction1(((tx) => {
     var tx$1 = $as_Ldoodle_core_Transform(tx);
     var l = $as_Lcats_Eval($n(left).runA__O__Lcats_FlatMap__O($n(txLeft).andThen__Ldoodle_core_Transform__Ldoodle_core_Transform(tx$1), $m_Lcats_Eval$().Lcats_EvalInstances__f_catsBimonadForEval));
@@ -3270,7 +3270,7 @@ $c_Ldoodle_algebra_generic_package$Renderable$.prototype.parallel__Ldoodle_core_
     })), $m_Lcats_Eval$().Lcats_EvalInstances__f_catsBimonadForEval, $m_Lcats_Eval$().Lcats_EvalInstances__f_catsBimonadForEval));
   }));
   var F = $m_Lcats_Eval$().Lcats_EvalInstances__f_catsBimonadForEval;
-  return $f_Lcats_data_CommonStateTConstructors__inspectF__F1__Lcats_Applicative__Lcats_data_IndexedStateT(this$7, f, F);
+  return $f_Lcats_data_CommonStateTConstructors__inspectF__F1__Lcats_Applicative__Lcats_data_IndexedStateT(this$6, f, F);
 });
 $c_Ldoodle_algebra_generic_package$Renderable$.prototype.transform__Ldoodle_core_Transform__Lcats_data_IndexedStateT__Lcats_data_IndexedStateT = (function(transform, child) {
   return $n(child).contramap__F1__Lcats_Functor__Lcats_data_IndexedStateT(new $c_sjsr_AnonFunction1(((tx) => {
@@ -11815,13 +11815,13 @@ $c_Lkmv_KMinimumValues$.prototype.numberLine16384__T__V = (function(id) {
   var picture = this.numberLine__I__I__Ldoodle_algebra_Picture(16, 16384);
   new $c_Ldoodle_syntax_AbstractRendererSyntax$RendererPictureOps(this$1, picture).drawWithFrame__O__Ldoodle_effect_Renderer__Lcats_effect_unsafe_IORuntime__V(frame, $m_Ldoodle_svg_package$().Ldoodle_svg_package$__f_svgRenderer, $m_Lcats_effect_unsafe_IORuntime$().global__Lcats_effect_unsafe_IORuntime());
 });
-$c_Lkmv_KMinimumValues$.prototype.numberLine32 = (function(arg) {
-  var prep0 = $as_T(arg);
-  this.numberLine32__T__V(prep0);
-});
 $c_Lkmv_KMinimumValues$.prototype.numberLine16384 = (function(arg) {
   var prep0 = $as_T(arg);
   this.numberLine16384__T__V(prep0);
+});
+$c_Lkmv_KMinimumValues$.prototype.numberLine32 = (function(arg) {
+  var prep0 = $as_T(arg);
+  this.numberLine32__T__V(prep0);
 });
 var $d_Lkmv_KMinimumValues$ = new $TypeData().initClass($c_Lkmv_KMinimumValues$, "kmv.KMinimumValues$", ({
   Lkmv_KMinimumValues$: 1
@@ -16190,10 +16190,12 @@ $c_Lcats_effect_IO.prototype.unsafeRunAsync__F1__Lcats_effect_unsafe_IORuntime__
 $c_Lcats_effect_IO.prototype.unsafeRunFiber__F0__F1__F1__Z__Lcats_effect_unsafe_IORuntime__Lcats_effect_IOFiber = (function(canceled, failure, success, registerCallback, runtime) {
   var fiber = new $c_Lcats_effect_IOFiber($m_sci_Map$EmptyMap$(), new $c_sjsr_AnonFunction1(((oc) => {
     var oc$1 = $as_Lcats_effect_kernel_Outcome(oc);
+    if (registerCallback) {
+      $n($n(runtime).Lcats_effect_unsafe_IORuntime__f_fiberErrorCbs).remove__F1__V(failure);
+    }
     var this$2 = $n(oc$1);
     matchResult1: {
       if (((this$2 instanceof $c_Lcats_effect_kernel_Outcome$Canceled) && ($as_Lcats_effect_kernel_Outcome$Canceled(this$2), true))) {
-        $n($n(runtime).Lcats_effect_unsafe_IORuntime__f_fiberErrorCbs).remove__F1__V(failure);
         $n(canceled).apply__O();
         break matchResult1;
       }
@@ -16201,9 +16203,7 @@ $c_Lcats_effect_IO.prototype.unsafeRunFiber__F0__F1__F1__Z__Lcats_effect_unsafe_
         var x$1 = $as_Lcats_effect_kernel_Outcome$Errored(this$2);
         var this$4 = $n(x$1);
         var x7 = this$4.Lcats_effect_kernel_Outcome$Errored__f_e;
-        var t = $as_jl_Throwable(x7);
-        $n($n(runtime).Lcats_effect_unsafe_IORuntime__f_fiberErrorCbs).remove__F1__V(failure);
-        $n(failure).apply__O__O(t);
+        $n(failure).apply__O__O(x7);
         break matchResult1;
       }
       if ((this$2 instanceof $c_Lcats_effect_kernel_Outcome$Succeeded)) {
@@ -16211,7 +16211,6 @@ $c_Lcats_effect_IO.prototype.unsafeRunFiber__F0__F1__F1__Z__Lcats_effect_unsafe_
         var this$6 = $n(x$1$1);
         var x4 = this$6.Lcats_effect_kernel_Outcome$Succeeded__f_fa;
         var ioa = $as_Lcats_effect_IO(x4);
-        $n($n(runtime).Lcats_effect_unsafe_IORuntime__f_fiberErrorCbs).remove__F1__V(failure);
         $n(success).apply__O__O($n($as_Lcats_effect_IO$Pure(ioa)).Lcats_effect_IO$Pure__f_value);
         break matchResult1;
       }
@@ -26974,10 +26973,10 @@ $c_Ldoodle_algebra_generic_Finalized$.prototype.applyU__F1__Ldoodle_algebra_gene
 $c_Ldoodle_algebra_generic_Finalized$.prototype.leaf__F1__Ldoodle_algebra_generic_Finalized = (function(f) {
   return $m_Ldoodle_algebra_generic_Finalized$().applyU__F1__Ldoodle_algebra_generic_Finalized(new $c_sjsr_AnonFunction1(((ctxTxs) => {
     var ctxTxs$1 = $as_sci_List(ctxTxs);
-    var this$2 = $n(ctxTxs$1);
+    var this$1 = $n(ctxTxs$1);
     var z = $m_Ldoodle_algebra_generic_DrawingContext$().default__Ldoodle_algebra_generic_DrawingContext();
     var acc = z;
-    var these = this$2;
+    var these = this$1;
     while ((!$n(these).isEmpty__Z())) {
       var arg1 = acc;
       var arg2 = $n(these).head__O();
@@ -26993,10 +26992,10 @@ $c_Ldoodle_algebra_generic_Finalized$.prototype.leaf__F1__Ldoodle_algebra_generi
 $c_Ldoodle_algebra_generic_Finalized$.prototype.contextTransform__F1__Ldoodle_algebra_generic_Finalized__Ldoodle_algebra_generic_Finalized = (function(f, child) {
   var f$1 = new $c_sjsr_AnonFunction1(((ctxTxs) => {
     var ctxTxs$1 = $as_sci_List(ctxTxs);
-    var this$3 = $n(child);
-    var this$2 = $n(ctxTxs$1);
-    var ctxTxs$2 = new $c_sci_$colon$colon(f, this$2);
-    return $as_Lcats_Eval($n(this$3.Ldoodle_algebra_generic_Finalized__f_f).apply__O__O(ctxTxs$2));
+    var this$2 = $n(child);
+    var this$1 = $n(ctxTxs$1);
+    var ctxTxs$2 = new $c_sci_$colon$colon(f, this$1);
+    return $as_Lcats_Eval($n(this$2.Ldoodle_algebra_generic_Finalized__f_f).apply__O__O(ctxTxs$2));
   }));
   return new $c_Ldoodle_algebra_generic_Finalized(f$1);
 });
@@ -27054,9 +27053,8 @@ function $f_Ldoodle_algebra_generic_GenericLayout__on__Ldoodle_algebra_generic_F
       var rdrB$2 = $as_Lcats_data_IndexedStateT(\u03b42$___2);
       var _1 = $n(bbT$2).on__Ldoodle_core_BoundingBox__Ldoodle_core_BoundingBox(bbB$2);
       $m_Lcats_implicits$();
-      var this$8 = $m_Ldoodle_algebra_generic_package$Renderable$();
       var evidence$1 = $n($as_Ldoodle_algebra_generic_GivenApply($thiz)).Ldoodle_svg_algebra_JsAlgebraModule$JsAlgebra__f_applyDrawing;
-      var evidence$1$1 = new $c_Ldoodle_algebra_generic_package$Renderable$$anon$1(s, evidence$1, this$8);
+      var evidence$1$1 = new $c_Ldoodle_algebra_generic_package$Renderable$$anon$1(s, evidence$1);
       var _2 = new $c_Lcats_syntax_SemigroupOps(rdrB$2, evidence$1$1).$bar$plus$bar__O__O(rdrT$2);
       return new $c_T2(_1, _2);
     })), $m_Lcats_Eval$().Lcats_EvalInstances__f_catsBimonadForEval, $m_Lcats_Eval$().Lcats_EvalInstances__f_catsBimonadForEval));
@@ -27177,20 +27175,16 @@ function $f_Ldoodle_algebra_generic_GenericPath__boundingBox__sci_List__Ldoodle_
             var x12 = this$6.Ldoodle_core_PathElement$MoveTo__f_to;
             var x = $n(x12).Ldoodle_core_Point$Cartesian__f_x;
             var that = elem;
-            var ev$1 = $uD(Math.min(x, that));
-            elem = ev$1;
+            elem = $uD(Math.min(x, that));
             var x$2 = $n(x12).Ldoodle_core_Point$Cartesian__f_y;
             var that$1 = elem$1;
-            var ev$2 = $uD(Math.min(x$2, that$1));
-            elem$1 = ev$2;
+            elem$1 = $uD(Math.min(x$2, that$1));
             var x$3 = $n(x12).Ldoodle_core_Point$Cartesian__f_x;
             var that$2 = elem$2;
-            var ev$3 = $uD(Math.max(x$3, that$2));
-            elem$2 = ev$3;
+            elem$2 = $uD(Math.max(x$3, that$2));
             var x$4 = $n(x12).Ldoodle_core_Point$Cartesian__f_y;
             var that$3 = elem$3;
-            var ev$4 = $uD(Math.max(x$4, that$3));
-            elem$3 = ev$4;
+            elem$3 = $uD(Math.max(x$4, that$3));
             break matchResult1;
           }
           if ((hd instanceof $c_Ldoodle_core_PathElement$LineTo)) {
@@ -27199,20 +27193,16 @@ function $f_Ldoodle_algebra_generic_GenericPath__boundingBox__sci_List__Ldoodle_
             var x9 = this$24.Ldoodle_core_PathElement$LineTo__f_to;
             var x$5 = $n(x9).Ldoodle_core_Point$Cartesian__f_x;
             var that$4 = elem;
-            var ev$5 = $uD(Math.min(x$5, that$4));
-            elem = ev$5;
+            elem = $uD(Math.min(x$5, that$4));
             var x$6 = $n(x9).Ldoodle_core_Point$Cartesian__f_y;
             var that$5 = elem$1;
-            var ev$6 = $uD(Math.min(x$6, that$5));
-            elem$1 = ev$6;
+            elem$1 = $uD(Math.min(x$6, that$5));
             var x$7 = $n(x9).Ldoodle_core_Point$Cartesian__f_x;
             var that$6 = elem$2;
-            var ev$7 = $uD(Math.max(x$7, that$6));
-            elem$2 = ev$7;
+            elem$2 = $uD(Math.max(x$7, that$6));
             var x$8 = $n(x9).Ldoodle_core_Point$Cartesian__f_y;
             var that$7 = elem$3;
-            var ev$8 = $uD(Math.max(x$8, that$7));
-            elem$3 = ev$8;
+            elem$3 = $uD(Math.max(x$8, that$7));
             break matchResult1;
           }
           if (false) {
@@ -27226,32 +27216,28 @@ function $f_Ldoodle_algebra_generic_GenericPath__boundingBox__sci_List__Ldoodle_
             var that$9 = $n(x4).Ldoodle_core_Point$Cartesian__f_x;
             var x$11 = $uD(Math.min(x$10, that$9));
             var that$10 = elem;
-            var ev$9 = $uD(Math.min(x$11, that$10));
-            elem = ev$9;
+            elem = $uD(Math.min(x$11, that$10));
             var x$12 = $n(x6).Ldoodle_core_Point$Cartesian__f_y;
             var that$11 = $n(x5).Ldoodle_core_Point$Cartesian__f_y;
             var x$13 = $uD(Math.min(x$12, that$11));
             var that$12 = $n(x4).Ldoodle_core_Point$Cartesian__f_y;
             var x$14 = $uD(Math.min(x$13, that$12));
             var that$13 = elem$1;
-            var ev$10 = $uD(Math.min(x$14, that$13));
-            elem$1 = ev$10;
+            elem$1 = $uD(Math.min(x$14, that$13));
             var x$15 = $n(x6).Ldoodle_core_Point$Cartesian__f_x;
             var that$14 = $n(x5).Ldoodle_core_Point$Cartesian__f_x;
             var x$16 = $uD(Math.max(x$15, that$14));
             var that$15 = $n(x4).Ldoodle_core_Point$Cartesian__f_x;
             var x$17 = $uD(Math.max(x$16, that$15));
             var that$16 = elem$2;
-            var ev$11 = $uD(Math.max(x$17, that$16));
-            elem$2 = ev$11;
+            elem$2 = $uD(Math.max(x$17, that$16));
             var x$18 = $n(x6).Ldoodle_core_Point$Cartesian__f_y;
             var that$17 = $n(x5).Ldoodle_core_Point$Cartesian__f_y;
             var x$19 = $uD(Math.max(x$18, that$17));
             var that$18 = $n(x4).Ldoodle_core_Point$Cartesian__f_y;
             var x$20 = $uD(Math.max(x$19, that$18));
             var that$19 = elem$3;
-            var ev$12 = $uD(Math.max(x$20, that$19));
-            elem$3 = ev$12;
+            elem$3 = $uD(Math.max(x$20, that$19));
             break matchResult1;
           }
           throw new $c_s_MatchError(hd);
@@ -27364,14 +27350,11 @@ function $f_Ldoodle_algebra_generic_GenericText__text__T__Ldoodle_algebra_generi
   })));
 }
 /** @constructor */
-function $c_Ldoodle_algebra_generic_package$Renderable$$anon$1(evidence$2$5, evidence$1$4, outer) {
+function $c_Ldoodle_algebra_generic_package$Renderable$$anon$1(evidence$2$5, evidence$1$4) {
   this.Ldoodle_algebra_generic_package$Renderable$$anon$1__f_evidence$2$4 = null;
   this.Ldoodle_algebra_generic_package$Renderable$$anon$1__f_evidence$1$3 = null;
   this.Ldoodle_algebra_generic_package$Renderable$$anon$1__f_evidence$2$4 = evidence$2$5;
   this.Ldoodle_algebra_generic_package$Renderable$$anon$1__f_evidence$1$3 = evidence$1$4;
-  if ((outer === null)) {
-    throw $ct_jl_NullPointerException__(new $c_jl_NullPointerException());
-  }
 }
 $c_Ldoodle_algebra_generic_package$Renderable$$anon$1.prototype = new $h_O();
 $c_Ldoodle_algebra_generic_package$Renderable$$anon$1.prototype.constructor = $c_Ldoodle_algebra_generic_package$Renderable$$anon$1;
@@ -27688,27 +27671,27 @@ $c_Ldoodle_svg_effect_Canvas$.prototype.fromFrame__Ldoodle_svg_effect_Frame__Lca
     var _2 = $m_Lfs2_concurrent_Topic$().apply__Lcats_effect_kernel_GenConcurrent__O($m_Lcats_effect_IO$().Lcats_effect_IO$__f__asyncForIO);
     var _3 = $m_Lfs2_concurrent_Topic$().apply__Lcats_effect_kernel_GenConcurrent__O($m_Lcats_effect_IO$().Lcats_effect_IO$__f__asyncForIO);
     var t3 = new $c_T3(_1, _2, _3);
-    var this$5 = $n($as_Lcats_effect_IO(new $c_Lcats_syntax_Tuple3SemigroupalOps(t3).mapN__F3__Lcats_Functor__Lcats_Semigroupal__O(new $c_sjsr_AnonFunction3(((redrawTopic, mouseClickTopic, mouseMoveTopic) => {
+    var this$4 = $n($as_Lcats_effect_IO(new $c_Lcats_syntax_Tuple3SemigroupalOps(t3).mapN__F3__Lcats_Functor__Lcats_Semigroupal__O(new $c_sjsr_AnonFunction3(((redrawTopic, mouseClickTopic, mouseMoveTopic) => {
       var redrawTopic$1 = $as_Lfs2_concurrent_Topic(redrawTopic);
       var mouseClickTopic$1 = $as_Lfs2_concurrent_Topic(mouseClickTopic);
       var mouseMoveTopic$1 = $as_Lfs2_concurrent_Topic(mouseMoveTopic);
       return new $c_Ldoodle_svg_effect_Canvas(target, frame, redrawTopic$1, mouseClickTopic$1, mouseMoveTopic$1);
     })), $m_Lcats_effect_IO$().Lcats_effect_IO$__f__asyncForIO, $m_Lcats_effect_IO$().Lcats_effect_IO$__f__asyncForIO)));
-    var this$14 = new $c_Lcats_effect_kernel_Resource$Eval(this$5);
+    var this$13 = new $c_Lcats_effect_kernel_Resource$Eval(this$4);
     var f = new $c_sjsr_AnonFunction1(((canvas) => {
       var canvas$1 = $as_Ldoodle_svg_effect_Canvas(canvas);
-      var this$10 = $n($n(canvas$1).Ldoodle_svg_effect_Canvas__f_stream);
+      var this$9 = $n($n(canvas$1).Ldoodle_svg_effect_Canvas__f_stream);
       $m_Lfs2_Compiler$();
       var evidence$1 = $m_Lcats_effect_IO$().Lcats_effect_IO$__f__asyncForIO;
       var F = new $c_Lfs2_Compiler$Target$ConcurrentTarget(evidence$1);
       var compiler = new $c_Lfs2_CompilerLowPriority1$$anon$2(F);
-      var target$1 = $n($as_Lcats_effect_IO(new $c_Lfs2_Stream$CompileOps(this$10.Lfs2_Stream__f_underlying, compiler).drain__O())).background__Lcats_effect_kernel_Resource();
+      var target$1 = $n($as_Lcats_effect_IO(new $c_Lfs2_Stream$CompileOps(this$9.Lfs2_Stream__f_underlying, compiler).drain__O())).background__Lcats_effect_kernel_Resource();
       var F0 = $m_Lcats_effect_IO$().Lcats_effect_IO$__f__asyncForIO;
       var tc = new $c_Lcats_effect_kernel_ResourceHOInstances0$$anon$9(F0);
-      var this$13 = new $c_Lcats_Functor$ToFunctorOps$$anon$5(target$1, tc);
-      return $as_Lcats_effect_kernel_Resource($n(this$13.Lcats_Functor$ToFunctorOps$$anon$5__f_typeClassInstance).as__O__O__O(this$13.Lcats_Functor$ToFunctorOps$$anon$5__f_self, canvas$1));
+      var this$12 = new $c_Lcats_Functor$ToFunctorOps$$anon$5(target$1, tc);
+      return $as_Lcats_effect_kernel_Resource($n(this$12.Lcats_Functor$ToFunctorOps$$anon$5__f_typeClassInstance).as__O__O__O(this$12.Lcats_Functor$ToFunctorOps$$anon$5__f_self, canvas$1));
     }));
-    return new $c_Lcats_effect_kernel_Resource$Bind(this$14, f);
+    return new $c_Lcats_effect_kernel_Resource$Bind(this$13, f);
   }
 });
 var $d_Ldoodle_svg_effect_Canvas$ = new $TypeData().initClass($c_Ldoodle_svg_effect_Canvas$, "doodle.svg.effect.Canvas$", ({
@@ -33525,14 +33508,12 @@ function $c_Ldoodle_svg_effect_Canvas(target, frame, redrawTopic, mouseClickTopi
       var ts$1 = $uD(ts);
       if (started.sr_BooleanRef__f_elem) {
         var diff = (ts$1 - lastTs.sr_DoubleRef__f_elem);
-        var ev$1 = ts$1;
-        lastTs.sr_DoubleRef__f_elem = ev$1;
+        lastTs.sr_DoubleRef__f_elem = ts$1;
         var $x_1 = $n(cb$1);
         var value = $doubleToInt(diff);
         return $x_1.apply__O__O(new $c_s_util_Right(value));
       } else {
-        var ev$2 = true;
-        started.sr_BooleanRef__f_elem = ev$2;
+        started.sr_BooleanRef__f_elem = true;
         return $n(cb$1).apply__O__O(new $c_s_util_Right(0));
       }
     }));
